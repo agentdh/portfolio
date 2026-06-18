@@ -95,6 +95,11 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card-add:hover{border-color:var(--cyan);background:rgba(0,229,255,.03);color:var(--cyan)}
 .card-add svg{width:22px;height:22px;fill:currentColor;opacity:.45}
 
+.card-multi-upload{background:rgba(0,229,255,.035);border:1px solid rgba(0,229,255,.18);border-radius:var(--radius);min-height:148px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:border-color .2s,background .2s,color .2s;color:var(--cyan);font-size:12px;text-align:center;padding:16px;font-family:'Noto Sans KR',sans-serif;font-weight:300;}
+.card-multi-upload:hover{border-color:var(--cyan);background:rgba(0,229,255,.075);color:#fff}
+.card-multi-upload svg{width:22px;height:22px;fill:currentColor;opacity:.55}
+.card-multi-upload small{display:block;color:var(--text-off);font-size:10px;line-height:1.5;font-weight:300}
+
 .card-del{position:absolute;top:8px;left:8px;z-index:5;width:22px;height:22px;border:1px solid rgba(255,255,255,.18);border-radius:5px;background:rgba(0,0,0,.55);color:var(--text-dim);font-size:15px;line-height:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .card-del:hover{border-color:var(--orange);color:#fff;background:rgba(255,107,43,.75)}
 
@@ -2009,6 +2014,7 @@ id="work-branding">
   </div>
 </footer>
 <!-- MODALS -->
+<input type="file" id="batchUploadInput" multiple accept="image/*,.gif,video/mp4,video/webm,video/quicktime" style="display:none">
 <div class="modal-backdrop" id="addModal" onclick="closeOnBg(event,'addModal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('addModal')">×</button>
@@ -2024,7 +2030,7 @@ id="work-branding">
     </div>
     <div class="form-group"><label>제목</label><input type="text" id="iTitle" placeholder="작업물 이름"></div>
     <div class="form-group" id="urlGrp"><label id="urlLbl">URL</label><input type="url" id="iUrl" placeholder="https://"></div>
-    <div class="form-group" id="fileGrp" style="display:none"><label id="fileLbl">업로드 파일</label><input type="file" id="iFile" accept="image/*,video/mp4,video/webm,video/quicktime" style="color:var(--text-dim)"><div class="upload-help" id="uploadHelp">선택한 파일은 현재 패널에 연결된 GitHub 폴더로 업로드됩니다.</div></div>
+    <div class="form-group" id="fileGrp" style="display:none"><label id="fileLbl">업로드 파일</label><input type="file" id="iFile" accept="image/*,.gif,video/mp4,video/webm,video/quicktime" style="color:var(--text-dim)"><div class="upload-help" id="uploadHelp">선택한 파일은 현재 패널에 연결된 GitHub 폴더로 업로드됩니다.</div></div>
     <div class="form-group"><label>설명 (선택)</label><textarea id="iDesc" rows="2" placeholder="간단한 설명"></textarea></div>
     <button class="btn-primary" id="addSubmitBtn" onclick="addItem()">추가하기</button>
   </div>
@@ -2317,7 +2323,7 @@ try{
 }
 
 function updateEditorVisibility(){
-  document.querySelectorAll('.card-add,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
+  document.querySelectorAll('.card-add,.card-multi-upload,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
     el.style.display=isAdmin ? '' : 'none';
   });
   setupDragSortable();
@@ -2894,6 +2900,105 @@ function insertCardToGrid(item,docId){
   else grid.appendChild(card);
   setupDragSortable();
 }
+
+function setupMultiUploadButtons(){
+  Object.keys(GITHUB_FOLDER_MAP).forEach(gridId=>{
+    const grid=document.getElementById(gridId);
+    if(!grid)return;
+    if(grid.querySelector(':scope > .card-multi-upload'))return;
+    const addCard=grid.querySelector(':scope > .card-add');
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='card-multi-upload';
+    btn.dataset.grid=gridId;
+    btn.innerHTML=`
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      <span>여러 파일 업로드</span>
+      <small>이미지 · GIF · 영상<br>동시 선택 가능</small>`;
+    btn.addEventListener('click',e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      openBatchUpload(gridId);
+    });
+    grid.insertBefore(btn,addCard||null);
+  });
+  updateEditorVisibility();
+}
+
+function openBatchUpload(gridId){
+  if(!isAdmin){alert('관리자 로그인 후 사용할 수 있습니다.');return;}
+  if(!GITHUB_FOLDER_MAP[gridId]){alert('이 항목에는 연결된 GitHub 폴더가 없습니다.');return;}
+  const input=document.getElementById('batchUploadInput');
+  if(!input){alert('업로드 입력 요소를 찾지 못했습니다.');return;}
+  input.value='';
+  input.dataset.grid=gridId;
+  input.onchange=()=>handleBatchUpload(input);
+  input.click();
+}
+
+async function handleBatchUpload(input){
+  const gridId=input.dataset.grid||'';
+  const files=[...(input.files||[])];
+  if(!gridId||!files.length)return;
+  const valid=files.filter(file=>getMediaTypeByName(file.name));
+  const invalid=files.filter(file=>!getMediaTypeByName(file.name));
+  if(!valid.length){alert('업로드 가능한 이미지/GIF/영상 파일이 없습니다.');return;}
+  if(invalid.length){
+    alert(`지원하지 않는 파일 ${invalid.length}개는 제외합니다.\n\n${invalid.map(f=>f.name).join('\n')}`);
+  }
+
+  const uploadBtn=document.querySelector(`.card-multi-upload[data-grid="${CSS.escape(gridId)}"]`);
+  const oldHTML=uploadBtn?.innerHTML||'';
+  if(uploadBtn){
+    uploadBtn.disabled=true;
+    uploadBtn.innerHTML=`<span>업로드 중...</span><small>0 / ${valid.length}</small>`;
+  }
+
+  let success=0;
+  const failed=[];
+
+  for(const file of valid){
+    try{
+      const uploaded=await uploadFileToGithubFolder(file,gridId);
+      uploaded.title=titleFromFilename(file.name);
+      uploaded.desc='';
+      const docId=autoDocIdFromSource(uploaded.sourcePath);
+      if(ensureFirestore()){
+        await getCardsCol().doc(docId).set({
+          grid:uploaded.grid,
+          type:uploaded.type,
+          title:uploaded.title,
+          desc:uploaded.desc||'',
+          url:uploaded.url||'',
+          sourcePath:uploaded.sourcePath,
+          sourceKind:'github',
+          createdAt:firebase.firestore.FieldValue.serverTimestamp()
+        },{merge:true});
+      }
+      insertCardToGrid(uploaded,docId);
+      success++;
+      if(uploadBtn)uploadBtn.innerHTML=`<span>업로드 중...</span><small>${success} / ${valid.length}</small>`;
+    }catch(err){
+      console.error('다중 업로드 실패:',file.name,err);
+      failed.push(`${file.name}: ${err.message||'실패'}`);
+    }
+  }
+
+  await saveGridOrder(gridId);
+  setupDragSortable();
+
+  if(uploadBtn){
+    uploadBtn.disabled=false;
+    uploadBtn.innerHTML=oldHTML;
+  }
+
+  if(failed.length){
+    alert(`업로드 완료: ${success}개\n실패: ${failed.length}개\n\n${failed.join('\n')}`);
+  }else{
+    alert(`업로드 완료: ${success}개`);
+  }
+}
+
 async function loadCards(){
   const firestoreItems=[];
   const metaBySource={};
@@ -2915,15 +3020,27 @@ async function loadCards(){
     }
   }
 
+  const renderedSourcePaths=new Set();
+
   autoFolderItems.forEach(autoItem=>{
     const meta=metaBySource[autoItem.sourcePath]||{};
     const merged={...autoItem,...meta,sourcePath:autoItem.sourcePath,sourceKind:'github'};
     insertCardToGrid(merged,meta._docId||autoDocIdFromSource(autoItem.sourcePath));
+    renderedSourcePaths.add(autoItem.sourcePath);
+  });
+
+  // GitHub API 캐시/스캔 실패 직후에도 새로고침 시 사라지지 않도록
+  // Firestore에 저장된 GitHub 업로드 카드도 백업 렌더링한다.
+  Object.values(metaBySource).forEach(item=>{
+    if(!item.sourcePath || renderedSourcePaths.has(item.sourcePath))return;
+    insertCardToGrid({...item,sourceKind:'github'},item._docId||autoDocIdFromSource(item.sourcePath));
+    renderedSourcePaths.add(item.sourcePath);
   });
 
   firestoreItems.forEach(item=>insertCardToGrid(item,item._docId));
   applyStaticMetadata(metaByStaticKey);
   enhanceStaticPortfolioCards();
+  setupMultiUploadButtons();
 }
 
 async function saveCard(item){
@@ -3006,7 +3123,7 @@ function openAddModal(gridId,label){
   if(hasFolder){
     document.getElementById('fileGrp').style.display='block';
     document.getElementById('fileLbl').textContent='업로드 파일';
-    document.getElementById('iFile').accept='image/*,video/mp4,video/webm,video/quicktime';
+    document.getElementById('iFile').accept='image/*,.gif,video/mp4,video/webm,video/quicktime';
     const help=document.getElementById('uploadHelp');
     if(help)help.textContent=`GitHub 폴더: ${GITHUB_FOLDER_MAP[_targetGrid]}`;
     setUrlFieldMode({visible:false,readonly:false,label:'URL',placeholder:'https://'});
@@ -3042,7 +3159,7 @@ function selType(btn){
 
   document.getElementById('fileGrp').style.display='block';
   document.getElementById('fileLbl').textContent=_currentType==='video'?'영상 파일':'이미지 파일';
-  document.getElementById('iFile').accept=_currentType==='video'?'video/mp4,video/webm,video/quicktime':'image/*';
+  document.getElementById('iFile').accept=_currentType==='video'?'video/mp4,video/webm,video/quicktime':'image/*,.gif';
   const help=document.getElementById('uploadHelp');
   if(help)help.textContent=`GitHub 폴더: ${GITHUB_FOLDER_MAP[_targetGrid]}`;
   setUrlFieldMode({visible:false,readonly:false,label:'URL',placeholder:'https://'});
@@ -3256,6 +3373,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   await loadCards();
   applyAllGridOrders();
   enhanceStaticPortfolioCards();
+  setupMultiUploadButtons();
   setupDragSortable();
 });
 
