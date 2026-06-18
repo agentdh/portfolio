@@ -98,6 +98,9 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card-del{position:absolute;top:8px;left:8px;z-index:5;width:22px;height:22px;border:1px solid rgba(255,255,255,.18);border-radius:5px;background:rgba(0,0,0,.55);color:var(--text-dim);font-size:15px;line-height:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .card-del:hover{border-color:var(--orange);color:#fff;background:rgba(255,107,43,.75)}
 
+.card-edit{position:absolute;top:8px;left:36px;z-index:5;height:22px;border:1px solid rgba(0,229,255,.25);border-radius:5px;background:rgba(0,0,0,.55);color:var(--cyan);font-size:10px;line-height:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 7px;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
+.card-edit:hover{border-color:var(--cyan);color:#0D0D14;background:var(--cyan)}
+
 /* ABOUT */
 .stat-row{display:flex;gap:1px;background:var(--border);margin-bottom:28px}
 .stat{flex:1;background:var(--surface);padding:20px;text-align:center}
@@ -307,11 +310,18 @@ font-weight:600;
 color:var(--cyan);
 }
 
+
+.admin-auth-btn{width:88px;padding:8px 10px;border-radius:999px;border:1px solid rgba(0,229,255,.35);background:rgba(0,229,255,.06);color:var(--cyan);font-size:11px;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.03em;cursor:pointer;transition:all .2s ease;}
+.admin-auth-btn:hover{border-color:var(--orange);color:var(--orange);background:rgba(255,107,43,.08);box-shadow:0 0 12px rgba(255,107,43,.12);}
+
 </style>
 </head>
 <body>
 <header>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
   <div class="avatar-wrap" onclick="openModal('profileModal')" title="프로필 편집"><span id="avatarInitial">BW</span><img id="avatarImg" src="" alt="" style="display:none"></div>
+  <button id="authBtn" class="admin-auth-btn">관리자 로그인</button>
+</div>
   <div class="profile-info">
     <div class="profile-brand">Multimedia Artist · Commission Open</div>
     <h1 id="profileName">BOW<span>ONE</span></h1>
@@ -619,11 +629,16 @@ id="work-branding">
   
 <div class="sub-panel" id="work-3d">
 <div class="portfolio-section-title">캐릭터</div>
+<div class="grid-3 fade-in" id="work3d-character">
+<div class="card-add" onclick="openAddModal('work3d-character','3D 캐릭터')">3D 캐릭터 추가</div>
+</div>
 <div class="portfolio-section-title">아이템</div>
+<div class="grid-3 fade-in" id="work3d-item">
+<div class="card-add" onclick="openAddModal('work3d-item','3D 아이템')">3D 아이템 추가</div>
+</div>
 <div class="portfolio-section-title">배경</div>
-<div class="sec-label fade-in">3D</div>
-<div class="grid-3 fade-in" id="work3dGrid">
-<div class="card-add" onclick="openAddModal('work3dGrid','3D')">3D 추가</div>
+<div class="grid-3 fade-in" id="work3d-bg">
+<div class="card-add" onclick="openAddModal('work3d-bg','3D 배경')">3D 배경 추가</div>
 </div>
 </div>
 
@@ -1990,7 +2005,7 @@ id="work-branding">
     <div class="form-group" id="urlGrp"><label id="urlLbl">URL</label><input type="url" id="iUrl" placeholder="https://"></div>
     <div class="form-group" id="fileGrp" style="display:none"><label>이미지 파일</label><input type="file" id="iFile" accept="image/*" style="color:var(--text-dim)"></div>
     <div class="form-group"><label>설명 (선택)</label><textarea id="iDesc" rows="2" placeholder="간단한 설명"></textarea></div>
-    <button class="btn-primary" onclick="addItem()">추가하기</button>
+    <button class="btn-primary" id="addSubmitBtn" onclick="addItem()">추가하기</button>
   </div>
 </div>
 <div class="modal-backdrop" id="profileModal" onclick="closeOnBg(event,'profileModal')">
@@ -2272,22 +2287,33 @@ try{
 
 let auth=null;
 let isAdmin=false;
+
 try{
-  if(FIRESTORE_READY){
-    auth=firebase.auth();
-  }
-}catch(err){console.error(err);}
+  auth=firebase.auth();
+  console.log('Auth initialized');
+}catch(err){
+  console.error('Auth init error:',err);
+}
 
 function updateEditorVisibility(){
-  document.querySelectorAll('.card-add,[onclick*="editProfile"]').forEach(el=>{
+  document.querySelectorAll('.card-add,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
     el.style.display=isAdmin ? '' : 'none';
   });
 }
 
 function loginWithGoogle(){
-  if(!auth) return;
+  console.log('login clicked');
+  if(!auth){
+    alert('Firebase Auth 초기화 실패');
+    return;
+  }
   const provider=new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(console.error);
+  auth.signInWithPopup(provider)
+    .then(result=>console.log('Login success:',result.user.email))
+    .catch(err=>{
+      console.error(err);
+      alert('로그인 실패: '+err.message);
+    });
 }
 
 function logoutGoogle(){
@@ -2295,25 +2321,62 @@ function logoutGoogle(){
 }
 
 window.addEventListener('DOMContentLoaded',()=>{
-  const btn=document.createElement('button');
-  btn.id='authBtn';
-  btn.className='contact-btn';
-  btn.style.marginLeft='12px';
-  document.querySelector('.contact-row')?.appendChild(btn);
+  const btn=document.getElementById('authBtn');
+  if(!btn) return;
+
   if(auth){
     auth.onAuthStateChanged(user=>{
+      console.log('Auth state:', user);
       isAdmin=!!(user && user.email==='agentdh@naver.com');
       btn.textContent=isAdmin?'로그아웃':'관리자 로그인';
       btn.onclick=isAdmin?logoutGoogle:loginWithGoogle;
       updateEditorVisibility();
     });
-  } else {
-    btn.style.display='none';
+  }else{
+    btn.textContent='관리자 로그인';
+    btn.onclick=loginWithGoogle;
   }
 });
 
 const PROFILE_DOC_PATH=['portfolio','profile'];
 const CARDS_COL_PATH=['portfolio','cards','items'];
+
+const GITHUB_OWNER='agentdh';
+const GITHUB_REPO='portfolio';
+const GITHUB_BRANCH='main';
+const GITHUB_FOLDER_MAP={
+  'thumbnail-ld':'thumbnail/ld-thumbnail',
+  'thumbnail-sd':'thumbnail/sd-thumbnail',
+  'thumbnail-composite':'thumbnail/composite-thumbnail',
+  'illust-simple':'illustration/simple',
+  'illust-line':'illustration/line',
+  'illust-semi-painted':'illustration/semi-render',
+  'illust-cover':'illustration/cover',
+  'work3d-character':'3d/character',
+  'work3d-item':'3d/item',
+  'work3d-bg':'3d/background',
+  'live2d-work':'live2d',
+  'pixel-cursor':'pixelart/cursor',
+  'pixel-illust':'pixelart/illustration',
+  'pixel-game':'pixelart/game-assets',
+  'mc-skin':'minecraft/skin',
+  'mc-model':'minecraft/modeling',
+  'mc-animation':'minecraft/animation',
+  'mc-resource':'minecraft/resourcepack',
+  'mvAnimationGrid':'animation-video/mv',
+  'animation2DGrid':'animation-video/animation-2d',
+  'animation3DGrid':'animation-video/animation-3d',
+  'virtualPropGrid':'animation-video/virtual-props',
+  'brand-wait':'branding/waiting-screen',
+  'brand-symbol':'branding/symbol',
+  'brand-emote':'branding/emote',
+  'brand-poster':'branding/poster',
+  'brand-etc':'branding/etc'
+};
+const IMAGE_EXTS=['jpg','jpeg','png','gif','webp','avif'];
+const VIDEO_EXTS=['mp4','webm','mov'];
+let autoFolderItems=[];
+
 
 function getProfileDoc(){return db.collection(PROFILE_DOC_PATH[0]).doc(PROFILE_DOC_PATH[1]);}
 function getCardsCol(){return db.collection(CARDS_COL_PATH[0]).doc(CARDS_COL_PATH[1]).collection(CARDS_COL_PATH[2]);}
@@ -2322,6 +2385,59 @@ function ensureFirestore(){
   alert('Firebase 설정이 아직 연결되지 않았습니다. index.html의 firebaseConfig 값을 먼저 교체해주세요.');
   return false;
 }
+
+function getFileExt(name){
+  const m=String(name||'').toLowerCase().match(/\.([a-z0-9]+)$/);
+  return m?m[1]:'';
+}
+function getMediaTypeByName(name){
+  const ext=getFileExt(name);
+  if(IMAGE_EXTS.includes(ext))return 'image';
+  if(VIDEO_EXTS.includes(ext))return 'video';
+  return null;
+}
+function titleFromFilename(name){
+  return String(name||'').replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').trim() || '제목 없음';
+}
+function autoDocIdFromSource(sourcePath){
+  let h=0;
+  for(let i=0;i<sourcePath.length;i++){
+    h=((h<<5)-h)+sourcePath.charCodeAt(i);
+    h|=0;
+  }
+  return 'auto_'+Math.abs(h);
+}
+async function fetchGithubFolder(gridId,folderPath){
+  const api=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folderPath).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
+  try{
+    const res=await fetch(api,{headers:{'Accept':'application/vnd.github+json'}});
+    if(!res.ok)return [];
+    const files=await res.json();
+    if(!Array.isArray(files))return [];
+    return files
+      .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
+      .map(f=>({
+        grid:gridId,
+        type:getMediaTypeByName(f.name),
+        title:titleFromFilename(f.name),
+        desc:'',
+        url:f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folderPath}/${f.name}`,
+        sourcePath:`${folderPath}/${f.name}`,
+        sourceKind:'github'
+      }));
+  }catch(err){
+    console.warn('GitHub 폴더 스캔 실패:',folderPath,err);
+    return [];
+  }
+}
+async function loadGithubFolderItems(){
+  autoFolderItems=[];
+  const entries=Object.entries(GITHUB_FOLDER_MAP);
+  const results=await Promise.all(entries.map(([gridId,folder])=>fetchGithubFolder(gridId,folder)));
+  autoFolderItems=results.flat();
+  return autoFolderItems;
+}
+
 
 /* ── PORTFOLIO CARD ── */
 function extractYtId(url){
@@ -2358,6 +2474,9 @@ function makeCardEl(item,docId){
   card.dataset.url=item.url||'';
   card.dataset.title=item.title||'';
   card.dataset.desc=item.desc||'';
+  card.dataset.grid=item.grid||'';
+  card.dataset.sourcePath=item.sourcePath||'';
+  card.dataset.sourceKind=item.sourceKind||'';
   const type=item.type||'image';
   const title=escapeHTML(item.title||'제목 없음');
   const desc=escapeHTML(item.desc||'');
@@ -2387,12 +2506,15 @@ function makeCardEl(item,docId){
   }
   card.setAttribute('onclick',onClick);
   card.innerHTML=`
+    <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
     ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
     <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
     <span class="type-badge ${badgeClass}">${badge}</span>
     <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
+  updateEditorVisibility();
   return card;
 }
+
 function insertCardToGrid(item,docId){
   const grid=document.getElementById(item.grid);
   if(!grid)return;
@@ -2403,15 +2525,33 @@ function insertCardToGrid(item,docId){
   else grid.appendChild(card);
 }
 async function loadCards(){
-  if(!FIRESTORE_READY)return;
-  try{
-    const snap=await getCardsCol().orderBy('createdAt','asc').get();
-    snap.forEach(doc=>insertCardToGrid(doc.data(),doc.id));
-  }catch(err){
-    console.error('카드 불러오기 실패:',err);
-    alert('Firestore 카드 불러오기에 실패했습니다. Firestore 규칙과 firebaseConfig를 확인해주세요.');
+  const firestoreItems=[];
+  const metaBySource={};
+
+  if(FIRESTORE_READY){
+    try{
+      const snap=await getCardsCol().orderBy('createdAt','asc').get();
+      snap.forEach(doc=>{
+        const item=doc.data();
+        item._docId=doc.id;
+        if(item.sourcePath)metaBySource[item.sourcePath]=item;
+        else firestoreItems.push(item);
+      });
+    }catch(err){
+      console.error('카드 불러오기 실패:',err);
+      alert('Firestore 카드 불러오기에 실패했습니다. Firestore 규칙과 firebaseConfig를 확인해주세요.');
+    }
   }
+
+  autoFolderItems.forEach(autoItem=>{
+    const meta=metaBySource[autoItem.sourcePath]||{};
+    const merged={...autoItem,...meta,sourcePath:autoItem.sourcePath,sourceKind:'github'};
+    insertCardToGrid(merged,meta._docId||autoDocIdFromSource(autoItem.sourcePath));
+  });
+
+  firestoreItems.forEach(item=>insertCardToGrid(item,item._docId));
 }
+
 async function saveCard(item){
   if(!ensureFirestore())return null;
   const ref=await getCardsCol().add({
@@ -2444,7 +2584,13 @@ function closeVideoOnly(){
 /* ── ADD MODAL ── */
 let _targetGrid='';
 let _currentType='image';
+let _editingDocId='';
+let _editingSourcePath='';
 function openAddModal(gridId,label){
+  _editingDocId='';
+  _editingSourcePath='';
+  const submitBtn=document.getElementById('addSubmitBtn');
+  if(submitBtn)submitBtn.textContent='추가하기';
   const clicked=window.event?.currentTarget;
   const actualGrid=clicked?.closest('.grid-3,.grid-2');
   _targetGrid=(actualGrid&&actualGrid.id)?actualGrid.id:gridId;
@@ -2484,6 +2630,47 @@ function selType(btn){
     document.getElementById('iUrl').placeholder='https://youtube.com/watch?v=...';
   }
 }
+function updateCardElement(docId,item){
+  const old=document.querySelector(`[data-doc-id="${docId}"]`);
+  if(!old)return;
+  const fresh=makeCardEl(item,docId);
+  old.replaceWith(fresh);
+}
+function editCard(e,docId){
+  e.stopPropagation();
+  const card=e.currentTarget.closest('.card');
+  if(!card)return;
+
+  _editingDocId=docId||'';
+  _editingSourcePath=card.dataset.sourcePath||'';
+  _targetGrid=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+  _currentType=card.dataset.type||'image';
+
+  document.getElementById('addModalTitle').textContent='작업물 수정';
+  document.getElementById('iTitle').value=card.dataset.title||'';
+  document.getElementById('iUrl').value=card.dataset.url||'';
+  document.getElementById('iDesc').value=card.dataset.desc||'';
+
+  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
+  document.getElementById('fileGrp').style.display='none';
+  document.getElementById('urlGrp').style.display='block';
+
+  if(_currentType==='image'){
+    document.getElementById('urlLbl').textContent='이미지 URL';
+    document.getElementById('iUrl').placeholder='./images/work01.jpg 또는 https://...';
+  }else if(_currentType==='link'){
+    document.getElementById('urlLbl').textContent='URL';
+    document.getElementById('iUrl').placeholder='https://';
+  }else{
+    document.getElementById('urlLbl').textContent='영상 URL';
+    document.getElementById('iUrl').placeholder='https://youtube.com/watch?v=...';
+  }
+
+  const submitBtn=document.getElementById('addSubmitBtn');
+  if(submitBtn)submitBtn.textContent='수정 저장';
+  openModal('addModal');
+}
 async function addItem(){
   const title=document.getElementById('iTitle').value.trim()||'제목 없음';
   const desc=document.getElementById('iDesc').value.trim();
@@ -2492,7 +2679,26 @@ async function addItem(){
   const grid=document.getElementById(_targetGrid);
   if(!grid){alert('추가할 위치를 찾지 못했습니다.');return;}
   const item={grid:_targetGrid,type:_currentType,url,title,desc};
+
   try{
+    if(_editingDocId){
+      const sourcePath=_editingSourcePath||'';
+      const saveData={
+        ...item,
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      };
+      if(sourcePath){
+        saveData.sourcePath=sourcePath;
+        saveData.sourceKind='github';
+      }
+      await getCardsCol().doc(_editingDocId).set(saveData,{merge:true});
+      updateCardElement(_editingDocId,{...item,sourcePath,sourceKind:sourcePath?'github':''});
+      _editingDocId='';
+      _editingSourcePath='';
+      closeModal('addModal');
+      return;
+    }
+
     const docId=await saveCard(item);
     if(docId)insertCardToGrid(item,docId);
     closeModal('addModal');
@@ -2542,8 +2748,9 @@ async function saveProfile(){
   closeModal('profileModal');
 }
 
-window.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('DOMContentLoaded',async()=>{
   loadProfile();
+  await loadGithubFolderItems();
   loadCards();
 });
 
