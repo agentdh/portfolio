@@ -276,6 +276,10 @@ border-radius:0;
 .type-tabs{display:flex;gap:6px;margin-bottom:16px}
 .type-tab{flex:1;padding:8px;border-radius:7px;border:1px solid var(--border2);background:none;color:var(--text-dim);font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;}
 .type-tab.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.07)}
+
+.source-file-info{display:none;background:rgba(0,229,255,.045);border:1px solid rgba(0,229,255,.18);border-radius:8px;padding:9px 12px;margin-bottom:14px;}
+.source-file-info label{display:block;font-size:10px;color:var(--text-dim);margin-bottom:4px;letter-spacing:.04em;}
+.source-file-name{font-size:12px;color:var(--cyan);font-family:'Space Mono',monospace;word-break:break-all;line-height:1.5;}
 .btn-primary{width:100%;padding:11px;background:var(--cyan);color:#0D0D14;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:opacity .2s;}
 .btn-primary:hover{opacity:.88}
 .video-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center;}
@@ -2009,6 +2013,10 @@ id="work-branding">
       <button class="type-tab" data-type="video" onclick="selType(this)">▶ 영상</button>
       <button class="type-tab" data-type="link" onclick="selType(this)">🔗 링크</button>
     </div>
+    <div class="source-file-info" id="sourceFileInfo">
+      <label>원본 파일명</label>
+      <div class="source-file-name" id="sourceFileName">-</div>
+    </div>
     <div class="form-group"><label>제목</label><input type="text" id="iTitle" placeholder="작업물 이름"></div>
     <div class="form-group" id="urlGrp"><label id="urlLbl">URL</label><input type="url" id="iUrl" placeholder="https://"></div>
     <div class="form-group" id="fileGrp" style="display:none"><label>이미지 파일</label><input type="file" id="iFile" accept="image/*" style="color:var(--text-dim)"></div>
@@ -2407,6 +2415,37 @@ function getMediaTypeByName(name){
 function titleFromFilename(name){
   return String(name||'').replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').trim() || '제목 없음';
 }
+function filenameFromPath(path){
+  return String(path||'').split('/').filter(Boolean).pop() || '';
+}
+function setSourceFileInfo(path){
+  const box=document.getElementById('sourceFileInfo');
+  const name=document.getElementById('sourceFileName');
+  if(!box||!name)return;
+  const file=filenameFromPath(path);
+  if(file){
+    name.textContent=file;
+    box.style.display='block';
+  }else{
+    name.textContent='-';
+    box.style.display='none';
+  }
+}
+function setTypeTabsVisible(visible){
+  const tabs=document.querySelector('.type-tabs');
+  if(tabs)tabs.style.display=visible?'flex':'none';
+}
+function setUrlFieldMode({visible=true,readonly=false,label='URL',placeholder='https://'}={}){
+  const grp=document.getElementById('urlGrp');
+  const input=document.getElementById('iUrl');
+  const lbl=document.getElementById('urlLbl');
+  if(grp)grp.style.display=visible?'block':'none';
+  if(input){
+    input.readOnly=!!readonly;
+    input.placeholder=placeholder;
+  }
+  if(lbl)lbl.textContent=label;
+}
 function autoDocIdFromSource(sourcePath){
   let h=0;
   for(let i=0;i<sourcePath.length;i++){
@@ -2648,7 +2687,7 @@ function makeCardEl(item,docId){
   card.setAttribute('onclick','openCardFromElement(this)');
   card.innerHTML=`
     <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
-    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
+    ${(docId && item.sourceKind!=='github')?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
     <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
     <span class="type-badge ${badgeClass}">${badge}</span>
     <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
@@ -2732,23 +2771,24 @@ function openAddModal(gridId,label){
   _editingSourcePath='';
   _editingStaticKey='';
   const submitBtn=document.getElementById('addSubmitBtn');
-  if(submitBtn)submitBtn.textContent='추가하기';
+  if(submitBtn)submitBtn.textContent='링크 추가';
   const clicked=window.event?.currentTarget;
   const actualGrid=clicked?.closest('.grid-3,.grid-2');
   _targetGrid=(actualGrid&&actualGrid.id)?actualGrid.id:gridId;
-  document.getElementById('addModalTitle').textContent=label+' 추가';
+  _currentType='link';
+  document.getElementById('addModalTitle').textContent=label+' 링크 추가';
   ['iTitle','iUrl','iDesc'].forEach(id=>{document.getElementById(id).value=''});
   const file=document.getElementById('iFile');
   if(file)file.value='';
-  _currentType='image';
+  setSourceFileInfo('');
+  setTypeTabsVisible(false);
   document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelector('.type-tab[data-type="image"]')?.classList.add('active');
+  document.querySelector('.type-tab[data-type="link"]')?.classList.add('active');
   document.getElementById('fileGrp').style.display='none';
-  document.getElementById('urlGrp').style.display='block';
-  document.getElementById('urlLbl').textContent='이미지 URL';
-  document.getElementById('iUrl').placeholder='./images/work01.jpg 또는 https://...';
+  setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
   openModal('addModal');
 }
+
 function openModal(id){
   if(id==='profileModal')fillProfileModal();
   document.getElementById(id).classList.add('open');
@@ -2760,18 +2800,10 @@ function selType(btn){
   btn.classList.add('active');
   _currentType=btn.dataset.type;
   document.getElementById('fileGrp').style.display='none';
-  document.getElementById('urlGrp').style.display='block';
-  if(_currentType==='image'){
-    document.getElementById('urlLbl').textContent='이미지 URL';
-    document.getElementById('iUrl').placeholder='./images/work01.jpg 또는 https://...';
-  }else if(_currentType==='link'){
-    document.getElementById('urlLbl').textContent='URL';
-    document.getElementById('iUrl').placeholder='https://';
-  }else{
-    document.getElementById('urlLbl').textContent='영상 URL';
-    document.getElementById('iUrl').placeholder='https://youtube.com/watch?v=...';
-  }
+  setSourceFileInfo('');
+  setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
 }
+
 function updateCardElement(docId,item){
   const old=document.querySelector(`[data-doc-id="${docId}"]`);
   if(!old)return;
@@ -2796,23 +2828,21 @@ function editCard(e,docId){
   document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
   document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
   document.getElementById('fileGrp').style.display='none';
-  document.getElementById('urlGrp').style.display='block';
 
-  if(_currentType==='image'){
-    document.getElementById('urlLbl').textContent='이미지 URL';
-    document.getElementById('iUrl').placeholder='./images/work01.jpg 또는 https://...';
-  }else if(_currentType==='link'){
-    document.getElementById('urlLbl').textContent='URL';
-    document.getElementById('iUrl').placeholder='https://';
+  const isGithubSource=!!_editingSourcePath || card.dataset.sourceKind==='github';
+  setSourceFileInfo(isGithubSource ? _editingSourcePath : '');
+  setTypeTabsVisible(false);
+  if(isGithubSource){
+    setUrlFieldMode({visible:false,readonly:true,label:'원본 URL',placeholder:''});
   }else{
-    document.getElementById('urlLbl').textContent='영상 URL';
-    document.getElementById('iUrl').placeholder='https://youtube.com/watch?v=...';
+    setUrlFieldMode({visible:true,readonly:false,label:_currentType==='link'?'링크 URL':'URL',placeholder:'https://'});
   }
 
   const submitBtn=document.getElementById('addSubmitBtn');
   if(submitBtn)submitBtn.textContent='수정 저장';
   openModal('addModal');
 }
+
 function editStaticCard(e){
   e.stopPropagation();
   const card=e.currentTarget.closest('.card');
@@ -2833,20 +2863,27 @@ function editStaticCard(e){
   document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
   document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
   document.getElementById('fileGrp').style.display='none';
-  document.getElementById('urlGrp').style.display='block';
-  document.getElementById('urlLbl').textContent=_currentType==='video'?'영상 URL':(_currentType==='link'?'URL':'이미지 URL');
+  setSourceFileInfo('');
+  setTypeTabsVisible(false);
+  setUrlFieldMode({visible:true,readonly:false,label:_currentType==='link'?'링크 URL':'URL',placeholder:'https://'});
 
   const submitBtn=document.getElementById('addSubmitBtn');
   if(submitBtn)submitBtn.textContent='수정 저장';
   openModal('addModal');
 }
+
 async function addItem(){
   const title=document.getElementById('iTitle').value.trim()||'제목 없음';
   const desc=document.getElementById('iDesc').value.trim();
   const url=document.getElementById('iUrl').value.trim();
-  if(!url){alert(_currentType==='image'?'이미지 URL을 입력해주세요.':'URL을 입력해주세요.');return;}
   const grid=document.getElementById(_targetGrid);
   if(!grid){alert('추가할 위치를 찾지 못했습니다.');return;}
+  if(!_editingDocId && !_editingStaticKey){
+    _currentType='link';
+    if(!url){alert('링크 URL을 입력해주세요.');return;}
+  }else if(!_editingSourcePath && !url){
+    alert('URL을 입력해주세요.');return;
+  }
   const item={grid:_targetGrid,type:_currentType,url,title,desc};
 
   try{
@@ -2881,14 +2918,16 @@ async function addItem(){
       return;
     }
 
-    const docId=await saveCard(item);
-    if(docId)insertCardToGrid(item,docId);
+    const linkItem={grid:_targetGrid,type:'link',url,title,desc};
+    const docId=await saveCard(linkItem);
+    if(docId)insertCardToGrid(linkItem,docId);
     closeModal('addModal');
   }catch(err){
     console.error('카드 저장 실패:',err);
     alert('카드 저장에 실패했습니다. Firestore 설정을 확인해주세요.');
   }
 }
+
 
 /* ── PROFILE ── */
 function fillProfileModal(){
