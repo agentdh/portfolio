@@ -514,6 +514,11 @@ id="work-illust">
       <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
     </div>
     </div>
+<div class="portfolio-section-title">컨셉아트</div><div class="grid-3 fade-in" id="illust-conceptart">
+      <div class="card-add" onclick="openAddModal('illustGrid','컨셉아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>컨셉아트 추가
+    </div>
+    </div>
   </div>
 
   <div class="sub-panel" 
@@ -1035,145 +1040,151 @@ id="work-animation">
 	  </div>
     </div>
     <div class="option-block"><div class="option-block-title">배경 추가</div>
-      <div class="option-row"><div class="opt-name">단색 배경</div><div class="opt-price free">추가금 없음</div></div>
+      <div class="option-row"><div class="opt-name">단색 배경</div><div class="opt-price">추가금 없음</div></div>
       <div class="option-row"><div class="opt-name">패턴 배경</div><div class="opt-price add">+20,000</div></div>
       <div class="option-row"><div class="opt-name">자연물 ~ 인공물</div><div class="opt-price add">+40,000~</div></div>
-      <div class="option-row"><div class="opt-name">컨셉아트</div><div class="opt-price">105,000+α</div></div>
+    </div>
+	<div class="option-block"><div class="option-block-title">컨셉아트</div>
+      <div class="option-row"><div class="opt-name">기본금</div><div class="opt-price free">105,000</div></div>
+      <div class="option-row"><div class="opt-name">셀채색(얇은선)</div><div class="opt-price add">+30,000</div></div>
+      <div class="option-row"><div class="opt-name">반무테</div><div class="opt-price add">+50,000~</div></div>
+      <div class="option-row"><div class="opt-name">정면 추가</div><div class="opt-price add">+35,000~</div></div>
+      <div class="option-row"><div class="opt-name">정면+후면 추가</div><div class="opt-price add">+50,000~</div></div>
     </div>
 
 </div>
 <div class="calc-box" id="calc-illust">
-      <div class="calc-title">가격 옵션</div>
-        <div class="calc-select-group" data-calc="illust">
-          <label>비상업용</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'illust\')">
-              <option value="0">선택하세요.</option>
-              <option value="10000">흉상 (10,000)</option>
-              <option value="40000">반신 (40,000)</option>
-              <option value="65000">전신 (65,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('illust',0,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('illust',0,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="illust">
-          <label>상업용</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'illust\')">
-              <option value="0">선택하세요.</option>
-              <option value="50000">흉상 (50,000)</option>
-              <option value="80000">반신 (80,000)</option>
-              <option value="140000">전신 (140,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('illust',2,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('illust',2,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="illust">
-          <label>방송용</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'illust\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="40000">흉상 (40,000)</option>
-              <option value="75000">반신 (75,000)</option>
-              <option value="115000">전신 (115,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('illust',3,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('illust',3,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="illust">
-          <label>필수옵션_스타일</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'illust\')">
-              <option value="0">선택하세요.</option>
-              <option value="0">심플 (+0)</option>
-              <option value="20000">얇은선 (+20,000)</option>
-              <option value="35000">반무테 (+35,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('illust',4,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('illust',4,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="illust">
-          <label>옵션_배경추가</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'illust\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="0">단색 (추가금없음)</option>
-              <option value="20000">패턴 (+20,000)</option>
-              <option value="40000">자연물~인공물 (+40,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('illust',5,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('illust',5,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="illust">
-          <label>옵션_인원추가</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'illust\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="10000">1명 추가 (+10,000)</option>
-              <option value="20000">2명 추가 (+20,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('illust',6,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('illust',6,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="illust">
-          <label>기타</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'illust\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="105000">컨셉아트 (105,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('illust',7,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('illust',7,+1)">+</button>
-            </div>
-          </div>
-        </div>
-      <div class="calc-divider"></div>
-      <div class="calc-extra">
-        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-illust">
-        <button onclick="applyExtra('illust')">추가</button>
-      </div>
-      <div class="calc-items-box"></div>
-      <div class="calc-total-row">
-        <span class="calc-total-label">결제 금액</span>
-        <span class="calc-total-price">0원</span>
-      </div>
-      <div class="calc-btn-row">
-        <button class="calc-action-btn add-order" onclick="addOrder('illust',false)">+ 주문 추가</button>
-        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('illust',true)">옵션 유지 추가</button>
-      </div>
-      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('illust')">초기화</button>
-      <div class="calc-orders"></div>
+  <div class="calc-title">가격 옵션</div>
+
+  <div class="calc-select-group" data-calc="illust">
+    <label>유형1</label>
+    <div class="calc-select-row">
+      <select onchange="handleIllustTypeChange()">
+        <option value="0">선택하세요.</option>
+        <option value="illustration">일러스트</option>
+        <option value="concept">컨셉아트</option>
+      </select>
     </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="illust" id="illustType2Wrap">
+    <label>유형2</label>
+    <div class="calc-select-row">
+      <select onchange="handleIllustTypeChange()">
+        <option value="0">선택하세요.</option>
+        <option value="noncommercial">비상업용</option>
+        <option value="commercial">상업용</option>
+        <option value="broadcast">방송용</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="illust">
+    <label>필수옵션_기준</label>
+    <div class="calc-select-row">
+      <select id="illustBaseSelect" onchange="handleOptionChange(this,'illust')">
+        <option value="0">선택하세요.</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="illust">
+    <label>필수옵션_스타일</label>
+    <div class="calc-select-row">
+      <select id="illustStyleSelect" onchange="handleOptionChange(this,'illust')">
+        <option value="0">선택하세요.</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="illust">
+    <label>옵션_배경추가</label>
+    <div class="calc-select-row">
+      <select onchange="handleOptionChange(this,'illust')">
+        <option value="0">없음</option>
+        <option value="0">단색 (추가금없음)</option>
+        <option value="20000">패턴 (+20,000)</option>
+        <option value="40000">자연물~인공물 (+40,000)</option>
+      </select>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('illust',4,-1)">−</button>
+        <div class="qty-val">0</div>
+        <button class="qty-btn" onclick="changeQty('illust',4,+1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="illust">
+  <label>옵션_인원추가</label>
+  <div class="calc-select-row">
+    <div style="flex:1;color:var(--text-dim);font-size:12px;">
+      추가 인원 수
+    </div>
+    <div class="qty-ctrl">
+      <button class="qty-btn" onclick="
+        const group=this.closest('.calc-select-group');
+        const qty=group.querySelector('.qty-val');
+        let v=Math.max(0,(parseInt(qty.textContent)||0)-1);
+        qty.textContent=v;
+        calcFromDOM('illust');
+      ">−</button>
+
+      <div class="qty-val">0</div>
+
+      <button class="qty-btn" onclick="
+        const group=this.closest('.calc-select-group');
+        const qty=group.querySelector('.qty-val');
+        let v=(parseInt(qty.textContent)||0)+1;
+        qty.textContent=v;
+        calcFromDOM('illust');
+      ">+</button>
+    </div>
+  </div>
+
+  <select style="display:none">
+    <option value="1">인원 추가</option>
+  </select>
+</div>
+
+  <div class="calc-select-group" data-calc="illust">
+    <label>옵션_의상추가</label>
+    <div class="calc-select-row">
+      <select onchange="handleOptionChange(this,'illust')">
+        <option value="0">없음</option>
+        <option value="35000">정면 추가 (+35,000)</option>
+        <option value="50000">정면 + 후면 추가 (+50,000)</option>
+      </select>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('illust',6,-1)">−</button>
+        <div class="qty-val">0</div>
+        <button class="qty-btn" onclick="changeQty('illust',6,+1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-divider"></div>
+
+  <div class="calc-extra">
+    <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-illust">
+    <button onclick="applyExtra('illust')">추가</button>
+  </div>
+
+  <div class="calc-items-box"></div>
+
+  <div class="calc-total-row">
+    <span class="calc-total-label">결제 금액</span>
+    <span class="calc-total-price">0원</span>
+  </div>
+
+  <div class="calc-btn-row">
+    <button class="calc-action-btn add-order" onclick="addOrder('illust',false)">+ 주문 추가</button>
+    <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('illust',true)">옵션 유지 추가</button>
+  </div>
+
+  <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('illust')">초기화</button>
+
+  <div class="calc-orders"></div>
+</div>
 </div>
 </div>
 
@@ -1869,107 +1880,188 @@ id="work-animation">
 
 </div>
 <div class="calc-box" id="calc-anim">
-      <div class="calc-title">가격 옵션</div>
-        <div class="calc-select-group" data-calc="anim">
-          <label>유형</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'anim\')">
-              <option value="0">선택하세요.</option>
-              <option value="25000">2D 애니메이션 기본 (25,000)</option>
-              <option value="40000">3D 애니메이션 기본 (40,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('anim',0,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('anim',0,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="anim">
-          <label>2D 장수 추가</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'anim\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="5000">+1장 (+5,000)</option>
-              <option value="15000">+3장 (+15,000)</option>
-              <option value="25000">+5장 (+25,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('anim',1,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('anim',1,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="anim">
-          <label>3D 초과 (30초당)</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'anim\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="60000">+30초 (+60,000)</option>
-              <option value="120000">+60초 (+120,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('anim',2,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('anim',2,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="anim">
-          <label>일러스트 추가 (2D)</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'anim\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="20000">흉상 (+20,000)</option>
-              <option value="60000">전신 (+60,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('anim',3,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('anim',3,+1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="calc-select-group" data-calc="anim">
-          <label>편집/기타</label>
-          <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'anim\')">
-              <option value="0">없음</option>
-              <option value="0">없음</option>
-              <option value="30000">3D 편집 추가 (+30,000)</option>
-              <option value="5000">필터 제작 (5,000)</option>
-              <option value="10000">이펙트/화면전환 (10,000)</option>
-              <option value="70000">노래커버 편집 (70,000)</option>
-              <option value="15000">타이포소스 (15,000)</option>
-            </select>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty('anim',4,-1)">−</button>
-              <div class="qty-val">0</div>
-              <button class="qty-btn" onclick="changeQty('anim',4,+1)">+</button>
-            </div>
-          </div>
-        </div>
-      <div class="calc-divider"></div>
-      <div class="calc-extra">
-        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-anim">
-        <button onclick="applyExtra('anim')">추가</button>
+  <div class="calc-title">가격 옵션</div>
+
+  <div class="calc-select-group" data-calc="anim">
+    <label>유형</label>
+    <div class="calc-select-row">
+      <select onchange="handleOptionChange(this,'anim')">
+        <option value="0">선택하세요.</option>
+        <option value="25000">2D 애니메이션 기본 (25,000)</option>
+        <option value="40000">3D 애니메이션 기본 (40,000)</option>
+      </select>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('anim',0,-1)">−</button>
+        <div class="qty-val">0</div>
+        <button class="qty-btn" onclick="changeQty('anim',0,+1)">+</button>
       </div>
-      <div class="calc-items-box"></div>
-      <div class="calc-total-row">
-        <span class="calc-total-label">결제 금액</span>
-        <span class="calc-total-price">0원</span>
-      </div>
-      <div class="calc-btn-row">
-        <button class="calc-action-btn add-order" onclick="addOrder('anim',false)">+ 주문 추가</button>
-        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('anim',true)">옵션 유지 추가</button>
-      </div>
-      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('anim')">초기화</button>
-      <div class="calc-orders"></div>
     </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="anim">
+    <label>2D 장수 추가</label>
+    <div class="calc-select-row">
+      <select onchange="handleOptionChange(this,'anim')">
+        <option value="0">없음</option>
+        <option value="5000">+1장 (+5,000)</option>
+        <option value="15000">+3장 (+15,000)</option>
+        <option value="25000">+5장 (+25,000)</option>
+      </select>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('anim',1,-1)">−</button>
+        <div class="qty-val">0</div>
+        <button class="qty-btn" onclick="changeQty('anim',1,+1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="anim">
+    <label>3D 1분 초과시 (30초당)</label>
+    <div class="calc-select-row">
+      <select onchange="handleOptionChange(this,'anim')">
+        <option value="0">없음</option>
+        <option value="60000">+30초 (+60,000)</option>
+        <option value="120000">+60초 (+120,000)</option>
+      </select>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('anim',2,-1)">−</button>
+        <div class="qty-val">0</div>
+        <button class="qty-btn" onclick="changeQty('anim',2,+1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="anim">
+    <label>일러스트 추가 (2D)</label>
+    <div class="calc-select-row">
+      <select onchange="handleOptionChange(this,'anim')">
+        <option value="0">없음</option>
+        <option value="20000">흉상 (+20,000)</option>
+        <option value="60000">전신 (+60,000)</option>
+      </select>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('anim',3,-1)">−</button>
+        <div class="qty-val">0</div>
+        <button class="qty-btn" onclick="changeQty('anim',3,+1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="anim">
+  <label>3D 편집 추가 (회당 +30,000)</label>
+  <div class="calc-select-row">
+    <div style="flex:1;color:var(--text-dim);font-size:12px;">
+      횟수 선택
+    </div>
+    <div class="qty-ctrl">
+      <button class="qty-btn" onclick="
+        const group=this.closest('.calc-select-group');
+        const qty=group.querySelector('.qty-val');
+        let v=Math.max(0,(parseInt(qty.textContent)||0)-1);
+        qty.textContent=v;
+        calcFromDOM('anim');
+      ">−</button>
+
+      <div class="qty-val">0</div>
+
+      <button class="qty-btn" onclick="
+        const group=this.closest('.calc-select-group');
+        const qty=group.querySelector('.qty-val');
+        let v=(parseInt(qty.textContent)||0)+1;
+        qty.textContent=v;
+        calcFromDOM('anim');
+      ">+</button>
+    </div>
+  </div>
+
+  <select style="display:none">
+    <option value="30000">3D 편집 추가</option>
+  </select>
+</div>
+
+<div class="calc-select-group" data-calc="anim">
+    <div style="flex:1;color:var(--text-dim);font-size:20px;">
+    <span>필터 제작 (+5,000)</span>
+    <button type="button" class="toggle-btn" onclick="
+      this.classList.toggle('active');
+      this.innerText=this.classList.contains('active')?'ON':'OFF';
+      this.closest('.calc-select-group').querySelector('select').value=this.classList.contains('active')?'5000':'0';
+      this.closest('.calc-select-group').querySelector('.qty-val').textContent=this.classList.contains('active')?'1':'0';
+      calcFromDOM('anim');
+    ">OFF</button>
+  </div>
+  <select style="display:none"><option value="0">없음</option><option value="5000">필터 제작 (+5,000)</option></select>
+  <div class="qty-val" style="display:none">0</div>
+</div>
+
+<div class="calc-select-group" data-calc="anim">
+    <div style="flex:1;color:var(--text-dim);font-size:20px;">
+    <span>이펙트/화면전환 (+10,000)</span>
+    <button type="button" class="toggle-btn" onclick="
+      this.classList.toggle('active');
+      this.innerText=this.classList.contains('active')?'ON':'OFF';
+      this.closest('.calc-select-group').querySelector('select').value=this.classList.contains('active')?'10000':'0';
+      this.closest('.calc-select-group').querySelector('.qty-val').textContent=this.classList.contains('active')?'1':'0';
+      calcFromDOM('anim');
+    ">OFF</button>
+  </div>
+  <select style="display:none"><option value="0">없음</option><option value="10000">이펙트/화면전환 (+10,000)</option></select>
+  <div class="qty-val" style="display:none">0</div>
+</div>
+
+<div class="calc-select-group" data-calc="anim">
+    <div style="flex:1;color:var(--text-dim);font-size:20px;">
+    <span>노래커버 편집 (+70,000)</span>
+    <button type="button" class="toggle-btn" onclick="
+      this.classList.toggle('active');
+      this.innerText=this.classList.contains('active')?'ON':'OFF';
+      this.closest('.calc-select-group').querySelector('select').value=this.classList.contains('active')?'70000':'0';
+      this.closest('.calc-select-group').querySelector('.qty-val').textContent=this.classList.contains('active')?'1':'0';
+      calcFromDOM('anim');
+    ">OFF</button>
+  </div>
+  <select style="display:none"><option value="0">없음</option><option value="70000">노래커버 편집 (+70,000)</option></select>
+  <div class="qty-val" style="display:none">0</div>
+</div>
+
+<div class="calc-select-group" data-calc="anim">
+    <div style="flex:1;color:var(--text-dim);font-size:20px;">
+    <span>타이포소스 (+15,000)</span>
+    <button type="button" class="toggle-btn" onclick="
+      this.classList.toggle('active');
+      this.innerText=this.classList.contains('active')?'ON':'OFF';
+      this.closest('.calc-select-group').querySelector('select').value=this.classList.contains('active')?'15000':'0';
+      this.closest('.calc-select-group').querySelector('.qty-val').textContent=this.classList.contains('active')?'1':'0';
+      calcFromDOM('anim');
+    ">OFF</button>
+  </div>
+  <select style="display:none"><option value="0">없음</option><option value="15000">타이포소스 (+15,000)</option></select>
+  <div class="qty-val" style="display:none">0</div>
+</div>
+
+  <div class="calc-divider"></div>
+
+  <div class="calc-extra">
+    <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-anim">
+    <button onclick="applyExtra('anim')">추가</button>
+  </div>
+
+  <div class="calc-items-box"></div>
+
+  <div class="calc-total-row">
+    <span class="calc-total-label">결제 금액</span>
+    <span class="calc-total-price">0원</span>
+  </div>
+
+  <div class="calc-btn-row">
+    <button class="calc-action-btn add-order" onclick="addOrder('anim',false);document.querySelectorAll('#calc-anim input[type=checkbox]').forEach(cb=>cb.checked=false)">+ 주문 추가</button>
+    <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('anim',true)">옵션 유지 추가</button>
+  </div>
+
+  <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('anim');document.querySelectorAll('#calc-anim input[type=checkbox]').forEach(cb=>cb.checked=false)">초기화</button>
+
+  <div class="calc-orders"></div>
+</div>
 </div>
 </div>
 
@@ -2076,6 +2168,31 @@ function calcFromDOM(key){
       c.items.push({name:`${label}: ${optText}`,price:val,qty,groupIndex});
     }
   });
+  
+if(key==='illust'){
+  const peopleGroup = document.querySelectorAll('[data-calc="illust"]')[5];
+
+  if(peopleGroup){
+    const qtyEl = peopleGroup.querySelector('.qty-val');
+    const peopleCount = parseInt(qtyEl?.textContent) || 0;
+
+    c.items = c.items.filter(it => !it.name.includes('옵션_인원추가'));
+
+    if(peopleCount > 0){
+      const subtotal = c.items.reduce((sum,it)=>sum+(it.price*it.qty),0) + c.extraAdj;
+
+      const peoplePrice = Math.round(subtotal * 0.6 * peopleCount);
+
+      c.items.push({
+        name:`옵션_인원추가 (${peopleCount}명)`,
+        price:peoplePrice,
+        qty:1,
+        groupIndex:5
+      });
+    }
+  }
+}
+  
   renderCalc(key);
 }
 
@@ -2104,6 +2221,71 @@ function handleOptionChange(select,key){
   const val=parseInt(select.value)||0;
   qv.textContent=val>0?'1':'0';
   calcFromDOM(key);
+}
+
+function handleIllustTypeChange(){
+  const groups=document.querySelectorAll('#calc-illust select');
+  const type1=groups[0]?.value;
+  const type2=groups[1]?.value;
+
+  const base=document.getElementById('illustBaseSelect');
+  const style=document.getElementById('illustStyleSelect');
+  const type2Wrap=document.getElementById('illustType2Wrap');
+
+  if(!base || !style) return;
+
+  base.innerHTML='<option value="0">선택하세요.</option>';
+  style.innerHTML='<option value="0">선택하세요.</option>';
+
+  if(type1==='concept'){
+    type2Wrap.style.display='none';
+
+    base.innerHTML += `
+      <option value="105000">기본 구성 (105,000)</option>
+      <option value="30000">의상 추가 (+30,000)</option>
+    `;
+
+    style.innerHTML += `
+      <option value="0">심플 (+0)</option>
+      <option value="30000">셀채색 (+30,000)</option>
+      <option value="50000">반무테 (+50,000)</option>
+    `;
+  }
+  else if(type1==='illustration'){
+    type2Wrap.style.display='block';
+
+    if(type2==='noncommercial'){
+      base.innerHTML += `
+        <option value="10000">흉상 (10,000)</option>
+        <option value="40000">반신 (40,000)</option>
+        <option value="65000">전신 (65,000)</option>
+      `;
+    }
+
+    if(type2==='commercial'){
+      base.innerHTML += `
+        <option value="50000">흉상 (50,000)</option>
+        <option value="80000">반신 (80,000)</option>
+        <option value="140000">전신 (140,000)</option>
+      `;
+    }
+
+    if(type2==='broadcast'){
+      base.innerHTML += `
+        <option value="40000">흉상 (40,000)</option>
+        <option value="75000">반신 (75,000)</option>
+        <option value="115000">전신 (115,000)</option>
+      `;
+    }
+
+    style.innerHTML += `
+      <option value="0">심플 (+0)</option>
+      <option value="20000">얇은선 (+20,000)</option>
+      <option value="35000">반무테 (+35,000)</option>
+    `;
+  }
+
+  calcFromDOM('illust');
 }
 
 function renderCalc(key){
@@ -2356,6 +2538,7 @@ const GITHUB_FOLDER_MAP={
   'illust-line':'illustration/line',
   'illust-semi-painted':'illustration/semi-render',
   'illust-cover':'illustration/cover',
+  'illust-conceptart':'illustration/conceptart',
   'work3d-character':'3d/character',
   'work3d-item':'3d/item',
   'work3d-bg':'3d/background',
