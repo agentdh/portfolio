@@ -2013,6 +2013,7 @@ id="work-branding">
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 
 <script>
 /* ── MAIN TAB ── */
@@ -2267,6 +2268,49 @@ try{
 }catch(err){
   console.error('Firebase 초기화 실패:',err);
 }
+
+
+let auth=null;
+let isAdmin=false;
+try{
+  if(FIRESTORE_READY){
+    auth=firebase.auth();
+  }
+}catch(err){console.error(err);}
+
+function updateEditorVisibility(){
+  document.querySelectorAll('.card-add,[onclick*="editProfile"]').forEach(el=>{
+    el.style.display=isAdmin ? '' : 'none';
+  });
+}
+
+function loginWithGoogle(){
+  if(!auth) return;
+  const provider=new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(console.error);
+}
+
+function logoutGoogle(){
+  if(auth) auth.signOut();
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const btn=document.createElement('button');
+  btn.id='authBtn';
+  btn.className='contact-btn';
+  btn.style.marginLeft='12px';
+  document.querySelector('.contact-row')?.appendChild(btn);
+  if(auth){
+    auth.onAuthStateChanged(user=>{
+      isAdmin=!!(user && user.email==='agentdh@naver.com');
+      btn.textContent=isAdmin?'로그아웃':'관리자 로그인';
+      btn.onclick=isAdmin?logoutGoogle:loginWithGoogle;
+      updateEditorVisibility();
+    });
+  } else {
+    btn.style.display='none';
+  }
+});
 
 const PROFILE_DOC_PATH=['portfolio','profile'];
 const CARDS_COL_PATH=['portfolio','cards','items'];
