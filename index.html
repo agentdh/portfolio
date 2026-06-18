@@ -283,6 +283,14 @@ border-radius:0;
 .video-modal{width:90%;max-width:760px;position:relative}
 .video-modal iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:10px}
 .video-modal-close{position:absolute;top:-36px;right:0;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;}
+
+/* MEDIA PREVIEW MODAL */
+.media-preview{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:16px;width:100%;}
+.media-preview-media{width:100%;background:#050509;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.media-preview-media img{max-width:100%;max-height:72vh;display:block;object-fit:contain;}
+.media-preview-media video,.media-preview-media iframe{width:100%;aspect-ratio:16/9;border:none;display:block;background:#000;}
+.media-preview-title{font-size:16px;font-weight:600;color:var(--text);margin-top:14px;line-height:1.5;}
+.media-preview-desc{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.8;white-space:pre-line;}
 .fade-in{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
 
@@ -2021,7 +2029,7 @@ id="work-branding">
 </div>
 <div class="video-modal-backdrop" id="videoModal" onclick="closeVideoModal(event)">
   <div class="video-modal">
-    <button class="video-modal-close" onclick="document.getElementById('videoModal').classList.remove('open')">×</button>
+    <button class="video-modal-close" onclick="closeVideoOnly()">×</button>
     <div id="videoContainer"></div>
   </div>
 </div>
@@ -2448,24 +2456,157 @@ function escapeHTML(v){
   return String(v??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
 }
 function escapeAttr(v){return escapeHTML(v).replace(/'/g,'&#39;');}
-function openCard(item){
-  if(!item||!item.url)return;
-  if(item.type==='video'){
-    const id=extractYtId(item.url||'');
-    if(id){
-      document.getElementById('videoContainer').innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay" allowfullscreen></iframe>`;
-      document.getElementById('videoModal').classList.add('open');
-    }else{window.open(item.url,'_blank')}
-  }else{
-    window.open(item.url,'_blank');
+function isVideoUrl(url){
+  const ytId=extractYtId(url||'');
+  const type=getMediaTypeByName(url||'');
+  return !!ytId || type==='video';
+}
+function getDisplayItemFromCard(card){
+  if(!card)return null;
+  let url=card.dataset.url||'';
+  const onclick=card.getAttribute('onclick')||'';
+  if(!url){
+    const m=onclick.match(/window\.open\(['"]([^'"]+)['"]/);
+    if(m)url=m[1];
   }
+  let type=card.dataset.type||'';
+  if(!type){
+    const badge=(card.querySelector('.type-badge')?.textContent||'').trim().toLowerCase();
+    if(badge.includes('video'))type='video';
+    else if(badge.includes('link'))type='link';
+    else if(url&&isVideoUrl(url))type='video';
+    else type='image';
+  }
+  return {
+    grid:card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'',
+    type,
+    url,
+    title:card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음',
+    desc:card.dataset.desc||card.querySelector('.card-desc')?.textContent?.trim()||'',
+    sourcePath:card.dataset.sourcePath||'',
+    sourceKind:card.dataset.sourceKind||''
+  };
+}
+function openMediaModal(item){
+  if(!item||!item.url)return;
+  if(item.type==='link'){
+    window.open(item.url,'_blank');
+    return;
+  }
+  const container=document.getElementById('videoContainer');
+  if(!container)return;
+  const url=item.url||'';
+  const title=escapeHTML(item.title||'제목 없음');
+  const desc=escapeHTML(item.desc||'');
+  const ytId=extractYtId(url);
+  let mediaHTML='';
+  if(ytId){
+    mediaHTML=`<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay" allowfullscreen></iframe>`;
+  }else if(item.type==='video' || getMediaTypeByName(url)==='video'){
+    mediaHTML=`<video src="${escapeAttr(url)}" controls autoplay playsinline></video>`;
+  }else{
+    mediaHTML=`<img src="${escapeAttr(url)}" alt="${title}">`;
+  }
+  container.innerHTML=`
+    <div class="media-preview">
+      <div class="media-preview-media">${mediaHTML}</div>
+      <div class="media-preview-title">${title}</div>
+      ${desc?`<div class="media-preview-desc">${desc}</div>`:''}
+    </div>`;
+  document.getElementById('videoModal').classList.add('open');
+}
+function openCard(item){
+  openMediaModal(item);
+}
+function openCardFromElement(card){
+  openMediaModal(getDisplayItemFromCard(card));
 }
 function closeVideoModal(e){
   if(e.target===document.getElementById('videoModal')){
-    document.getElementById('videoModal').classList.remove('open');
-    document.getElementById('videoContainer').innerHTML='';
+    closeVideoOnly();
   }
 }
+function closeVideoOnly(){
+  document.getElementById('videoModal').classList.remove('open');
+  document.getElementById('videoContainer').innerHTML='';
+}
+function extractUrlFromOnclickAttr(card){
+  const onclick=card?.getAttribute('onclick')||'';
+  const m=onclick.match(/window\.open\(['"]([^'"]+)['"]/);
+  return m?m[1]:'';
+}
+function staticKeyFromCard(card){
+  const url=card.dataset.url||extractUrlFromOnclickAttr(card)||'';
+  const grid=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+  const raw=`${grid}|${url}|${card.querySelector('.card-title')?.textContent?.trim()||''}`;
+  return 'static_'+autoDocIdFromSource(raw).replace(/^auto_/,'');
+}
+function applyStaticCardMeta(card,meta){
+  if(!card||!meta)return;
+  if(meta.title){
+    card.dataset.title=meta.title;
+    const titleEl=card.querySelector('.card-title');
+    if(titleEl)titleEl.textContent=meta.title;
+  }
+  if(typeof meta.desc==='string'){
+    card.dataset.desc=meta.desc;
+    let descEl=card.querySelector('.card-desc');
+    if(meta.desc){
+      if(!descEl){
+        descEl=document.createElement('div');
+        descEl.className='card-desc';
+        card.querySelector('.card-body')?.appendChild(descEl);
+      }
+      descEl.textContent=meta.desc;
+    }else if(descEl){
+      descEl.remove();
+    }
+  }
+}
+function applyStaticMetadata(metaByStaticKey){
+  document.querySelectorAll('#tab-work .card').forEach(card=>{
+    if(card.closest('.card-add'))return;
+    const key=card.dataset.staticKey||staticKeyFromCard(card);
+    card.dataset.staticKey=key;
+    if(metaByStaticKey&&metaByStaticKey[key])applyStaticCardMeta(card,metaByStaticKey[key]);
+  });
+}
+function enhanceStaticPortfolioCards(){
+  document.querySelectorAll('#tab-work .card').forEach(card=>{
+    if(card.querySelector('.card-edit'))return;
+    const key=card.dataset.staticKey||staticKeyFromCard(card);
+    card.dataset.staticKey=key;
+    if(!card.dataset.grid)card.dataset.grid=card.closest('.grid-3,.grid-2')?.id||'';
+    if(!card.dataset.url)card.dataset.url=extractUrlFromOnclickAttr(card)||'';
+    if(!card.dataset.type){
+      const item=getDisplayItemFromCard(card);
+      card.dataset.type=item.type;
+    }
+    if(!card.dataset.title)card.dataset.title=card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
+    if(!card.dataset.desc)card.dataset.desc=card.querySelector('.card-desc')?.textContent?.trim()||'';
+    const editBtn=document.createElement('button');
+    editBtn.className='card-edit';
+    editBtn.title='수정';
+    editBtn.textContent='수정';
+    editBtn.setAttribute('onclick','editStaticCard(event)');
+    card.insertBefore(editBtn,card.firstChild);
+  });
+  updateEditorVisibility();
+}
+
+document.addEventListener('click',e=>{
+  const card=e.target.closest('#tab-work .card');
+  if(!card)return;
+  if(e.target.closest('.card-edit,.card-del,.card-add'))return;
+  const item=getDisplayItemFromCard(card);
+  if(item&&item.url&&(item.type==='image'||item.type==='video')){
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    openMediaModal(item);
+  }
+},true);
+
 function makeCardEl(item,docId){
   const card=document.createElement('div');
   card.className='card';
@@ -2504,7 +2645,7 @@ function makeCardEl(item,docId){
       : `<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>`;
     onClick=url?`window.open('${safeUrl}','_blank')`:'';
   }
-  card.setAttribute('onclick',onClick);
+  card.setAttribute('onclick','openCardFromElement(this)');
   card.innerHTML=`
     <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
     ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
@@ -2527,6 +2668,7 @@ function insertCardToGrid(item,docId){
 async function loadCards(){
   const firestoreItems=[];
   const metaBySource={};
+  const metaByStaticKey={};
 
   if(FIRESTORE_READY){
     try{
@@ -2535,6 +2677,7 @@ async function loadCards(){
         const item=doc.data();
         item._docId=doc.id;
         if(item.sourcePath)metaBySource[item.sourcePath]=item;
+        else if(item.staticKey)metaByStaticKey[item.staticKey]=item;
         else firestoreItems.push(item);
       });
     }catch(err){
@@ -2550,6 +2693,8 @@ async function loadCards(){
   });
 
   firestoreItems.forEach(item=>insertCardToGrid(item,item._docId));
+  applyStaticMetadata(metaByStaticKey);
+  enhanceStaticPortfolioCards();
 }
 
 async function saveCard(item){
@@ -2576,19 +2721,16 @@ async function deleteCard(e,docId){
     alert('카드 삭제에 실패했습니다.');
   }
 }
-function closeVideoOnly(){
-  document.getElementById('videoModal').classList.remove('open');
-  document.getElementById('videoContainer').innerHTML='';
-}
-
 /* ── ADD MODAL ── */
 let _targetGrid='';
 let _currentType='image';
 let _editingDocId='';
 let _editingSourcePath='';
+let _editingStaticKey='';
 function openAddModal(gridId,label){
   _editingDocId='';
   _editingSourcePath='';
+  _editingStaticKey='';
   const submitBtn=document.getElementById('addSubmitBtn');
   if(submitBtn)submitBtn.textContent='추가하기';
   const clicked=window.event?.currentTarget;
@@ -2671,6 +2813,33 @@ function editCard(e,docId){
   if(submitBtn)submitBtn.textContent='수정 저장';
   openModal('addModal');
 }
+function editStaticCard(e){
+  e.stopPropagation();
+  const card=e.currentTarget.closest('.card');
+  if(!card)return;
+  const item=getDisplayItemFromCard(card);
+  _editingDocId='';
+  _editingSourcePath='';
+  _editingStaticKey=card.dataset.staticKey||staticKeyFromCard(card);
+  card.dataset.staticKey=_editingStaticKey;
+  _targetGrid=item.grid||'';
+  _currentType=item.type||'image';
+
+  document.getElementById('addModalTitle').textContent='작업물 수정';
+  document.getElementById('iTitle').value=item.title||'';
+  document.getElementById('iUrl').value=item.url||'';
+  document.getElementById('iDesc').value=item.desc||'';
+
+  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
+  document.getElementById('fileGrp').style.display='none';
+  document.getElementById('urlGrp').style.display='block';
+  document.getElementById('urlLbl').textContent=_currentType==='video'?'영상 URL':(_currentType==='link'?'URL':'이미지 URL');
+
+  const submitBtn=document.getElementById('addSubmitBtn');
+  if(submitBtn)submitBtn.textContent='수정 저장';
+  openModal('addModal');
+}
 async function addItem(){
   const title=document.getElementById('iTitle').value.trim()||'제목 없음';
   const desc=document.getElementById('iDesc').value.trim();
@@ -2681,6 +2850,19 @@ async function addItem(){
   const item={grid:_targetGrid,type:_currentType,url,title,desc};
 
   try{
+    if(_editingStaticKey){
+      const saveData={...item,staticKey:_editingStaticKey,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+      await getCardsCol().doc(_editingStaticKey).set(saveData,{merge:true});
+      const card=document.querySelector(`[data-static-key="${_editingStaticKey}"]`);
+      if(card){
+        card.dataset.url=url;
+        card.dataset.type=_currentType;
+        applyStaticCardMeta(card,{title,desc});
+      }
+      _editingStaticKey='';
+      closeModal('addModal');
+      return;
+    }
     if(_editingDocId){
       const sourcePath=_editingSourcePath||'';
       const saveData={
@@ -2751,7 +2933,8 @@ async function saveProfile(){
 window.addEventListener('DOMContentLoaded',async()=>{
   loadProfile();
   await loadGithubFolderItems();
-  loadCards();
+  await loadCards();
+  enhanceStaticPortfolioCards();
 });
 
 /* ── FADE IN ── */
