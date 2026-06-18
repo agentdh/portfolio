@@ -557,8 +557,6 @@ id="work-minecraft">
     </div>
     </div>
 <div class="portfolio-section-title">애니메이션</div><div class="grid-3 fade-in" id="mc-animation">
-      <div class="card-desc">마인크래프트 애니메이션</div></div>
-    </div>
       <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
       <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
     </div>
@@ -599,40 +597,30 @@ id="work-branding">
     </div>
   </div>
 
-  <div class="sub-panel" id="work-animation">
-  <div class="portfolio-section-title">MV</div>
-  <div class="grid-3 fade-in" id="mvAnimationGrid">
-    
-        <div class="card-desc">뮤직비디오 애니메이션</div>
-      </div>
-    </div>
-    
-        <div class="card-desc">Shorts MV</div>
-      </div>
-    </div>
-    <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>MV 추가</div>
+  <div class="sub-panel"
+id="work-animation">
+<div class="portfolio-section-title">MV</div><div class="grid-3 fade-in" id="mvAnimationGrid">
+      <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV')">
+	  <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>MV 추가
+	</div>
+	</div>
+<div class="portfolio-section-title">2D Animation</div><div class="grid-3 fade-in" id="animation2DGrid">
+      <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation')">
+	  <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>2D 애니메이션 추가
   </div>
-  <div class="portfolio-section-title">2D Animation</div>
-  <div class="grid-3 fade-in" id="animation2DGrid">
-    <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>2D 애니메이션 추가</div>
   </div>
-  <div class="portfolio-section-title">3D Animation</div>
-  <div class="grid-3 fade-in" id="animation3DGrid">
-    
-        <div class="card-desc">프레임 애니메이션</div>
-      </div>
-    </div>
-    <div class="card-add" onclick="openAddModal('animation3DGrid','3D Animation')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>3D 애니메이션 추가</div>
+<div class="portfolio-section-title">3D Animation</div><div class="grid-3 fade-in" id="animation3DGrid">
+      <div class="card-add" onclick="openAddModal('animation3DGrid','3D Animation')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>3D 애니메이션 추가
+	</div>
+	</div>
+<div class="portfolio-section-title">Virtual Props</div><div class="grid-3 fade-in" id="virtualPropGrid">
+      <div class="card-add" onclick="openAddModal('virtualPropGrid','Virtual Props')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>버추얼 소품 추가
+	</div>
+	</div>
   </div>
-  <div class="portfolio-section-title">Virtual Props</div>
-  <div class="grid-3 fade-in" id="virtualPropGrid">
-    <div class="card-add" onclick="openAddModal('virtualPropGrid','Virtual Props')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>버추얼 소품 추가</div>
-  </div>
-</div>
+	
 
   
 <div class="sub-panel" id="work-3d">
@@ -2669,8 +2657,25 @@ function setupDragSortable(){
 
 /* ── PORTFOLIO CARD ── */
 function extractYtId(url){
-  const m=(url||'').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([^&\n?#]+)/);
-  return m?m[1]:null;
+  try{
+    const raw=String(url||'').trim();
+    if(!raw)return null;
+    const u=new URL(raw, window.location.href);
+    const host=u.hostname.replace(/^www\./,'').toLowerCase();
+    let id='';
+    if(host==='youtube.com'||host==='m.youtube.com'||host==='music.youtube.com'){
+      if(u.pathname==='/watch')id=u.searchParams.get('v')||'';
+      else if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/shorts/')[1]?.split('/')[0]||'';
+      else if(u.pathname.startsWith('/embed/'))id=u.pathname.split('/embed/')[1]?.split('/')[0]||'';
+    }else if(host==='youtu.be'){
+      id=u.pathname.replace(/^\//,'').split('/')[0]||'';
+    }
+    id=(id||'').split(/[?&#]/)[0];
+    return /^[A-Za-z0-9_-]{6,}$/.test(id)?id:null;
+  }catch(e){
+    const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i);
+    return m?m[1]:null;
+  }
 }
 function escapeHTML(v){
   return String(v??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
@@ -2709,8 +2714,9 @@ function getDisplayItemFromCard(card){
 }
 function openMediaModal(item){
   if(!item||!item.url)return;
-  if(item.type==='link'){
-    openMediaModal(item.url);
+  const ytId=extractYtId(item.url||'');
+  if(item.type==='link'&&!ytId){
+    window.open(item.url,'_blank');
     return;
   }
   const container=document.getElementById('videoContainer');
@@ -2718,7 +2724,6 @@ function openMediaModal(item){
   const url=item.url||'';
   const title=escapeHTML(item.title||'제목 없음');
   const desc=escapeHTML(item.desc||'');
-  const ytId=extractYtId(url);
   let mediaHTML='';
   if(ytId){
     mediaHTML=`<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay" allowfullscreen></iframe>`;
@@ -2828,7 +2833,7 @@ document.addEventListener('click',e=>{
     return;
   }
   const item=getDisplayItemFromCard(card);
-  if(item&&item.url&&(item.type==='image'||item.type==='video')){
+  if(item&&item.url&&(item.type==='image'||item.type==='video'||extractYtId(item.url))){
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
@@ -2857,7 +2862,7 @@ function makeCardEl(item,docId){
   let badge='IMAGE';
   let badgeClass='image';
   let onClick='';
-  if(type==='video'){
+  if(type==='video' || ytId){
     badge='VIDEO';badgeClass='video';
     thumb=ytId
       ? `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${title}"><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>`
@@ -2866,13 +2871,13 @@ function makeCardEl(item,docId){
   }else if(type==='link'){
     badge='LINK';badgeClass='link';
     thumb=`<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></div>`;
-    onClick=`openMediaModal('${safeUrl}')`;
+    onClick=`window.open('${safeUrl}','_blank')`;
   }else{
     badge='IMAGE';badgeClass='image';
     thumb=url
       ? `<img src="${safeUrl}" alt="${title}">`
       : `<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>`;
-    onClick=url?`openMediaModal('${safeUrl}')`:'';
+    onClick=url?`window.open('${safeUrl}','_blank')`:'';
   }
   card.setAttribute('onclick','openCardFromElement(this)');
   card.innerHTML=`
@@ -3403,7 +3408,7 @@ async function addItem(){
     }
 
     if(_currentType==='link'){
-      const linkItem={grid:_targetGrid,type:'link',url,title,desc};
+      const linkItem={grid:_targetGrid,type:extractYtId(url)?'video':'link',url,title,desc};
       const docId=await saveCard(linkItem);
       if(docId)insertCardToGrid(linkItem,docId);
       await saveGridOrder(_targetGrid);
