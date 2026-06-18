@@ -95,6 +95,9 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card-add:hover{border-color:var(--cyan);background:rgba(0,229,255,.03);color:var(--cyan)}
 .card-add svg{width:22px;height:22px;fill:currentColor;opacity:.45}
 
+.card-del{position:absolute;top:8px;left:8px;z-index:5;width:22px;height:22px;border:1px solid rgba(255,255,255,.18);border-radius:5px;background:rgba(0,0,0,.55);color:var(--text-dim);font-size:15px;line-height:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.card-del:hover{border-color:var(--orange);color:#fff;background:rgba(255,107,43,.75)}
+
 /* ABOUT */
 .stat-row{display:flex;gap:1px;background:var(--border);margin-bottom:28px}
 .stat{flex:1;background:var(--surface);padding:20px;text-align:center}
@@ -551,8 +554,7 @@ id="work-branding">
     </div>
   </div>
 
-  <div class="sub-panel" 
-<div class="sub-panel" id="work-animation">
+  <div class="sub-panel" id="work-animation">
   <div class="portfolio-section-title">MV</div>
   <div class="grid-3 fade-in" id="mvAnimationGrid">
     <div class="card" onclick="window.open('https://youtu.be/UoKUdXDwonM', '_blank')">
@@ -2009,6 +2011,9 @@ id="work-branding">
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
 <script>
 /* ── MAIN TAB ── */
 function switchTab(id,btn){
@@ -2238,18 +2243,61 @@ function resetCalc(key){
   renderCalc(key);
 }
 
+/* ── FIRESTORE SETUP ──
+   아래 firebaseConfig 값은 Firebase 콘솔 > 프로젝트 설정 > 일반 > 내 앱 > SDK 설정에서 받은 값으로 교체한다.
+   Firestore 규칙은 사용자가 설정한 개발용 allow read, write: if true 기준으로 동작한다.
+*/
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_API_KEY_HERE",
+  authDomain: "bowone-portfolio.firebaseapp.com",
+  projectId: "bowone-portfolio",
+  storageBucket: "bowone-portfolio.appspot.com",
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+  appId: "PASTE_YOUR_APP_ID_HERE"
+};
+
+let db=null;
+let FIRESTORE_READY=false;
+try{
+  if(firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('PASTE_') && window.firebase){
+    firebase.initializeApp(firebaseConfig);
+    db=firebase.firestore();
+    FIRESTORE_READY=true;
+  }
+}catch(err){
+  console.error('Firebase 초기화 실패:',err);
+}
+
+const PROFILE_DOC_PATH=['portfolio','profile'];
+const CARDS_COL_PATH=['portfolio','cards','items'];
+
+function getProfileDoc(){return db.collection(PROFILE_DOC_PATH[0]).doc(PROFILE_DOC_PATH[1]);}
+function getCardsCol(){return db.collection(CARDS_COL_PATH[0]).doc(CARDS_COL_PATH[1]).collection(CARDS_COL_PATH[2]);}
+function ensureFirestore(){
+  if(FIRESTORE_READY)return true;
+  alert('Firebase 설정이 아직 연결되지 않았습니다. index.html의 firebaseConfig 값을 먼저 교체해주세요.');
+  return false;
+}
+
 /* ── PORTFOLIO CARD ── */
 function extractYtId(url){
   const m=(url||'').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([^&\n?#]+)/);
   return m?m[1]:null;
 }
+function escapeHTML(v){
+  return String(v??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+}
+function escapeAttr(v){return escapeHTML(v).replace(/'/g,'&#39;');}
 function openCard(item){
+  if(!item||!item.url)return;
   if(item.type==='video'){
     const id=extractYtId(item.url||'');
     if(id){
       document.getElementById('videoContainer').innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay" allowfullscreen></iframe>`;
       document.getElementById('videoModal').classList.add('open');
     }else{window.open(item.url,'_blank')}
+  }else{
+    window.open(item.url,'_blank');
   }
 }
 function closeVideoModal(e){
@@ -2258,75 +2306,202 @@ function closeVideoModal(e){
     document.getElementById('videoContainer').innerHTML='';
   }
 }
+function makeCardEl(item,docId){
+  const card=document.createElement('div');
+  card.className='card';
+  card.dataset.docId=docId||'';
+  card.dataset.type=item.type||'image';
+  card.dataset.url=item.url||'';
+  card.dataset.title=item.title||'';
+  card.dataset.desc=item.desc||'';
+  const type=item.type||'image';
+  const title=escapeHTML(item.title||'제목 없음');
+  const desc=escapeHTML(item.desc||'');
+  const url=item.url||'';
+  const safeUrl=escapeAttr(url);
+  const ytId=extractYtId(url);
+  let thumb='';
+  let badge='IMAGE';
+  let badgeClass='image';
+  let onClick='';
+  if(type==='video'){
+    badge='VIDEO';badgeClass='video';
+    thumb=ytId
+      ? `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${title}"><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>`
+      : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--orange);font-size:36px">▶</div>`;
+    onClick=`openCard({type:'video',url:'${safeUrl}'})`;
+  }else if(type==='link'){
+    badge='LINK';badgeClass='link';
+    thumb=`<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></div>`;
+    onClick=`window.open('${safeUrl}','_blank')`;
+  }else{
+    badge='IMAGE';badgeClass='image';
+    thumb=url
+      ? `<img src="${safeUrl}" alt="${title}">`
+      : `<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>`;
+    onClick=url?`window.open('${safeUrl}','_blank')`:'';
+  }
+  card.setAttribute('onclick',onClick);
+  card.innerHTML=`
+    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
+    <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
+    <span class="type-badge ${badgeClass}">${badge}</span>
+    <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
+  return card;
+}
+function insertCardToGrid(item,docId){
+  const grid=document.getElementById(item.grid);
+  if(!grid)return;
+  if(docId&&grid.querySelector(`[data-doc-id="${docId}"]`))return;
+  const addCard=grid.querySelector('.card-add');
+  const card=makeCardEl(item,docId);
+  if(addCard)grid.insertBefore(card,addCard);
+  else grid.appendChild(card);
+}
+async function loadCards(){
+  if(!FIRESTORE_READY)return;
+  try{
+    const snap=await getCardsCol().orderBy('createdAt','asc').get();
+    snap.forEach(doc=>insertCardToGrid(doc.data(),doc.id));
+  }catch(err){
+    console.error('카드 불러오기 실패:',err);
+    alert('Firestore 카드 불러오기에 실패했습니다. Firestore 규칙과 firebaseConfig를 확인해주세요.');
+  }
+}
+async function saveCard(item){
+  if(!ensureFirestore())return null;
+  const ref=await getCardsCol().add({
+    grid:item.grid,
+    type:item.type,
+    title:item.title,
+    desc:item.desc||'',
+    url:item.url||'',
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  });
+  return ref.id;
+}
+async function deleteCard(e,docId){
+  e.stopPropagation();
+  if(!docId||!ensureFirestore())return;
+  if(!confirm('이 카드를 삭제할까요?'))return;
+  try{
+    await getCardsCol().doc(docId).delete();
+    document.querySelector(`[data-doc-id="${docId}"]`)?.remove();
+  }catch(err){
+    console.error('카드 삭제 실패:',err);
+    alert('카드 삭제에 실패했습니다.');
+  }
+}
+function closeVideoOnly(){
+  document.getElementById('videoModal').classList.remove('open');
+  document.getElementById('videoContainer').innerHTML='';
+}
 
 /* ── ADD MODAL ── */
 let _targetGrid='';
+let _currentType='image';
 function openAddModal(gridId,label){
-  _targetGrid=gridId;
+  const clicked=window.event?.currentTarget;
+  const actualGrid=clicked?.closest('.grid-3,.grid-2');
+  _targetGrid=(actualGrid&&actualGrid.id)?actualGrid.id:gridId;
   document.getElementById('addModalTitle').textContent=label+' 추가';
   ['iTitle','iUrl','iDesc'].forEach(id=>{document.getElementById(id).value=''});
+  const file=document.getElementById('iFile');
+  if(file)file.value='';
+  _currentType='image';
+  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.type-tab[data-type="image"]')?.classList.add('active');
+  document.getElementById('fileGrp').style.display='none';
+  document.getElementById('urlGrp').style.display='block';
+  document.getElementById('urlLbl').textContent='이미지 URL';
+  document.getElementById('iUrl').placeholder='./images/work01.jpg 또는 https://...';
   openModal('addModal');
 }
-function openModal(id){document.getElementById(id).classList.add('open')}
+function openModal(id){
+  if(id==='profileModal')fillProfileModal();
+  document.getElementById(id).classList.add('open');
+}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 function closeOnBg(e,id){if(e.target===document.getElementById(id))closeModal(id)}
-
-let _currentType='image';
 function selType(btn){
   document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   _currentType=btn.dataset.type;
-  document.getElementById('fileGrp').style.display=_currentType==='image'?'block':'none';
-  document.getElementById('urlGrp').style.display=_currentType==='image'?'none':'block';
-  document.getElementById('urlLbl').textContent=_currentType==='link'?'URL':'영상 URL';
+  document.getElementById('fileGrp').style.display='none';
+  document.getElementById('urlGrp').style.display='block';
+  if(_currentType==='image'){
+    document.getElementById('urlLbl').textContent='이미지 URL';
+    document.getElementById('iUrl').placeholder='./images/work01.jpg 또는 https://...';
+  }else if(_currentType==='link'){
+    document.getElementById('urlLbl').textContent='URL';
+    document.getElementById('iUrl').placeholder='https://';
+  }else{
+    document.getElementById('urlLbl').textContent='영상 URL';
+    document.getElementById('iUrl').placeholder='https://youtube.com/watch?v=...';
+  }
 }
-
 async function addItem(){
   const title=document.getElementById('iTitle').value.trim()||'제목 없음';
   const desc=document.getElementById('iDesc').value.trim();
-  let url='';
-  if(_currentType==='image'){
-    const file=document.getElementById('iFile').files[0];
-    if(file){const r=new FileReader();url=await new Promise(res=>{r.onload=e=>res(e.target.result);r.readAsDataURL(file)});}
-  }else{url=document.getElementById('iUrl').value.trim();}
-  const item={type:_currentType,url,title,desc};
+  const url=document.getElementById('iUrl').value.trim();
+  if(!url){alert(_currentType==='image'?'이미지 URL을 입력해주세요.':'URL을 입력해주세요.');return;}
   const grid=document.getElementById(_targetGrid);
-  if(!grid)return;
-  const addCard=grid.querySelector('.card-add');
-  const div=document.createElement('div');
-  const ytId=extractYtId(url||'');
-  let inner='';
-  if(_currentType==='video'){
-    inner=`<div class="card" onclick="openCard(${JSON.stringify(item).replace(/"/g,'&quot;')})">
-      <div class="card-thumb">${ytId?`<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${title}"><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>`:'<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--orange);font-size:36px">▶</div>'}</div>
-      <span class="type-badge video">VIDEO</span>
-      <div class="card-body"><div class="card-title">${title}</div><div class="card-desc">${desc}</div></div></div>`;
-  }else if(_currentType==='link'){
-    inner=`<div class="card" onclick="window.open('${url}','_blank')">
-      <div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></div>
-      <span class="type-badge link">LINK</span>
-      <div class="card-body"><div class="card-title">${title}</div><div class="card-desc">${desc}</div></div></div>`;
-  }else{
-    inner=`<div class="card">
-      <div class="card-thumb">${url?`<img src="${url}" alt="${title}">`:'<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>'}</div>
-      <span class="type-badge image">IMAGE</span>
-      <div class="card-body"><div class="card-title">${title}</div><div class="card-desc">${desc}</div></div></div>`;
+  if(!grid){alert('추가할 위치를 찾지 못했습니다.');return;}
+  const item={grid:_targetGrid,type:_currentType,url,title,desc};
+  try{
+    const docId=await saveCard(item);
+    if(docId)insertCardToGrid(item,docId);
+    closeModal('addModal');
+  }catch(err){
+    console.error('카드 저장 실패:',err);
+    alert('카드 저장에 실패했습니다. Firestore 설정을 확인해주세요.');
   }
-  div.innerHTML=inner;
-  grid.insertBefore(div.firstElementChild,addCard);
-  closeModal('addModal');
 }
 
 /* ── PROFILE ── */
-function saveProfile(){
+function fillProfileModal(){
+  document.getElementById('pName').value=(document.getElementById('profileName').textContent||'').trim();
+  document.getElementById('pRole').value=(document.getElementById('profileRole').textContent||'').trim();
+  document.getElementById('pBio').value=(document.getElementById('profileBio').innerHTML||'').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]*>/g,'').trim();
+  const emailTxt=(document.getElementById('profileBio').textContent||'').match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  document.getElementById('pEmail').value=emailTxt?emailTxt[0]:'agentdh@naver.com';
+}
+function applyProfile(p){
+  if(!p)return;
+  if(p.name)document.getElementById('profileName').innerHTML=escapeHTML(p.name);
+  if(p.role)document.getElementById('profileRole').textContent=p.role;
+  if(p.bio)document.getElementById('profileBio').innerHTML=escapeHTML(p.bio).replace(/\n/g,'<br>');
+  if(p.email){
+    document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.href='mailto:'+p.email);
+  }
+}
+async function loadProfile(){
+  if(!FIRESTORE_READY)return;
+  try{
+    const doc=await getProfileDoc().get();
+    if(doc.exists)applyProfile(doc.data());
+  }catch(err){
+    console.error('프로필 불러오기 실패:',err);
+  }
+}
+async function saveProfile(){
   const n=document.getElementById('pName').value.trim();
   const r=document.getElementById('pRole').value.trim();
   const b=document.getElementById('pBio').value.trim();
-  if(n)document.getElementById('profileName').innerHTML=n;
-  if(r)document.getElementById('profileRole').textContent=r;
-  if(b)document.getElementById('profileBio').innerHTML=b.replace(/\n/g,'<br>');
+  const email=document.getElementById('pEmail').value.trim();
+  const profile={name:n,role:r,bio:b,email,updatedAt:window.firebase?.firestore?.FieldValue?.serverTimestamp?.()||new Date().toISOString()};
+  applyProfile(profile);
+  if(ensureFirestore()){
+    try{await getProfileDoc().set(profile,{merge:true});}
+    catch(err){console.error('프로필 저장 실패:',err);alert('프로필 저장에 실패했습니다.');return;}
+  }
   closeModal('profileModal');
 }
+
+window.addEventListener('DOMContentLoaded',()=>{
+  loadProfile();
+  loadCards();
+});
 
 /* ── FADE IN ── */
 const obs=new IntersectionObserver(entries=>{
