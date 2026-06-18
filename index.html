@@ -111,6 +111,22 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card.drag-over{border-color:var(--cyan)}
 .upload-help{font-size:10px;color:var(--text-off);margin-top:5px;line-height:1.6}
 
+.portfolio-section-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.section-admin-controls{display:inline-flex;gap:6px;align-items:center;margin-left:8px}
+.admin-mini-btn{border:1px solid rgba(0,229,255,.24);background:rgba(0,229,255,.055);color:var(--cyan);border-radius:6px;padding:4px 8px;font-size:10px;font-family:'Noto Sans KR',sans-serif;font-weight:400;cursor:pointer;transition:all .16s}
+.admin-mini-btn:hover{border-color:var(--cyan);background:rgba(0,229,255,.12);color:#fff}
+.admin-mini-btn.danger{border-color:rgba(255,107,43,.38);background:rgba(255,107,43,.07);color:var(--orange)}
+.admin-mini-btn.danger:hover{border-color:var(--orange);background:rgba(255,107,43,.14);color:#fff}
+.card.select-mode{cursor:pointer}
+.card.select-mode:hover{transform:none;border-color:rgba(0,229,255,.35)}
+.card.selected{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,229,255,.35),0 10px 28px rgba(0,0,0,.32)}
+.card-select-mark{position:absolute;top:8px;left:8px;z-index:8;width:24px;height:24px;border-radius:7px;border:1px solid rgba(0,229,255,.36);background:rgba(0,0,0,.65);color:var(--cyan);display:none;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.card.select-mode .card-select-mark{display:flex}
+.card.selected .card-select-mark{background:var(--cyan);color:#0D0D14;border-color:var(--cyan)}
+.card.select-mode .card-del{display:none!important}
+.card.select-mode .card-edit{display:none!important}
+
+
 /* ABOUT */
 .stat-row{display:flex;gap:1px;background:var(--border);margin-bottom:28px}
 .stat{flex:1;background:var(--surface);padding:20px;text-align:center}
@@ -2323,7 +2339,7 @@ try{
 }
 
 function updateEditorVisibility(){
-  document.querySelectorAll('.card-add,.card-multi-upload,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
+  document.querySelectorAll('.card-add,.card-multi-upload,.section-admin-controls,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
     el.style.display=isAdmin ? '' : 'none';
   });
   setupDragSortable();
@@ -2823,6 +2839,7 @@ function enhanceStaticPortfolioCards(){
     editBtn.title='수정';
     editBtn.textContent='수정';
     editBtn.setAttribute('onclick','editStaticCard(event)');
+    if(!card.querySelector('.card-select-mark')){const mark=document.createElement('span');mark.className='card-select-mark';mark.textContent='✓';card.insertBefore(mark,card.firstChild);}
     card.insertBefore(editBtn,card.firstChild);
   });
   updateEditorVisibility();
@@ -2831,7 +2848,15 @@ function enhanceStaticPortfolioCards(){
 document.addEventListener('click',e=>{
   const card=e.target.closest('#tab-work .card');
   if(!card)return;
-  if(e.target.closest('.card-edit,.card-del,.card-add'))return;
+  if(e.target.closest('.card-edit,.card-del,.card-add,.card-multi-upload,.section-admin-controls'))return;
+  const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+  if(selectionModeGrid && gridId===selectionModeGrid){
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    toggleCardSelection(card);
+    return;
+  }
   const item=getDisplayItemFromCard(card);
   if(item&&item.url&&(item.type==='image'||item.type==='video')){
     e.preventDefault();
@@ -2843,7 +2868,7 @@ document.addEventListener('click',e=>{
 
 function makeCardEl(item,docId){
   const card=document.createElement('div');
-  card.className='card';
+  card.className='card generated-card';
   card.dataset.docId=docId||'';
   card.dataset.type=item.type||'image';
   card.dataset.url=item.url||'';
@@ -2881,6 +2906,7 @@ function makeCardEl(item,docId){
   }
   card.setAttribute('onclick','openCardFromElement(this)');
   card.innerHTML=`
+    <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
     ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
     <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
@@ -2999,6 +3025,120 @@ async function handleBatchUpload(input){
   }
 }
 
+
+let selectionModeGrid='';
+const selectedCardKeys=new Set();
+function cardSelectionKey(card){
+  return card?.dataset?.docId || card?.dataset?.sourcePath || card?.dataset?.staticKey || '';
+}
+function getGridTitle(gridId){
+  const grid=document.getElementById(gridId);
+  const title=grid?.previousElementSibling;
+  return title?.classList?.contains('portfolio-section-title') ? title.textContent.replace(/다중선택|선택삭제|리로드/g,'').trim() : gridId;
+}
+function clearSelection(){
+  selectedCardKeys.clear();
+  document.querySelectorAll('#tab-work .card.selected').forEach(card=>card.classList.remove('selected'));
+}
+function setSelectionMode(gridId){
+  if(selectionModeGrid===gridId){selectionModeGrid='';clearSelection();}
+  else{selectionModeGrid=gridId;clearSelection();}
+  document.querySelectorAll('#tab-work .card').forEach(card=>{
+    const gid=card.dataset.grid || card.closest('.grid-3,.grid-2')?.id || '';
+    card.classList.toggle('select-mode',!!selectionModeGrid && gid===selectionModeGrid);
+  });
+}
+function toggleCardSelection(card){
+  const key=cardSelectionKey(card);
+  if(!key)return;
+  if(selectedCardKeys.has(key)){selectedCardKeys.delete(key);card.classList.remove('selected');}
+  else{selectedCardKeys.add(key);card.classList.add('selected');}
+}
+function getSelectedCards(){
+  if(!selectionModeGrid)return [];
+  return [...document.querySelectorAll(`#${CSS.escape(selectionModeGrid)} > .card.selected`)];
+}
+async function deleteSelectedCards(){
+  const cards=getSelectedCards();
+  if(!cards.length){alert('선택된 항목이 없습니다.');return;}
+  const lines=cards.map((card,i)=>`${i+1}. ${card.dataset.title || card.querySelector('.card-title')?.textContent?.trim() || filenameFromPath(card.dataset.sourcePath) || '제목 없음'}${card.dataset.sourcePath ? `\n   ${card.dataset.sourcePath}` : ''}`);
+  const ok=confirm(`선택한 ${cards.length}개 항목을 삭제하겠습니까?\n\n${lines.join('\n')}`);
+  if(!ok){setSelectionMode(selectionModeGrid);return;}
+  const failed=[];
+  for(const card of cards){
+    const docId=card.dataset.docId||'';
+    const sourcePath=card.dataset.sourcePath||'';
+    const sourceKind=card.dataset.sourceKind||'';
+    const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+    try{
+      if(sourceKind==='github' && sourcePath)await deleteGithubFileByPath(sourcePath);
+      if(FIRESTORE_READY && docId)await getCardsCol().doc(docId).delete().catch(()=>{});
+      card.remove();
+      if(gridId)await saveGridOrder(gridId);
+    }catch(err){
+      failed.push(`${card.dataset.title||sourcePath||'항목'}: ${err.message||'삭제 실패'}`);
+    }
+  }
+  setSelectionMode(selectionModeGrid);
+  if(failed.length)alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
+}
+function setupSectionAdminControls(){
+  Object.keys(GITHUB_FOLDER_MAP).forEach(gridId=>{
+    const grid=document.getElementById(gridId);
+    const title=grid?.previousElementSibling;
+    if(!grid||!title||!title.classList.contains('portfolio-section-title'))return;
+    if(title.querySelector('.section-admin-controls'))return;
+    const box=document.createElement('span');
+    box.className='section-admin-controls';
+    box.innerHTML=`<button type="button" class="admin-mini-btn" data-act="select">다중선택</button><button type="button" class="admin-mini-btn danger" data-act="delete">선택삭제</button><button type="button" class="admin-mini-btn" data-act="reload">리로드</button>`;
+    box.querySelector('[data-act="select"]').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setSelectionMode(gridId);});
+    box.querySelector('[data-act="delete"]').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();deleteSelectedCards();});
+    box.querySelector('[data-act="reload"]').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();reloadPortfolioClean(gridId);});
+    title.appendChild(box);
+  });
+  updateEditorVisibility();
+}
+async function cleanupMissingGithubMetadata(gridId){
+  if(!FIRESTORE_READY)return;
+  const existing=new Set(autoFolderItems.filter(item=>!gridId || item.grid===gridId).map(item=>item.sourcePath).filter(Boolean));
+  try{
+    const snap=await getCardsCol().get();
+    const jobs=[];
+    snap.forEach(doc=>{
+      const item=doc.data();
+      if(item.sourceKind==='github' && item.sourcePath && (!gridId || item.grid===gridId) && !existing.has(item.sourcePath)){
+        jobs.push(getCardsCol().doc(doc.id).delete());
+      }
+    });
+    await Promise.allSettled(jobs);
+  }catch(err){console.warn('없는 GitHub 카드 정리 실패:',err);}
+}
+async function reloadPortfolioClean(gridId){
+  if(!isAdmin){alert('관리자 로그인 후 사용할 수 있습니다.');return;}
+  const ok=confirm(`${getGridTitle(gridId)} 항목을 GitHub 기준으로 다시 불러옵니다.\nGitHub 폴더에 실제로 없는 백업 카드/깨진 카드는 제거됩니다.`);
+  if(!ok)return;
+  const grid=document.getElementById(gridId);
+  try{
+    await loadGithubFolderItems();
+    await cleanupMissingGithubMetadata(gridId);
+    if(grid){
+      [...grid.querySelectorAll(':scope > .card.generated-card,:scope > .card[data-source-path],:scope > .card[data-doc-id]')].forEach(card=>card.remove());
+      grid.querySelector(':scope > .card-multi-upload')?.remove();
+    }else{
+      document.querySelectorAll('#tab-work .card.generated-card,#tab-work .card[data-source-path],#tab-work .card[data-doc-id],#tab-work .card-multi-upload').forEach(el=>el.remove());
+    }
+    clearSelection();selectionModeGrid='';
+    await loadCards();
+    applyAllGridOrders();
+    setupSectionAdminControls();
+    setupDragSortable();
+    alert('리로드 완료');
+  }catch(err){
+    console.error('리로드 실패:',err);
+    alert('리로드 실패: '+(err.message||''));
+  }
+}
+
 async function loadCards(){
   const firestoreItems=[];
   const metaBySource={};
@@ -3041,6 +3181,7 @@ async function loadCards(){
   applyStaticMetadata(metaByStaticKey);
   enhanceStaticPortfolioCards();
   setupMultiUploadButtons();
+  setupSectionAdminControls();
 }
 
 async function saveCard(item){
@@ -3374,6 +3515,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   applyAllGridOrders();
   enhanceStaticPortfolioCards();
   setupMultiUploadButtons();
+  setupSectionAdminControls();
   setupDragSortable();
 });
 
