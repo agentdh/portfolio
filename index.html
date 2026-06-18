@@ -557,10 +557,7 @@ id="work-minecraft">
     </div>
     </div>
 <div class="portfolio-section-title">애니메이션</div><div class="grid-3 fade-in" id="mc-animation">
-      <div class="card" onclick="window.open('https://youtu.be/6yiArsUdr_s', '_blank')">
-      <div class="card-thumb"><img src="https://img.youtube.com/vi/6yiArsUdr_s/mqdefault.jpg" alt="MC"><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
-      <span class="type-badge video">VIDEO</span>
-      <div class="card-body"><div class="card-title">MC 애니메이션 #1</div><div class="card-desc">마인크래프트 애니메이션</div></div>
+      <div class="card-desc">마인크래프트 애니메이션</div></div>
     </div>
       <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
       <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
@@ -605,29 +602,11 @@ id="work-branding">
   <div class="sub-panel" id="work-animation">
   <div class="portfolio-section-title">MV</div>
   <div class="grid-3 fade-in" id="mvAnimationGrid">
-    <div class="card" onclick="window.open('https://youtu.be/UoKUdXDwonM', '_blank')">
-      <div class="card-thumb">
-        <img src="https://img.youtube.com/vi/UoKUdXDwonM/mqdefault.jpg" alt="MV1">
-        <div class="play-overlay">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-      <span class="type-badge video">VIDEO</span>
-      <div class="card-body">
-        <div class="card-title">MV 작업물 #1</div>
+    
         <div class="card-desc">뮤직비디오 애니메이션</div>
       </div>
     </div>
-    <div class="card" onclick="window.open('https://youtube.com/shorts/W5Bc9GofYws', '_blank')">
-      <div class="card-thumb">
-        <img src="https://img.youtube.com/vi/W5Bc9GofYws/mqdefault.jpg" alt="MV2">
-        <div class="play-overlay">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-      <span class="type-badge video">VIDEO</span>
-      <div class="card-body">
-        <div class="card-title">MV 작업물 #2</div>
+    
         <div class="card-desc">Shorts MV</div>
       </div>
     </div>
@@ -641,16 +620,7 @@ id="work-branding">
   </div>
   <div class="portfolio-section-title">3D Animation</div>
   <div class="grid-3 fade-in" id="animation3DGrid">
-    <div class="card" onclick="window.open('https://youtu.be/wlTLXVMm4VA', '_blank')">
-      <div class="card-thumb">
-        <img src="https://img.youtube.com/vi/wlTLXVMm4VA/mqdefault.jpg" alt="3D">
-        <div class="play-overlay">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-      <span class="type-badge video">VIDEO</span>
-      <div class="card-body">
-        <div class="card-title">3D 애니메이션 #1</div>
+    
         <div class="card-desc">프레임 애니메이션</div>
       </div>
     </div>
@@ -2740,7 +2710,7 @@ function getDisplayItemFromCard(card){
 function openMediaModal(item){
   if(!item||!item.url)return;
   if(item.type==='link'){
-    window.open(item.url,'_blank');
+    openMediaModal(item.url);
     return;
   }
   const container=document.getElementById('videoContainer');
@@ -2896,13 +2866,13 @@ function makeCardEl(item,docId){
   }else if(type==='link'){
     badge='LINK';badgeClass='link';
     thumb=`<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></div>`;
-    onClick=`window.open('${safeUrl}','_blank')`;
+    onClick=`openMediaModal('${safeUrl}')`;
   }else{
     badge='IMAGE';badgeClass='image';
     thumb=url
       ? `<img src="${safeUrl}" alt="${title}">`
       : `<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>`;
-    onClick=url?`window.open('${safeUrl}','_blank')`:'';
+    onClick=url?`openMediaModal('${safeUrl}')`:'';
   }
   card.setAttribute('onclick','openCardFromElement(this)');
   card.innerHTML=`
