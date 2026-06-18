@@ -2528,7 +2528,7 @@ async function uploadFileToGithubFolder(file,gridId){
   const res=await fetch(WORKER_UPLOAD_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({path,content})
+    body:JSON.stringify({action:'upload',path,content})
   });
   const text=await res.text();
   let data=null;
@@ -2546,6 +2546,23 @@ async function uploadFileToGithubFolder(file,gridId){
     sourcePath:path,
     sourceKind:'github'
   };
+}
+
+async function deleteGithubFileByPath(path){
+  if(!path)throw new Error('삭제할 GitHub 원본 파일 경로가 없습니다.');
+  const res=await fetch(WORKER_UPLOAD_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'delete',path})
+  });
+  const text=await res.text();
+  let data=null;
+  try{data=JSON.parse(text);}catch(_){}
+  if(!res.ok){
+    const msg=data?.message||data?.error||text||'GitHub 파일 삭제 실패';
+    throw new Error(msg);
+  }
+  return data;
 }
 
 let gridOrderMap={};
@@ -2859,7 +2876,7 @@ function makeCardEl(item,docId){
   card.setAttribute('onclick','openCardFromElement(this)');
   card.innerHTML=`
     <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
-    ${(docId && item.sourceKind!=='github')?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
+    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
     <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
     <span class="type-badge ${badgeClass}">${badge}</span>
     <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
@@ -2923,14 +2940,38 @@ async function saveCard(item){
 }
 async function deleteCard(e,docId){
   e.stopPropagation();
-  if(!docId||!ensureFirestore())return;
-  if(!confirm('이 카드를 삭제할까요?'))return;
+  if(!docId)return;
+
+  const card=document.querySelector(`[data-doc-id="${docId}"]`);
+  const sourcePath=card?.dataset?.sourcePath||'';
+  const sourceKind=card?.dataset?.sourceKind||'';
+  const gridId=card?.dataset?.grid||card?.closest('.grid-3,.grid-2')?.id||'';
+
+  const msg=sourceKind==='github' && sourcePath
+    ? `이 카드를 삭제하면 GitHub 원본 파일도 삭제됩니다.\n\n원본 파일: ${filenameFromPath(sourcePath)}\n경로: ${sourcePath}\n\n삭제할까요?`
+    : '이 카드를 삭제할까요?';
+
+  if(!confirm(msg))return;
+
   try{
-    await getCardsCol().doc(docId).delete();
-    document.querySelector(`[data-doc-id="${docId}"]`)?.remove();
+    if(sourceKind==='github' && sourcePath){
+      await deleteGithubFileByPath(sourcePath);
+    }
+
+    if(FIRESTORE_READY){
+      await getCardsCol().doc(docId).delete().catch(err=>{
+        console.warn('Firestore 메타데이터 삭제 실패:',err);
+      });
+    }
+
+    card?.remove();
+
+    if(gridId){
+      await saveGridOrder(gridId);
+    }
   }catch(err){
     console.error('카드 삭제 실패:',err);
-    alert('카드 삭제에 실패했습니다.');
+    alert('카드 삭제에 실패했습니다. '+(err.message||''));
   }
 }
 /* ── ADD MODAL ── */
