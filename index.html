@@ -101,6 +101,11 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card-edit{position:absolute;top:8px;left:36px;z-index:5;height:22px;border:1px solid rgba(0,229,255,.25);border-radius:5px;background:rgba(0,0,0,.55);color:var(--cyan);font-size:10px;line-height:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 7px;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
 .card-edit:hover{border-color:var(--cyan);color:#0D0D14;background:var(--cyan)}
 
+.card.drag-ready{cursor:grab}
+.card.dragging{opacity:.72;transform:scale(1.035);border-color:var(--orange);box-shadow:0 12px 32px rgba(0,0,0,.38);z-index:20}
+.card.drag-over{border-color:var(--cyan)}
+.upload-help{font-size:10px;color:var(--text-off);margin-top:5px;line-height:1.6}
+
 /* ABOUT */
 .stat-row{display:flex;gap:1px;background:var(--border);margin-bottom:28px}
 .stat{flex:1;background:var(--surface);padding:20px;text-align:center}
@@ -2019,7 +2024,7 @@ id="work-branding">
     </div>
     <div class="form-group"><label>제목</label><input type="text" id="iTitle" placeholder="작업물 이름"></div>
     <div class="form-group" id="urlGrp"><label id="urlLbl">URL</label><input type="url" id="iUrl" placeholder="https://"></div>
-    <div class="form-group" id="fileGrp" style="display:none"><label>이미지 파일</label><input type="file" id="iFile" accept="image/*" style="color:var(--text-dim)"></div>
+    <div class="form-group" id="fileGrp" style="display:none"><label id="fileLbl">업로드 파일</label><input type="file" id="iFile" accept="image/*,video/mp4,video/webm,video/quicktime" style="color:var(--text-dim)"><div class="upload-help" id="uploadHelp">선택한 파일은 현재 패널에 연결된 GitHub 폴더로 업로드됩니다.</div></div>
     <div class="form-group"><label>설명 (선택)</label><textarea id="iDesc" rows="2" placeholder="간단한 설명"></textarea></div>
     <button class="btn-primary" id="addSubmitBtn" onclick="addItem()">추가하기</button>
   </div>
@@ -2315,6 +2320,7 @@ function updateEditorVisibility(){
   document.querySelectorAll('.card-add,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
     el.style.display=isAdmin ? '' : 'none';
   });
+  setupDragSortable();
 }
 
 function loginWithGoogle(){
@@ -2356,10 +2362,12 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 const PROFILE_DOC_PATH=['portfolio','profile'];
 const CARDS_COL_PATH=['portfolio','cards','items'];
+const ORDER_DOC_PATH=['portfolio','cardOrder'];
 
 const GITHUB_OWNER='agentdh';
 const GITHUB_REPO='portfolio';
 const GITHUB_BRANCH='main';
+const WORKER_UPLOAD_URL='https://portfolio-upload.agentdh.workers.dev/';
 const GITHUB_FOLDER_MAP={
   'thumbnail-ld':'thumbnail/ld-thumbnail',
   'thumbnail-sd':'thumbnail/sd-thumbnail',
@@ -2396,6 +2404,7 @@ let autoFolderItems=[];
 
 function getProfileDoc(){return db.collection(PROFILE_DOC_PATH[0]).doc(PROFILE_DOC_PATH[1]);}
 function getCardsCol(){return db.collection(CARDS_COL_PATH[0]).doc(CARDS_COL_PATH[1]).collection(CARDS_COL_PATH[2]);}
+function getOrderDoc(){return db.collection(ORDER_DOC_PATH[0]).doc(ORDER_DOC_PATH[1]);}
 function ensureFirestore(){
   if(FIRESTORE_READY)return true;
   alert('Firebase 설정이 아직 연결되지 않았습니다. index.html의 firebaseConfig 값을 먼저 교체해주세요.');
@@ -2483,6 +2492,169 @@ async function loadGithubFolderItems(){
   const results=await Promise.all(entries.map(([gridId,folder])=>fetchGithubFolder(gridId,folder)));
   autoFolderItems=results.flat();
   return autoFolderItems;
+}
+
+function sanitizeUploadFilename(name){
+  const original=String(name||'file');
+  const dot=original.lastIndexOf('.');
+  const base=(dot>=0?original.slice(0,dot):original)
+    .trim()
+    .replace(/\s+/g,'-')
+    .replace(/[^a-zA-Z0-9가-힣._-]/g,'-')
+    .replace(/-+/g,'-')
+    .replace(/^-+|-+$/g,'') || 'file';
+  const ext=(dot>=0?original.slice(dot).toLowerCase():'');
+  return `${Date.now()}-${base}${ext}`;
+}
+function readFileAsBase64Content(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const result=String(reader.result||'');
+      resolve(result.includes(',')?result.split(',')[1]:result);
+    };
+    reader.onerror=()=>reject(reader.error||new Error('파일 읽기 실패'));
+    reader.readAsDataURL(file);
+  });
+}
+async function uploadFileToGithubFolder(file,gridId){
+  const folder=GITHUB_FOLDER_MAP[gridId];
+  if(!folder)throw new Error('현재 패널에 연결된 GitHub 폴더가 없습니다.');
+  const type=getMediaTypeByName(file.name);
+  if(!type)throw new Error('지원하지 않는 파일 형식입니다.');
+  const filename=sanitizeUploadFilename(file.name);
+  const path=`${folder}/${filename}`;
+  const content=await readFileAsBase64Content(file);
+  const res=await fetch(WORKER_UPLOAD_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({path,content})
+  });
+  const text=await res.text();
+  let data=null;
+  try{data=JSON.parse(text);}catch(_){}
+  if(!res.ok){
+    const msg=data?.message||data?.error||text||'GitHub 업로드 실패';
+    throw new Error(msg);
+  }
+  return {
+    grid:gridId,
+    type,
+    title:titleFromFilename(file.name),
+    desc:'',
+    url:data?.content?.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`,
+    sourcePath:path,
+    sourceKind:'github'
+  };
+}
+
+let gridOrderMap={};
+function getCardOrderKey(card){
+  if(!card)return '';
+  if(card.dataset.sourcePath)return 'src:'+card.dataset.sourcePath;
+  if(card.dataset.docId)return 'doc:'+card.dataset.docId;
+  if(card.dataset.staticKey)return 'static:'+card.dataset.staticKey;
+  return '';
+}
+async function loadGridOrder(){
+  gridOrderMap={};
+  if(!FIRESTORE_READY)return;
+  try{
+    const doc=await getOrderDoc().get();
+    if(doc.exists)gridOrderMap=doc.data()||{};
+  }catch(err){
+    console.warn('카드 순서 불러오기 실패:',err);
+  }
+}
+function applyGridOrder(gridId){
+  const grid=document.getElementById(gridId);
+  const order=gridOrderMap[gridId];
+  if(!grid||!Array.isArray(order)||!order.length)return;
+  const addCard=grid.querySelector('.card-add');
+  const cards=[...grid.querySelectorAll(':scope > .card')];
+  const byKey=new Map(cards.map(card=>[getCardOrderKey(card),card]).filter(([k])=>k));
+  const ordered=[];
+  order.forEach(key=>{
+    if(byKey.has(key)){
+      ordered.push(byKey.get(key));
+      byKey.delete(key);
+    }
+  });
+  ordered.push(...cards.filter(card=>byKey.has(getCardOrderKey(card))));
+  ordered.forEach(card=>grid.insertBefore(card,addCard||null));
+}
+function applyAllGridOrders(){
+  Object.keys(GITHUB_FOLDER_MAP).forEach(applyGridOrder);
+}
+async function saveGridOrder(gridId){
+  if(!FIRESTORE_READY||!gridId)return;
+  const grid=document.getElementById(gridId);
+  if(!grid)return;
+  const order=[...grid.querySelectorAll(':scope > .card')].map(getCardOrderKey).filter(Boolean);
+  gridOrderMap[gridId]=order;
+  try{
+    await getOrderDoc().set({[gridId]:order,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  }catch(err){
+    console.error('카드 순서 저장 실패:',err);
+  }
+}
+function setupDragSortable(){
+  let dragCard=null;
+  let dragGridId='';
+  document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(grid=>{
+    grid.querySelectorAll(':scope > .card').forEach(card=>{
+      card.draggable=!!isAdmin;
+      card.classList.toggle('drag-ready',!!isAdmin);
+    });
+  });
+  if(window.__portfolioDragStart)document.removeEventListener('dragstart',window.__portfolioDragStart,true);
+  if(window.__portfolioDragOver)document.removeEventListener('dragover',window.__portfolioDragOver,true);
+  if(window.__portfolioDrop)document.removeEventListener('drop',window.__portfolioDrop,true);
+  if(window.__portfolioDragEnd)document.removeEventListener('dragend',window.__portfolioDragEnd,true);
+
+  window.__portfolioDragStart=function(e){
+    const card=e.target.closest('#tab-work .card');
+    if(!isAdmin||!card||e.target.closest('.card-edit,.card-del')){e.preventDefault();return;}
+    dragCard=card;
+    dragGridId=card.closest('.grid-3,.grid-2')?.id||'';
+    card.classList.add('dragging');
+    if(e.dataTransfer){
+      e.dataTransfer.effectAllowed='move';
+      e.dataTransfer.setData('text/plain',getCardOrderKey(card));
+    }
+  };
+  window.__portfolioDragOver=function(e){
+    if(!dragCard)return;
+    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
+    if(!grid||grid.id!==dragGridId)return;
+    e.preventDefault();
+    const target=e.target.closest('#tab-work .card');
+    if(!target||target===dragCard||target.closest('.card-add'))return;
+    const rect=target.getBoundingClientRect();
+    const before=e.clientY < rect.top + rect.height/2;
+    grid.insertBefore(dragCard,before?target:target.nextSibling);
+  };
+  window.__portfolioDrop=function(e){
+    if(!dragCard)return;
+    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
+    if(grid&&grid.id===dragGridId){
+      e.preventDefault();
+      saveGridOrder(dragGridId);
+    }
+  };
+  window.__portfolioDragEnd=function(){
+    if(dragCard){
+      dragCard.classList.remove('dragging');
+      saveGridOrder(dragGridId);
+    }
+    dragCard=null;
+    dragGridId='';
+  };
+
+  document.addEventListener('dragstart',window.__portfolioDragStart,true);
+  document.addEventListener('dragover',window.__portfolioDragOver,true);
+  document.addEventListener('drop',window.__portfolioDrop,true);
+  document.addEventListener('dragend',window.__portfolioDragEnd,true);
 }
 
 
@@ -2703,6 +2875,7 @@ function insertCardToGrid(item,docId){
   const card=makeCardEl(item,docId);
   if(addCard)grid.insertBefore(card,addCard);
   else grid.appendChild(card);
+  setupDragSortable();
 }
 async function loadCards(){
   const firestoreItems=[];
@@ -2771,21 +2944,39 @@ function openAddModal(gridId,label){
   _editingSourcePath='';
   _editingStaticKey='';
   const submitBtn=document.getElementById('addSubmitBtn');
-  if(submitBtn)submitBtn.textContent='링크 추가';
+  if(submitBtn)submitBtn.textContent='추가하기';
   const clicked=window.event?.currentTarget;
   const actualGrid=clicked?.closest('.grid-3,.grid-2');
   _targetGrid=(actualGrid&&actualGrid.id)?actualGrid.id:gridId;
-  _currentType='link';
-  document.getElementById('addModalTitle').textContent=label+' 링크 추가';
+
+  const hasFolder=!!GITHUB_FOLDER_MAP[_targetGrid];
+  _currentType=hasFolder?'image':'link';
+
+  document.getElementById('addModalTitle').textContent=label+' 추가';
   ['iTitle','iUrl','iDesc'].forEach(id=>{document.getElementById(id).value=''});
   const file=document.getElementById('iFile');
   if(file)file.value='';
+
   setSourceFileInfo('');
-  setTypeTabsVisible(false);
+  setTypeTabsVisible(true);
   document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelector('.type-tab[data-type="link"]')?.classList.add('active');
-  document.getElementById('fileGrp').style.display='none';
-  setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
+  document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
+
+  if(hasFolder){
+    document.getElementById('fileGrp').style.display='block';
+    document.getElementById('fileLbl').textContent='업로드 파일';
+    document.getElementById('iFile').accept='image/*,video/mp4,video/webm,video/quicktime';
+    const help=document.getElementById('uploadHelp');
+    if(help)help.textContent=`GitHub 폴더: ${GITHUB_FOLDER_MAP[_targetGrid]}`;
+    setUrlFieldMode({visible:false,readonly:false,label:'URL',placeholder:'https://'});
+  }else{
+    document.getElementById('fileGrp').style.display='none';
+    _currentType='link';
+    document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.type-tab[data-type="link"]')?.classList.add('active');
+    setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
+  }
+
   openModal('addModal');
 }
 
@@ -2799,9 +2990,21 @@ function selType(btn){
   document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   _currentType=btn.dataset.type;
-  document.getElementById('fileGrp').style.display='none';
   setSourceFileInfo('');
-  setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
+
+  const hasFolder=!!GITHUB_FOLDER_MAP[_targetGrid];
+  if(_currentType==='link' || !hasFolder){
+    document.getElementById('fileGrp').style.display='none';
+    setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
+    return;
+  }
+
+  document.getElementById('fileGrp').style.display='block';
+  document.getElementById('fileLbl').textContent=_currentType==='video'?'영상 파일':'이미지 파일';
+  document.getElementById('iFile').accept=_currentType==='video'?'video/mp4,video/webm,video/quicktime':'image/*';
+  const help=document.getElementById('uploadHelp');
+  if(help)help.textContent=`GitHub 폴더: ${GITHUB_FOLDER_MAP[_targetGrid]}`;
+  setUrlFieldMode({visible:false,readonly:false,label:'URL',placeholder:'https://'});
 }
 
 function updateCardElement(docId,item){
@@ -2873,21 +3076,31 @@ function editStaticCard(e){
 }
 
 async function addItem(){
-  const title=document.getElementById('iTitle').value.trim()||'제목 없음';
+  const titleInput=document.getElementById('iTitle').value.trim();
+  const title=titleInput||'제목 없음';
   const desc=document.getElementById('iDesc').value.trim();
   const url=document.getElementById('iUrl').value.trim();
+  const file=document.getElementById('iFile')?.files?.[0]||null;
   const grid=document.getElementById(_targetGrid);
   if(!grid){alert('추가할 위치를 찾지 못했습니다.');return;}
+
   if(!_editingDocId && !_editingStaticKey){
-    _currentType='link';
-    if(!url){alert('링크 URL을 입력해주세요.');return;}
+    if(_currentType==='link'){
+      if(!url){alert('링크 URL을 입력해주세요.');return;}
+    }else{
+      if(!file){alert('업로드할 파일을 선택해주세요.');return;}
+      const actualType=getMediaTypeByName(file.name);
+      if(!actualType){alert('지원하지 않는 파일 형식입니다.');return;}
+      if(_currentType==='image'&&actualType!=='image'){alert('이미지 파일을 선택해주세요.');return;}
+      if(_currentType==='video'&&actualType!=='video'){alert('영상 파일을 선택해주세요.');return;}
+    }
   }else if(!_editingSourcePath && !url){
     alert('URL을 입력해주세요.');return;
   }
-  const item={grid:_targetGrid,type:_currentType,url,title,desc};
 
   try{
     if(_editingStaticKey){
+      const item={grid:_targetGrid,type:_currentType,url,title,desc};
       const saveData={...item,staticKey:_editingStaticKey,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
       await getCardsCol().doc(_editingStaticKey).set(saveData,{merge:true});
       const card=document.querySelector(`[data-static-key="${_editingStaticKey}"]`);
@@ -2900,8 +3113,10 @@ async function addItem(){
       closeModal('addModal');
       return;
     }
+
     if(_editingDocId){
       const sourcePath=_editingSourcePath||'';
+      const item={grid:_targetGrid,type:_currentType,url,title,desc};
       const saveData={
         ...item,
         updatedAt:firebase.firestore.FieldValue.serverTimestamp()
@@ -2918,13 +3133,37 @@ async function addItem(){
       return;
     }
 
-    const linkItem={grid:_targetGrid,type:'link',url,title,desc};
-    const docId=await saveCard(linkItem);
-    if(docId)insertCardToGrid(linkItem,docId);
+    if(_currentType==='link'){
+      const linkItem={grid:_targetGrid,type:'link',url,title,desc};
+      const docId=await saveCard(linkItem);
+      if(docId)insertCardToGrid(linkItem,docId);
+      await saveGridOrder(_targetGrid);
+      closeModal('addModal');
+      return;
+    }
+
+    const uploaded=await uploadFileToGithubFolder(file,_targetGrid);
+    uploaded.title=titleInput||titleFromFilename(file.name);
+    uploaded.desc=desc;
+    const docId=autoDocIdFromSource(uploaded.sourcePath);
+    if(ensureFirestore()){
+      await getCardsCol().doc(docId).set({
+        grid:uploaded.grid,
+        type:uploaded.type,
+        title:uploaded.title,
+        desc:uploaded.desc||'',
+        url:uploaded.url||'',
+        sourcePath:uploaded.sourcePath,
+        sourceKind:'github',
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+    }
+    insertCardToGrid(uploaded,docId);
+    await saveGridOrder(_targetGrid);
     closeModal('addModal');
   }catch(err){
     console.error('카드 저장 실패:',err);
-    alert('카드 저장에 실패했습니다. Firestore 설정을 확인해주세요.');
+    alert('카드 저장에 실패했습니다. '+(err.message||''));
   }
 }
 
@@ -2971,9 +3210,12 @@ async function saveProfile(){
 
 window.addEventListener('DOMContentLoaded',async()=>{
   loadProfile();
+  await loadGridOrder();
   await loadGithubFolderItems();
   await loadCards();
+  applyAllGridOrders();
   enhanceStaticPortfolioCards();
+  setupDragSortable();
 });
 
 /* ── FADE IN ── */
