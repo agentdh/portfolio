@@ -3,839 +3,2005 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOWONE — Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>BOWONE — Portfolio & Commission</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:        #0D0D14;
-    --bg2:       #13131F;
-    --bg3:       #1A1A2E;
-    --cyan:      #00E5FF;
-    --orange:    #FF6B2B;
-    --text:      #E8E8F0;
-    --text-dim:  #7A7A9A;
-    --border:    rgba(255,255,255,0.08);
-    --card-bg:   #16161F;
-    --radius:    10px;
-  }
+:root{
+  --bg:#0D0D14;--bg2:#13131F;--bg3:#1A1A2E;
+  --surface:#16161F;--surface2:#1e1e2c;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --cyan:#00E5FF;--orange:#FF6B2B;--gold:#c8a96e;
+  --green:#5ecfb1;--purple:#7b8ff5;
+  --text:#E8E8F0;--text-dim:#7A7A9A;--text-off:#4a4a60;
+  --radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-weight:300;min-height:100vh;line-height:1.6;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* HEADER */
+header{max-width:960px;margin:0 auto;padding:56px 24px 40px;display:flex;align-items:flex-start;gap:28px;}
+.avatar-wrap{width:88px;height:88px;border-radius:50%;border:2px solid var(--cyan);overflow:hidden;flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--cyan);cursor:pointer;position:relative;transition:border-color .2s;}
+.avatar-wrap:hover{border-color:var(--orange)}
+.avatar-wrap img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.profile-info{flex:1}
+.profile-brand{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.profile-info h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,4vw,36px);font-weight:700;letter-spacing:-.5px;line-height:1.15;color:#fff;}
+.profile-info h1 span{color:var(--cyan)}
+.profile-role{font-size:12px;color:var(--text-dim);margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
+.profile-bio{margin-top:10px;font-size:13px;color:var(--text-dim);max-width:480px;line-height:1.75;}
+.profile-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.p-tag{font-size:11px;padding:4px 11px;border-radius:100px;border:1px solid var(--border2);color:var(--text-dim);background:var(--bg3);letter-spacing:.03em;transition:all .2s;}
+.p-tag.hl{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    min-height: 100vh;
-    line-height: 1.6;
-  }
+/* CONTACT ROW */
+.contact-row{max-width:960px;margin:0 auto;padding:0 24px 28px;display:flex;gap:10px;flex-wrap:wrap;}
+.c-btn{display:flex;align-items:center;gap:7px;font-size:12px;padding:8px 14px;border-radius:8px;border:1px solid var(--border2);color:var(--text-dim);background:var(--bg2);text-decoration:none;cursor:pointer;transition:border-color .2s,color .2s;font-family:'Noto Sans KR',sans-serif;font-weight:300;}
+.c-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.c-btn svg{width:13px;height:13px;fill:currentColor}
 
-  /* ── HEADER ── */
-  header {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 60px 24px 40px;
-    display: flex;
-    align-items: flex-start;
-    gap: 32px;
-  }
+/* MAIN TABS */
+.tab-nav-wrap{max-width:960px;margin:0 auto;padding:0 24px;position:sticky;top:0;background:rgba(13,13,20,.93);backdrop-filter:blur(14px);z-index:50;}
+hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--border)}
+.tab-nav{display:flex;gap:0;border-bottom:1px solid var(--border);position:relative;overflow-x:auto;scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;padding:17px 20px 15px;background:none;border:none;color:var(--text-dim);cursor:pointer;position:relative;letter-spacing:.03em;transition:color .2s;white-space:nowrap;}
+.tab-btn::after{content:'';position:absolute;bottom:-1px;left:0;width:100%;height:2px;background:var(--cyan);transform:scaleX(0);transition:transform .25s ease;border-radius:2px 2px 0 0;}
+.tab-btn.active{color:var(--cyan)}.tab-btn.active::after{transform:scaleX(1)}
+.tab-btn:hover{color:var(--text)}
 
-  .avatar-wrap {
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    border: 2px solid var(--cyan);
-    overflow: hidden;
-    flex-shrink: 0;
-    background: var(--bg3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--cyan);
-    cursor: pointer;
-    position: relative;
-  }
-  .avatar-wrap img {
-    width: 100%; height: 100%; object-fit: cover;
-    position: absolute; top: 0; left: 0;
-  }
+.content{max-width:960px;margin:0 auto;padding:36px 24px 100px}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-  .profile-info h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: #fff;
-  }
-  .profile-info h1 span { color: var(--cyan); }
+/* SUB TABS (가격표 분야, 주의사항 하위) */
+.sub-tab-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.sub-tab{font-size:12px;padding:7px 14px;border-radius:8px;border:1px solid var(--border2);background:none;color:var(--text-dim);cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:300;transition:all .2s;white-space:nowrap;}
+.sub-tab.active{background:rgba(0,229,255,.08);border-color:var(--cyan);color:var(--cyan);}
+.sub-tab:hover{color:var(--text);border-color:var(--border2)}
+.sub-panel{display:none}.sub-panel.active{display:block}
 
-  .profile-info .role {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-top: 4px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
+/* SEC LABELS */
+.sec-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-off);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-label-lg{display:flex;align-items:baseline;gap:12px;margin-bottom:24px;}
+.sec-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-off);letter-spacing:.1em;}
+.sec-title{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.sec-title .en{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:8px;font-weight:400;}
 
-  .profile-info .bio {
-    margin-top: 12px;
-    font-size: 14px;
-    color: var(--text-dim);
-    max-width: 480px;
-    line-height: 1.7;
-  }
+/* PORTFOLIO CARDS */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:640px){.grid-3,.grid-2{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.grid-3,.grid-2{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s;cursor:pointer;position:relative;}
+.card:hover{transform:translateY(-3px);border-color:rgba(0,229,255,.3)}
+.card-thumb{width:100%;aspect-ratio:16/10;background:var(--bg3);position:relative;overflow:hidden;}
+.card-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.card:hover .card-thumb img{transform:scale(1.04)}
+.card-thumb.ph{display:flex;align-items:center;justify-content:center;}
+.card-thumb.ph svg{width:32px;height:32px;opacity:.2;fill:var(--text)}
+.type-badge{position:absolute;top:8px;right:8px;font-size:9px;font-family:'Space Grotesk',sans-serif;font-weight:600;padding:3px 7px;border-radius:4px;letter-spacing:.05em;}
+.type-badge.video{background:rgba(255,107,43,.85);color:#fff}
+.type-badge.link{background:rgba(0,229,255,.12);color:var(--cyan);border:1px solid rgba(0,229,255,.3)}
+.type-badge.image{background:rgba(255,255,255,.07);color:var(--text-dim)}
+.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28);opacity:0;transition:opacity .2s;}
+.card:hover .play-overlay{opacity:1}
+.play-overlay svg{width:40px;height:40px;fill:#fff;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.card-body{padding:11px 13px 13px}
+.card-title{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-desc{font-size:11px;color:var(--text-dim);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-add{background:none;border:1px dashed rgba(255,255,255,.13);border-radius:var(--radius);min-height:148px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:border-color .2s,background .2s;color:var(--text-dim);font-size:12px;text-align:center;padding:16px;font-family:'Noto Sans KR',sans-serif;font-weight:300;}
+.card-add:hover{border-color:var(--cyan);background:rgba(0,229,255,.03);color:var(--cyan)}
+.card-add svg{width:22px;height:22px;fill:currentColor;opacity:.45}
 
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 16px;
-  }
-  .tag {
-    font-size: 11px;
-    padding: 4px 12px;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    background: var(--bg3);
-    letter-spacing: 0.03em;
-  }
-  .tag.highlight {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    background: rgba(0,229,255,0.06);
-  }
+/* ABOUT */
+.stat-row{display:flex;gap:1px;background:var(--border);margin-bottom:28px}
+.stat{flex:1;background:var(--surface);padding:20px;text-align:center}
+.stat-num{display:block;font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--cyan)}
+.stat-label{display:block;font-size:11px;color:var(--text-dim);margin-top:4px;letter-spacing:.03em}
+.about-top{margin-bottom:14px}
+.about-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.about-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.about-grid{grid-template-columns:1fr}}
+.about-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;}
+.about-card h4{font-size:12px;font-weight:500;color:var(--cyan);margin-bottom:12px;letter-spacing:.05em;text-transform:uppercase}
+.about-card ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.about-card li{font-size:12px;color:var(--text-dim);display:flex;align-items:center;gap:8px}
+.about-card li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--text-off);flex-shrink:0}
+.tl-group-title{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:20px 0 10px;font-family:'Space Mono',monospace}
+.tl-item{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:start;}
+.tl-date{font-size:10px;color:var(--text-off);line-height:1.7;font-family:'Space Mono',monospace}
+.tl-name{font-size:13px;color:var(--text);font-weight:400;margin-bottom:3px}
+.tl-role{font-size:11px;color:var(--text-dim)}
+.tl-dim{opacity:.4}
 
-  /* ── CONTACT ROW ── */
-  .contact-row {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px 32px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .contact-btn {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    background: var(--bg2);
-    text-decoration: none;
-    cursor: pointer;
-    transition: border-color .2s, color .2s;
-  }
-  .contact-btn:hover { border-color: var(--cyan); color: var(--cyan); }
-  .contact-btn svg { width: 14px; height: 14px; fill: currentColor; }
+/* NOTICE / POLICY */
+.notice{background:var(--surface);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--text-dim);line-height:1.85;border-radius:0 var(--radius) var(--radius) 0;}
+.notice strong{color:var(--gold);font-weight:500}
+.policy-block{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:24px;margin-bottom:16px;}
+.policy-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--cyan);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.policy-sub{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-family:'Space Mono',monospace;margin:14px 0 6px;}
+.policy-text{font-size:13px;color:var(--text-dim);line-height:1.85;}
+.policy-text p{margin-bottom:8px}
+.policy-text p:last-child{margin-bottom:0}
+.policy-divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+.flow-steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0;}
+.flow-step{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--cyan);}
+.flow-arrow{color:var(--text-off);font-size:14px}
+.cancel-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px;}
+.cancel-table th{background:var(--surface2);padding:10px 14px;text-align:left;color:var(--text-dim);font-weight:500;border-bottom:1px solid var(--border2);}
+.cancel-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);}
+.cancel-table td:last-child{color:var(--gold);font-family:'Space Mono',monospace;}
+.cancel-table tr:last-child td{border-bottom:none}
 
-  /* ── DIVIDER ── */
-  hr.divider {
-    max-width: 900px;
-    margin: 0 auto 0;
-    border: none;
-    border-top: 1px solid var(--border);
-  }
+/* 이용 방침 표 */
+.usage-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:12px;}
+.usage-table th,.usage-table td{border:1px solid var(--border2);padding:10px 12px;text-align:center;vertical-align:middle;}
+.usage-table th{background:var(--bg3);color:var(--text-dim);font-weight:500;font-size:11px;letter-spacing:.03em;}
+.usage-table .row-header{background:var(--bg3);font-weight:600;color:var(--text);text-align:left;padding-left:16px;}
+.usage-table .row-header.nc{border-left:3px solid #5ecfb1}
+.usage-table .row-header.bc{border-left:3px solid var(--cyan)}
+.usage-table .row-header.cm{border-left:3px solid var(--purple)}
+.cell-ok{background:rgba(94,207,177,.12);color:var(--green);}
+.cell-ok-p{background:rgba(0,229,255,.10);color:var(--cyan);}
+.cell-no{background:rgba(255,255,255,.03);color:var(--text-off);}
+.cell-half{background:linear-gradient(135deg,rgba(0,229,255,.08) 50%,rgba(255,255,255,.03) 50%);color:var(--text-dim);}
+.cell-owner{background:rgba(123,143,245,.1);color:var(--purple);font-weight:500;}
 
-  /* ── TAB NAV ── */
-  .tab-nav-wrap {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px;
-    position: sticky;
-    top: 0;
-    background: rgba(13,13,20,0.92);
-    backdrop-filter: blur(12px);
-    z-index: 50;
-  }
-  .tab-nav {
-    display: flex;
-    gap: 0;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .tab-btn {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 18px 20px 16px;
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    position: relative;
-    letter-spacing: 0.03em;
-    transition: color .2s;
-  }
-  .tab-btn::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--cyan);
-    transform: scaleX(0);
-    transition: transform .25s ease;
-    border-radius: 2px 2px 0 0;
-  }
-  .tab-btn.active { color: var(--cyan); }
-  .tab-btn.active::after { transform: scaleX(1); }
-  .tab-btn:hover { color: var(--text); }
+/* COMMISSION PRICE */
+.price-section{margin-bottom:32px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;}
+.price-card{background:var(--surface);padding:20px;transition:background .2s}
+.price-card:hover{background:var(--surface2)}
+.price-card-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-off);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;}
+.price-card-name{font-size:14px;font-weight:500;margin-bottom:4px;color:var(--text)}
+.price-card-desc{font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.65}
+.price-card-from{font-size:9px;color:var(--text-off);letter-spacing:.05em;margin-bottom:2px}
+.price-card-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--gold);}
+.price-card-num .unit{font-size:11px;color:var(--text-dim);font-weight:400;margin-left:2px}
 
-  /* ── CONTENT ── */
-  .content {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 36px 24px 80px;
-  }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+.option-block{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;}
+.option-block-title{padding:11px 16px;font-size:9px;letter-spacing:.12em;color:var(--text-dim);text-transform:uppercase;font-family:'Space Mono',monospace;border-bottom:1px solid var(--border);background:var(--surface2);}
+.option-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;gap:12px;transition:background .15s;}
+.option-row:last-child{border-bottom:none}
+.option-row:hover{background:var(--surface2)}
+.opt-name{color:var(--text);flex:1;line-height:1.5}
+.opt-sub{font-size:10px;color:var(--text-dim);margin-top:2px}
+.opt-price{font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);white-space:nowrap;text-align:right;}
+.opt-price.add{color:var(--purple)}.opt-price.free{color:var(--green)}
 
-  /* ── SECTION LABEL ── */
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;}
+.two-col .option-block{border:none;margin-bottom:0;border-radius:0}
 
-  /* ── GRID ── */
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  @media (max-width: 640px) {
-    .grid-3, .grid-2 { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 440px) {
-    .grid-3, .grid-2 { grid-template-columns: 1fr; }
-  }
+.pixel-grid{
+display:grid;
+grid-template-columns:repeat(3,minmax(0,1fr));
+gap:1px;
+background:var(--border2);
+border:1px solid var(--border2);
+border-radius:var(--radius);
+overflow:hidden;
+margin-bottom:8px;
+}
+.pixel-grid .option-block{
+border:none;
+margin:0;
+border-radius:0;
+}
+@media(max-width:900px){
+.pixel-grid{grid-template-columns:1fr;}
+}
 
-  /* ── MEDIA CARD ── */
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: transform .2s, border-color .2s;
-    cursor: pointer;
-    position: relative;
-  }
-  .card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(0,229,255,0.3);
-  }
+.hl-box{background:linear-gradient(135deg,rgba(200,169,110,.06) 0%,rgba(123,143,245,.04) 100%);border:1px solid rgba(200,169,110,.2);padding:18px 22px;border-radius:var(--radius);margin-bottom:8px;}
+.hl-box-title{font-size:9px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:12px;}
+.hl-total{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;}
+.hl-total:last-child{margin-bottom:0}
+.hl-total-name{font-size:13px;font-weight:500}
+.hl-total-price{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold)}
+.hl-total-sub{font-size:10px;color:var(--text-dim);margin-top:2px;line-height:1.7}
+.badge{display:inline-block;padding:2px 6px;font-size:9px;font-family:'Space Mono',monospace;letter-spacing:.08em;border-radius:4px;margin-left:5px;vertical-align:middle;}
+.badge.green{background:rgba(94,207,177,.12);color:var(--green);border:1px solid rgba(94,207,177,.25)}
+.badge.blue{background:rgba(123,143,245,.12);color:var(--purple);border:1px solid rgba(123,143,245,.25)}
+.badge.gold{background:rgba(200,169,110,.12);color:var(--gold);border:1px solid rgba(200,169,110,.25)}
 
-  .card-thumb {
-    width: 100%;
-    aspect-ratio: 16/10;
-    background: var(--bg3);
-    position: relative;
-    overflow: hidden;
-  }
-  .card-thumb img {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform .3s;
-  }
-  .card:hover .card-thumb img { transform: scale(1.04); }
+/* CALCULATOR — 우측 사이드바 레이아웃 */
+.price-layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start;}
+@media(max-width:800px){.price-layout{grid-template-columns:1fr}}
+.price-main{}
+.calc-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:18px;position:sticky;top:72px;}
+.calc-title{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);font-family:'Space Mono',monospace;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.calc-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.calc-select-group{margin-bottom:10px;}
+.calc-select-group label{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-off);margin-bottom:4px;letter-spacing:.04em;}
+.calc-select-row{display:flex;gap:6px;align-items:center;}
+.calc-select-row select{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:11px;padding:7px 28px 7px 8px;border-radius:6px;font-family:'Noto Sans KR',sans-serif;font-weight:300;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237A7A9A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;min-width:0;}
+.calc-select-row select:focus{border-color:var(--cyan)}
+.calc-select-row select option{background:var(--bg2)}
+.qty-ctrl{display:flex;align-items:center;gap:0;border:1px solid var(--border2);border-radius:6px;overflow:hidden;flex-shrink:0;}
+.qty-btn{width:26px;height:30px;background:var(--surface2);border:none;color:var(--text-dim);font-size:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.qty-btn:hover{background:var(--surface);color:var(--cyan)}
+.qty-val{width:28px;height:30px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Space Mono',monospace;color:var(--text);border-left:1px solid var(--border2);border-right:1px solid var(--border2);}
+.calc-divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.calc-extra{display:flex;gap:6px;margin-bottom:10px;}
+.calc-extra input{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:11px;padding:7px 9px;border-radius:6px;font-family:'Noto Sans KR',sans-serif;outline:none;min-width:0;}
+.calc-extra input:focus{border-color:var(--cyan)}
+.calc-extra input::placeholder{color:var(--text-off);font-size:10px;}
+.calc-extra button{padding:7px 10px;background:var(--surface2);border:1px solid var(--border2);color:var(--text-dim);font-size:11px;border-radius:6px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;flex-shrink:0;}
+.calc-extra button:hover{border-color:var(--cyan);color:var(--cyan)}
+.calc-items-box{background:var(--surface);border-radius:6px;padding:10px;margin-bottom:10px;min-height:48px;}
+.calc-item-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:2px 0;gap:8px;}
+.calc-item-name{color:var(--text-dim);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.calc-item-price{color:var(--gold);font-family:'Space Mono',monospace;white-space:nowrap;flex-shrink:0;}
+.calc-item-del{color:var(--text-off);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;flex-shrink:0;}
+.calc-item-del:hover{color:#e74c3c}
+.calc-total-row{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border);}
+.calc-total-label{font-size:12px;color:var(--text-dim);}
+.calc-total-price{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);}
+.calc-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;}
+.calc-action-btn{padding:9px 6px;border-radius:6px;border:1px solid var(--border2);font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:400;transition:all .15s;text-align:center;}
+.calc-action-btn.add-order{background:rgba(0,229,255,.08);border-color:rgba(0,229,255,.3);color:var(--cyan);}
+.calc-action-btn.add-order:hover{background:rgba(0,229,255,.15);}
+.calc-action-btn.reset{background:var(--surface);color:var(--text-dim);}
+.calc-action-btn.reset:hover{border-color:var(--border2);color:var(--text);}
+.calc-orders{margin-top:10px;}
+.calc-order-item{background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;margin-bottom:6px;}
+.calc-order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.calc-order-num{font-size:9px;color:var(--text-off);font-family:'Space Mono',monospace;letter-spacing:.08em;}
+.calc-order-price{font-size:14px;font-weight:700;color:var(--gold);font-family:'Space Mono',monospace;}
+.calc-order-del{font-size:14px;color:var(--text-off);cursor:pointer;padding:0 2px;}
+.calc-order-del:hover{color:#e74c3c}
+.calc-order-items{font-size:10px;color:var(--text-off);line-height:1.6;}
+.calc-grand-total{display:flex;justify-content:space-between;align-items:center;padding:10px 0 0;border-top:1px solid var(--border2);margin-top:6px;}
+.calc-grand-label{font-size:11px;color:var(--text-dim);}
+.calc-grand-price{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--cyan);}
 
-  /* 썸네일 없을 때 placeholder */
-  .card-thumb.placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg3);
-  }
-  .card-thumb.placeholder svg {
-    width: 36px; height: 36px; opacity: 0.25;
-    fill: var(--text);
-  }
+/* MODAL */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:28px;width:90%;max-width:420px;position:relative;max-height:85vh;overflow-y:auto;}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:18px;font-family:'Space Grotesk',sans-serif}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;line-height:1;}
+.modal-close:hover{color:var(--text)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;color:var(--text-dim);margin-bottom:5px;letter-spacing:.04em}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:9px 12px;border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-weight:300;outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--cyan)}
+.form-group textarea{resize:vertical;min-height:60px}
+.type-tabs{display:flex;gap:6px;margin-bottom:16px}
+.type-tab{flex:1;padding:8px;border-radius:7px;border:1px solid var(--border2);background:none;color:var(--text-dim);font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;}
+.type-tab.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.07)}
+.btn-primary{width:100%;padding:11px;background:var(--cyan);color:#0D0D14;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:opacity .2s;}
+.btn-primary:hover{opacity:.88}
+.video-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center;}
+.video-modal-backdrop.open{display:flex}
+.video-modal{width:90%;max-width:760px;position:relative}
+.video-modal iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:10px}
+.video-modal-close{position:absolute;top:-36px;right:0;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;}
+.fade-in{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
 
-  /* 타입 뱃지 */
-  .type-badge {
-    position: absolute;
-    top: 8px; right: 8px;
-    font-size: 10px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.05em;
-  }
-  .type-badge.video { background: rgba(255,107,43,0.85); color: #fff; }
-  .type-badge.link  { background: rgba(0,229,255,0.15); color: var(--cyan); border: 1px solid rgba(0,229,255,0.3); }
-  .type-badge.image { background: rgba(255,255,255,0.08); color: var(--text-dim); }
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:32px 24px;max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.footer-brand{font-family:'Space Mono',monospace;font-size:12px;color:var(--gold)}
+.footer-links{display:flex;gap:18px}
+.footer-links a{font-size:11px;color:var(--text-dim);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--cyan)}
 
-  /* 비디오 플레이 오버레이 */
-  .play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.3);
-    opacity: 0;
-    transition: opacity .2s;
-  }
-  .card:hover .play-overlay { opacity: 1; }
-  .play-overlay svg { width: 44px; height: 44px; fill: #fff; filter: drop-shadow(0 2px 8px rgba(0,0,0,.5)); }
+@media(max-width:640px){
+  header{padding:40px 16px 28px;gap:18px}
+  .contact-row,.tab-nav-wrap,.content,footer{padding-left:16px;padding-right:16px}
+  .two-col{grid-template-columns:1fr}
+  .card-grid{grid-template-columns:1fr}
+  .calc-selects{grid-template-columns:1fr}
+}
 
-  .card-body {
-    padding: 12px 14px 14px;
-  }
-  .card-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .card-desc {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 4px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+.portfolio-section-title{
+margin:32px 0 14px;
+padding-bottom:8px;
+border-bottom:1px solid var(--border);
+font-size:14px;
+font-weight:600;
+color:var(--cyan);
+}
 
-  /* ── ADD CARD (에디터용) ── */
-  .card-add {
-    background: none;
-    border: 1px dashed rgba(255,255,255,0.15);
-    border-radius: var(--radius);
-    aspect-ratio: auto;
-    min-height: 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: border-color .2s, background .2s;
-    color: var(--text-dim);
-    font-size: 12px;
-    text-align: center;
-    padding: 16px;
-  }
-  .card-add:hover {
-    border-color: var(--cyan);
-    background: rgba(0,229,255,0.03);
-    color: var(--cyan);
-  }
-  .card-add svg { width: 24px; height: 24px; fill: currentColor; opacity: 0.5; }
-
-  /* ── MODAL ── */
-  .modal-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-backdrop.open { display: flex; }
-
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    width: 100%;
-    max-width: 480px;
-    padding: 28px;
-    position: relative;
-  }
-  .modal h3 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #fff;
-  }
-  .modal-close {
-    position: absolute;
-    top: 16px; right: 16px;
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    font-size: 20px;
-    line-height: 1;
-    padding: 4px;
-  }
-  .modal-close:hover { color: #fff; }
-
-  .form-group { margin-bottom: 16px; }
-  .form-group label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-  }
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 13px;
-    outline: none;
-    transition: border-color .2s;
-    resize: none;
-  }
-  .form-group input:focus,
-  .form-group textarea:focus,
-  .form-group select:focus {
-    border-color: var(--cyan);
-  }
-  .form-group select option { background: var(--bg3); }
-
-  .type-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .type-tab {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: none;
-    color: var(--text-dim);
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: all .2s;
-    text-align: center;
-  }
-  .type-tab.active {
-    background: rgba(0,229,255,0.08);
-    border-color: var(--cyan);
-    color: var(--cyan);
-  }
-
-  .btn-primary {
-    width: 100%;
-    padding: 12px;
-    background: var(--cyan);
-    color: #0D0D14;
-    font-weight: 700;
-    font-size: 13px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Space Grotesk', sans-serif;
-    letter-spacing: 0.04em;
-    transition: opacity .2s;
-    margin-top: 4px;
-  }
-  .btn-primary:hover { opacity: 0.85; }
-
-  /* ── VIDEO MODAL ── */
-  .video-modal-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    z-index: 300;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .video-modal-backdrop.open { display: flex; }
-  .video-modal {
-    width: 100%;
-    max-width: 800px;
-    position: relative;
-  }
-  .video-modal iframe,
-  .video-modal video {
-    width: 100%;
-    aspect-ratio: 16/9;
-    border-radius: 10px;
-    border: none;
-  }
-  .video-modal-close {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 28px;
-    cursor: pointer;
-    opacity: 0.7;
-  }
-  .video-modal-close:hover { opacity: 1; }
-
-  /* ── INTRO SECTION (About 탭) ── */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 24px;
-  }
-  @media (max-width: 540px) { .about-grid { grid-template-columns: 1fr; } }
-
-  .about-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
-  .about-card h4 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 12px;
-  }
-  .about-card ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .about-card ul li {
-    font-size: 13px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .about-card ul li::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--cyan);
-    flex-shrink: 0;
-  }
-
-  .stat-row {
-    display: flex;
-    gap: 24px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-  }
-  .stat {
-    display: flex;
-    flex-direction: column;
-  }
-  .stat-num {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--cyan);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 4px;
-  }
-
-  /* 프로필 이미지 업로드 힌트 */
-  .avatar-edit-hint {
-    font-size: 10px;
-    color: var(--text-dim);
-    margin-top: 8px;
-    text-align: center;
-    max-width: 96px;
-  }
 </style>
 </head>
 <body>
-
-<!-- ── HEADER ── -->
 <header>
-  <div style="display:flex;flex-direction:column;align-items:center;">
-    <div class="avatar-wrap" id="avatarWrap" onclick="document.getElementById('avatarInput').click()" title="클릭하여 프로필 사진 변경">
-      BW
-      <img id="avatarImg" src="" style="display:none;">
-    </div>
-    <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="loadAvatar(event)">
-    <div class="avatar-edit-hint">클릭하여<br>사진 변경</div>
-  </div>
-
+  <div class="avatar-wrap" onclick="openModal('profileModal')" title="프로필 편집"><span id="avatarInitial">BW</span><img id="avatarImg" src="" alt="" style="display:none"></div>
   <div class="profile-info">
-    <h1>BOW<span>ONE</span></h1>
-    <div class="role">Animator · Character Designer · MV Creator</div>
-    <p class="bio">
-      캐릭터 IP 설계와 MV 스타일 애니메이션을 중심으로 작업합니다.
-      게임 콘텐츠 디자인 전공 (한국영상대학교), 프리랜서 외주 경험 보유.
-    </p>
-    <div class="tags">
-      <span class="tag highlight">애니메이터</span>
-      <span class="tag highlight">후보정</span>
-      <span class="tag">Clip Studio Paint</span>
-      <span class="tag">Adobe Suite</span>
-      <span class="tag">After Effects</span>
-      <span class="tag">Live2D</span>
+    <div class="profile-brand">Multimedia Artist · Commission Open</div>
+    <h1 id="profileName">BOW<span>ONE</span></h1>
+    <div class="profile-role" id="profileRole">Illustrator · Animator · 3D Modeler</div>
+    <p class="profile-bio" id="profileBio">일러스트, 애니메이션, 3D 모델링을 중심으로<br>다양한 디지털 콘텐츠를 제작하고 있는<br>멀티미디어 아티스트 보원입니다.<br><br>캐릭터 디자인부터 MV 제작,<br>게임용 픽셀아트 및 마인크래프트 리소스 제작까지<br>폭넓은 작업을 진행하고 있습니다.<br><br>E-mail : agentdh@naver.com</p>
+    <div class="profile-tags">
+      <span class="p-tag hl">일러스트</span><span class="p-tag hl">MV 제작</span><span class="p-tag hl">3D 모델링</span>
+      <span class="p-tag">Live2D</span><span class="p-tag">픽셀아트</span><span class="p-tag">마인크래프트</span><span class="p-tag">브랜딩</span>
     </div>
   </div>
 </header>
 
-<!-- ── CONTACT ROW ── -->
 <div class="contact-row">
-  <a href="https://artmug.kr/" target="_blank" class="contact-btn">
-    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93V18c0-.55.45-1 1-1s1 .45 1 1v1.93c-3.95-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6V13c0-.55.45-1 1-1s1 .45 1 1v5c2.76-.8 5-3.27 5-6.24V11c0-4.41-3.59-8-8-8S4 6.59 4 11v.76C4 15.37 6.55 18.37 9.97 18.9z"/></svg>
-    Artmug
-  </a>
-  <a href="https://open.kakao.com/o/sEkVy2zi" target="_blank" class="contact-btn">
-    <svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.92 2 11.77c0 3.03 1.76 5.69 4.4 7.24l-1.1 4.07 4.66-2.91c.64.1 1.3.16 1.98.16 5.52 0 10-3.92 10-8.77S17.52 3 12 3z"/></svg>
-    카카오톡 오픈채팅
-  </a>
-  <a href="mailto:your@email.com" class="contact-btn" id="emailBtn">
-    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-    <span id="emailLabel">이메일 등록</span>
-  </a>
-  <button class="contact-btn" onclick="editProfile()">
-    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-    프로필 편집
-  </button>
+  <a class="c-btn" href="https://x.com/agentdh_Bowone" target="_blank"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>@agentdh_Bowone</a>
+  <a class="c-btn" href="https://crepe.cm/@agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>크레페</a>
+  <a class="c-btn" href="https://artmug.kr/index.php?channel=list&field=brand&search=YWdlbnRkaA==" target="_blank"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>아트머그</a>
+  <a class="c-btn" href="https://www.youtube.com/@agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>YouTube</a>
+  <a class="c-btn" href="https://www.instagram.com/agentdhone/" target="_blank"><svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3z"/></svg>Instagram</a>
 </div>
-
 <hr class="divider">
 
-<!-- ── TAB NAV ── -->
+<!-- MAIN TAB NAV: 소개 / 포트폴리오 / 주의사항 / 가격표 -->
 <div class="tab-nav-wrap">
-  <nav class="tab-nav" id="tabNav">
-    <button class="tab-btn active" data-tab="work">작업물</button>
-    <button class="tab-btn" data-tab="process">작업 과정</button>
-    <button class="tab-btn" data-tab="links">링크 · 채널</button>
-    <button class="tab-btn" data-tab="about">About</button>
-  </nav>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('about',this)">소개</button>
+    <button class="tab-btn" onclick="switchTab('notice',this)">주의사항</button>
+    <button class="tab-btn" onclick="switchTab('work',this)">포트폴리오</button>
+    <button class="tab-btn" onclick="switchTab('commission',this)">가격표</button>
+  </div>
 </div>
 
-<!-- ── CONTENT ── -->
 <div class="content">
 
-  <!-- 작업물 탭 -->
-  <div class="tab-panel active" id="tab-work">
-    <div class="section-label">최근 작업</div>
-    <div class="grid-3" id="workGrid">
 
-      <!-- 샘플 카드: 이미지 -->
-      <div class="card" onclick="openCard(this)" data-type="image" data-url="" data-title="PARALLAX — 캐릭터 컨셉아트">
-        <div class="card-thumb placeholder">
-          <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-        </div>
-        <span class="type-badge image">IMAGE</span>
-        <div class="card-body">
-          <div class="card-title">PARALLAX — 캐릭터 컨셉아트</div>
-          <div class="card-desc">2026 한국게임학회 × 넥슨게임즈 입선작 · 캐릭터 Celne</div>
+<!-- ══ 소개 탭 ══ -->
+<div class="tab-panel active" id="tab-about">
+
+<div class="about-card about-top fade-in">
+<h4>학력</h4>
+<ul>
+<li>한국영상대학교 게임콘텐츠전공</li>
+</ul>
+</div>
+
+<div class="about-grid fade-in">
+
+<div class="about-card">
+<h4>작업</h4>
+<ul>
+<li>일러스트 · 2D 일러스트 · 썸네일 · 방송소스 · 컨셉아트 · 디자인</li>
+<li>영상 · MV 제작 · 2D 애니메이션 · 3D 애니메이션</li>
+<li>모델링 · 캐릭터 · 배경 소품 · 배경</li>
+<li>마인크래프트 · 스킨 · 리소스팩 · 애니메이션</li>
+<li>기타 · Live2D · 픽셀아트</li>
+</ul>
+</div>
+
+<div class="about-card">
+<h4>외주 이력</h4>
+<ul>
+<li>샌드박스네트워크 · MC 모델링 및 애니메이션</li>
+<li>우마공 · 10주년 기념 타이틀 배너</li>
+<li>벌스워크 · MC 스킨 · 모델 · 애니메이션</li>
+</ul>
+</div>
+
+<div class="about-card">
+<h4>동부 활동</h4>
+<ul>
+<li>배비꼬</li>
+<li>김루야</li>
+<li>조아햄</li>
+<li>작업 중단 및 보류 · 이보늬 · 떠난 자 · 다비</li>
+</ul>
+</div>
+
+<div class="about-card">
+<h4>사용하는 프로그램</h4>
+<ul>
+<li>ILLUST · Clip Studio Paint · Photoshop · Aseprite</li>
+<li>ANIMATION · After Effects · Premiere Pro · Live2D Cubism · Spine</li>
+<li>MODELING · Maya · Blender · ZBrush · Substance Painter</li>
+<li>ADDITIONAL · Blockbench · Mine-imator</li>
+</ul>
+</div>
+
+</div>
+<div style="height:15px;"></div>
+
+<div class="about-card about-top fade-in">
+<h4>수상 / 대외활동</h4>
+<ul>
+<li>2026 한국게임학회 × 넥슨게임즈 입선</li>
+</ul>
+</div>
+
+</div>
+
+
+<!-- ══ 포트폴리오 탭 ══ -->
+<div class="tab-panel" id="tab-work">
+  <div class="sub-tab-wrap">
+    <button class="sub-tab active" onclick="switchSub('work','thumbnail',this)">썸네일</button>
+    <button class="sub-tab" onclick="switchSub('work','illust',this)">일러스트</button>
+    <button class="sub-tab" onclick="switchSub('work','3d',this)">3D</button>
+    <button class="sub-tab" onclick="switchSub('work','live2d',this)">Live2D</button>
+    <button class="sub-tab" onclick="switchSub('work','pixel',this)">픽셀아트</button>
+    <button class="sub-tab" onclick="switchSub('work','minecraft',this)">마인크래프트</button>
+    <button class="sub-tab" onclick="switchSub('work','animation',this)">애니메이션·영상</button>
+    <button class="sub-tab" onclick="switchSub('work','branding',this)">브랜딩·채널아트</button>
+  </div>
+
+  <div class="sub-panel active" 
+id="work-thumbnail">
+<div class="portfolio-section-title">LD 썸네일</div><div class="grid-3 fade-in" id="thumbnail-ld">
+      <div class="card-add" onclick="openAddModal('thumbnailGrid','썸네일')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>썸네일 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">SD 썸네일</div><div class="grid-3 fade-in" id="thumbnail-sd">
+      <div class="card-add" onclick="openAddModal('thumbnailGrid','썸네일')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>썸네일 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">합성 썸네일</div><div class="grid-3 fade-in" id="thumbnail-composite">
+      <div class="card-add" onclick="openAddModal('thumbnailGrid','썸네일')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>썸네일 추가
+    </div>
+    </div>
+  </div>
+
+  <div class="sub-panel" 
+id="work-illust">
+<div class="portfolio-section-title">일러스트</div>
+  <div class="sec-label fade-in">심플</div><div class="grid-3 fade-in" id="illust-simple">
+      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
+    </div>
+    </div>
+  <div class="sec-label fade-in">얇은선</div><div class="grid-3 fade-in" id="illust-line">
+      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
+    </div>
+    </div>
+  <div class="sec-label fade-in">반무테</div><div class="grid-3 fade-in" id="illust-semi-painted">
+      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">커버일러스트</div><div class="grid-3 fade-in" id="illust-cover">
+      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
+    </div>
+    </div>
+  </div>
+
+  <div class="sub-panel" 
+id="work-live2d">
+<div class="sec-label fade-in">Live2D</div><div class="grid-3 fade-in" id="live2d-work">
+      <div class="card-add" onclick="openAddModal('live2dGrid','Live2D')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Live2D 추가
+    </div>
+    </div>
+  </div>
+
+  <div class="sub-panel" 
+id="work-pixel">
+<div class="portfolio-section-title">마우스 커서</div><div class="grid-3 fade-in" id="pixel-cursor">
+      <div class="card-add" onclick="openAddModal('pixelWorkGrid','픽셀아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>픽셀아트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">픽셀아트 일러스트</div><div class="grid-3 fade-in" id="pixel-illust">
+      <div class="card-add" onclick="openAddModal('pixelWorkGrid','픽셀아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>픽셀아트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">게임소스</div><div class="grid-3 fade-in" id="pixel-game">
+      <div class="card-add" onclick="openAddModal('pixelWorkGrid','픽셀아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>픽셀아트 추가
+    </div>
+    </div>
+  </div>
+
+  <div class="sub-panel" 
+id="work-minecraft">
+<div class="portfolio-section-title">스킨</div><div class="grid-3 fade-in" id="mc-skin">
+      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">모델링</div><div class="grid-3 fade-in" id="mc-model">
+      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">애니메이션</div><div class="grid-3 fade-in" id="mc-animation">
+      <div class="card" onclick="window.open('https://youtu.be/6yiArsUdr_s', '_blank')">
+      <div class="card-thumb"><img src="https://img.youtube.com/vi/6yiArsUdr_s/mqdefault.jpg" alt="MC"><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+      <span class="type-badge video">VIDEO</span>
+      <div class="card-body"><div class="card-title">MC 애니메이션 #1</div><div class="card-desc">마인크래프트 애니메이션</div></div>
+    </div>
+      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">리소스팩</div><div class="grid-3 fade-in" id="mc-resource">
+      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
+    </div>
+    </div>
+  </div>
+
+  <div class="sub-panel" 
+id="work-branding">
+<div class="portfolio-section-title">방송 대기화면</div><div class="grid-3 fade-in" id="brand-wait">
+      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">심볼 디자인</div><div class="grid-3 fade-in" id="brand-symbol">
+      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">이모티콘</div><div class="grid-3 fade-in" id="brand-emote">
+      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">포스터</div><div class="grid-3 fade-in" id="brand-poster">
+      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
+    </div>
+    </div>
+<div class="portfolio-section-title">기타</div><div class="grid-3 fade-in" id="brand-etc">
+      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
+    </div>
+    </div>
+  </div>
+
+  <div class="sub-panel" 
+<div class="sub-panel" id="work-animation">
+  <div class="portfolio-section-title">MV</div>
+  <div class="grid-3 fade-in" id="mvAnimationGrid">
+    <div class="card" onclick="window.open('https://youtu.be/UoKUdXDwonM', '_blank')">
+      <div class="card-thumb">
+        <img src="https://img.youtube.com/vi/UoKUdXDwonM/mqdefault.jpg" alt="MV1">
+        <div class="play-overlay">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </div>
       </div>
+      <span class="type-badge video">VIDEO</span>
+      <div class="card-body">
+        <div class="card-title">MV 작업물 #1</div>
+        <div class="card-desc">뮤직비디오 애니메이션</div>
+      </div>
+    </div>
+    <div class="card" onclick="window.open('https://youtube.com/shorts/W5Bc9GofYws', '_blank')">
+      <div class="card-thumb">
+        <img src="https://img.youtube.com/vi/W5Bc9GofYws/mqdefault.jpg" alt="MV2">
+        <div class="play-overlay">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <span class="type-badge video">VIDEO</span>
+      <div class="card-body">
+        <div class="card-title">MV 작업물 #2</div>
+        <div class="card-desc">Shorts MV</div>
+      </div>
+    </div>
+    <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>MV 추가</div>
+  </div>
+  <div class="portfolio-section-title">2D Animation</div>
+  <div class="grid-3 fade-in" id="animation2DGrid">
+    <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>2D 애니메이션 추가</div>
+  </div>
+  <div class="portfolio-section-title">3D Animation</div>
+  <div class="grid-3 fade-in" id="animation3DGrid">
+    <div class="card" onclick="window.open('https://youtu.be/wlTLXVMm4VA', '_blank')">
+      <div class="card-thumb">
+        <img src="https://img.youtube.com/vi/wlTLXVMm4VA/mqdefault.jpg" alt="3D">
+        <div class="play-overlay">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <span class="type-badge video">VIDEO</span>
+      <div class="card-body">
+        <div class="card-title">3D 애니메이션 #1</div>
+        <div class="card-desc">프레임 애니메이션</div>
+      </div>
+    </div>
+    <div class="card-add" onclick="openAddModal('animation3DGrid','3D Animation')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>3D 애니메이션 추가</div>
+  </div>
+  <div class="portfolio-section-title">Virtual Props</div>
+  <div class="grid-3 fade-in" id="virtualPropGrid">
+    <div class="card-add" onclick="openAddModal('virtualPropGrid','Virtual Props')">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>버추얼 소품 추가</div>
+  </div>
+</div>
 
-      <!-- 샘플 카드: 영상 (유튜브) -->
-      <div class="card" onclick="openCard(this)" data-type="video" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" data-title="애니메이션 샘플 클립">
-        <div class="card-thumb" style="background:#111;">
-          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg" alt="썸네일">
-          <div class="play-overlay">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  
+<div class="sub-panel" id="work-3d">
+<div class="portfolio-section-title">캐릭터</div>
+<div class="portfolio-section-title">아이템</div>
+<div class="portfolio-section-title">배경</div>
+<div class="sec-label fade-in">3D</div>
+<div class="grid-3 fade-in" id="work3dGrid">
+<div class="card-add" onclick="openAddModal('work3dGrid','3D')">3D 추가</div>
+</div>
+</div>
+
+</div>
+
+<!-- ══ 주의사항 탭 ══ -->
+<div class="tab-panel" id="tab-notice">
+  <div class="sub-tab-wrap">
+    <button class="sub-tab active" onclick="switchSub('notice','copyright',this)">저작권</button>
+    <button class="sub-tab" onclick="switchSub('notice','process',this)">작업 진행 순서</button>
+    <button class="sub-tab" onclick="switchSub('notice','refund',this)">취소 및 환불</button>
+    <button class="sub-tab" onclick="switchSub('notice','policy',this)">작업물 이용 방침</button>
+  </div>
+
+  <!-- 저작권 -->
+  <div class="sub-panel active" id="notice-copyright">
+    <div class="policy-block fade-in">
+      <div class="policy-title">📋 저작권 안내</div>
+      <div class="policy-text">
+        <p>저의 모든 커미션 작업물들의 저작권은<br>계약서를 따로 작성해서 작업하는 것이 아닌 이상 모두 <strong style="color:var(--cyan)">보원</strong>에게 있음을 알려드립니다.</p>
+      </div>
+      <div class="policy-divider"></div>
+      <div class="policy-sub">금지 사항</div>
+      <div class="policy-text">
+        <p>· 샘플들을 캡쳐해서 타 커미션에 참고자료로 사용하는 것을 금지합니다.</p>
+        <p>· 모든 작업물의 트레이싱을 금지합니다.</p>
+      </div>
+      <div class="policy-divider"></div>
+      <div class="policy-sub">허용 사항</div>
+      <div class="policy-text">
+        <p>· 연습/공부 등의 목적으로 이용하는 것은 자유입니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 작업 진행 순서 -->
+  <div class="sub-panel" id="notice-process">
+    <div class="policy-block fade-in">
+      <div class="policy-title">🔄 작업 진행 순서</div>
+      <div class="flow-steps">
+        <span class="flow-step">문의</span><span class="flow-arrow">→</span>
+        <span class="flow-step">확인 및 수락</span><span class="flow-arrow">→</span>
+        <span class="flow-step">작업 시작</span><span class="flow-arrow">→</span>
+        <span class="flow-step">중간 점검</span><span class="flow-arrow">→</span>
+        <span class="flow-step">작업 완료</span><span class="flow-arrow">→</span>
+        <span class="flow-step">후불 입금</span><span class="flow-arrow">→</span>
+        <span class="flow-step">원본 파일 전달</span>
+      </div>
+      <div class="policy-divider"></div>
+      <div class="policy-sub">수정 및 컨펌</div>
+      <div class="policy-text">
+        <p>작업 진행 시 컨펌 및 수정은 제한된 횟수가 없으며,<br>원하는 수정 및 추가사항은 언제든지 말씀하셔도 됩니다.</p>
+        <p style="margin-top:10px;color:var(--gold)">⚠ 다만, 갑자기 캐릭터 디자인이 크게 변경되는 등의 대폭 수정의 경우 추가 가격이 발생할 수 있음을 알려드립니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 취소 및 환불 -->
+  <div class="sub-panel" id="notice-refund">
+    <div class="policy-block fade-in">
+      <div class="policy-title">💸 취소 및 환불 정책</div>
+      <div class="policy-text">
+        <p>제 작업은 대부분 <strong style="color:var(--cyan)">후불</strong>로 작업이 진행되며,<br>도중 취소 시에는 취소금을 지불하셔야 합니다.<br>취소한 작업물은 사용이 불가능합니다.</p>
+      </div>
+      <div class="policy-divider"></div>
+      <div class="policy-sub">취소 시 비용</div>
+      <table class="cancel-table">
+        <thead><tr><th>시점</th><th>취소금</th></tr></thead>
+        <tbody>
+          <tr><td>첫 번째 중간 점검 도중</td><td>0% (취소금 없음)</td></tr>
+          <tr><td>첫 번째 중간 점검 이후</td><td>의뢰비용의 30%</td></tr>
+        </tbody>
+      </table>
+      <div class="policy-divider"></div>
+      <div class="policy-sub">환불 안내</div>
+      <div class="policy-text">
+        <p>원본 파일 전달 이후에는 기본적으로 환불이 불가능합니다.</p>
+        <p style="margin-top:8px">단, <strong style="color:var(--gold)">상업용 작업물</strong>의 경우 원본 파일 전달 이후 1달 내에 방송을 그만두게 되는 등의 이유로 사용할 수 없게 될 경우에는 상황에 따라 최대 <strong style="color:var(--cyan)">80%</strong>까지 환불 가능합니다.<br>단, 의뢰인은 해당 작업물을 폐기해야하고, 재사용이 불가능합니다.</p>
+      </div>
+      <div class="policy-divider"></div>
+      <div class="notice" style="margin-bottom:0">
+        <strong>※ 특수 상황 ※</strong><br>
+        어떠한 경우에도 제가 사전에 아무런 얘기 없이 마감기한을 지키지 못한 경우에는 취소 비용을 부담하실 필요 없습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 작업물 이용 방침 -->
+  <div class="sub-panel" id="notice-policy">
+    <div class="policy-block fade-in">
+      <div class="policy-title">📌 작업물 이용 방침 안내</div>
+
+      <!-- 이용 방침 표 -->
+      <div style="overflow-x:auto;margin-bottom:20px">
+        <table class="usage-table">
+          <thead>
+            <tr>
+              <th style="width:90px"></th>
+              <th>개인 소장<br>SNS 프로필</th>
+              <th>방송용<br>커버/방송화면</th>
+              <th>굿즈/이모티콘<br>제작</th>
+              <th>2차 수정<br>및 사용</th>
+              <th>저작권<br>소유자</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-header nc">비상업용</td>
+              <td class="cell-ok">✓</td>
+              <td class="cell-no">✗</td>
+              <td class="cell-no">✗</td>
+              <td class="cell-no">✗</td>
+              <td class="cell-owner">보원</td>
+            </tr>
+            <tr>
+              <td class="row-header bc">방송용</td>
+              <td class="cell-ok">✓</td>
+              <td class="cell-ok-p">✓</td>
+              <td class="cell-half">협의</td>
+              <td class="cell-no">✗</td>
+              <td class="cell-owner">보원</td>
+            </tr>
+            <tr>
+              <td class="row-header cm">상업용</td>
+              <td class="cell-ok">✓</td>
+              <td class="cell-ok">✓</td>
+              <td class="cell-ok">✓</td>
+              <td class="cell-ok">✓</td>
+              <td class="cell-owner" style="color:var(--gold)">보원/<br>의뢰인</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 비상업용 -->
+      <div class="policy-sub">비상업용</div>
+      <div class="policy-text">
+        <p><strong style="color:var(--green)">· 허용 범위 ·</strong><br>
+        개인 소장, SNS 프로필(방송 플랫폼 프로필 이미지 포함)로 사용 가능합니다.</p>
+        <p style="margin-top:8px"><strong style="color:var(--orange)">· 금지 범위 ·</strong><br>
+        수익 창출이 발생하는 방송 콘텐츠에 직접 삽입하거나 홍보 목적으로 사용하는 행위는 금지합니다.</p>
+      </div>
+
+      <div class="policy-divider"></div>
+
+      <!-- 방송용 -->
+      <div class="policy-sub">방송용</div>
+      <div class="policy-text">
+        <p><strong style="color:var(--cyan)">· 이용 성격 ·</strong><br>
+        "제한적으로 라이선스 허용하는 상업용"으로 간주됩니다.</p>
+        <p style="margin-top:8px"><strong style="color:var(--cyan)">· 추가 이용 ·</strong><br>
+        굿즈, 이모티콘 제작에 관해서는 별도 협의가 필요합니다.</p>
+        <p style="margin-top:8px"><strong style="color:var(--cyan)">· 2차 수정 ·</strong><br>
+        저에게 수정 의뢰를 하거나 수정 여부를 확인 후에 가능하며, 사전 통보 없이 개인적으로 수정하는 행위는 금지합니다.</p>
+      </div>
+
+      <div class="policy-divider"></div>
+
+      <!-- 상업용 -->
+      <div class="policy-sub">상업용</div>
+      <div class="policy-text">
+        <p><strong style="color:var(--purple)">· 진행 방식 ·</strong><br>
+        온전한 저작권 양도를 원하실 경우에만 의뢰가 가능합니다.</p>
+        <p style="margin-top:8px"><strong style="color:var(--purple)">· 계약 절차 ·</strong><br>
+        저작재산권과 2차적 저작물 작성권 양도 등 구체적인 권리 범위에 대한 합의가 필요하므로, 원하시는 권리에 대한 계약서를 준비하여 문의 주시면 검토 후 별도 계약을 통해 진행됩니다.</p>
+        <p style="margin-top:8px"><strong style="color:var(--purple)">· 주의사항 ·</strong><br>
+        저작인격권은 양도되지 않으며, 의뢰인이 작업물을 자유롭게 수정하기 위해서는 이 부분에 대한 특약이 필요합니다.</p>
+      </div>
+
+      <div class="policy-divider"></div>
+      <div class="policy-text" style="color:var(--text-off);font-size:12px">
+        (대부분의 외주 작업물들은 계약 상 포트폴리오로 보여드릴 수는 없습니다..)
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ══ 가격표 탭 ══ -->
+<div class="tab-panel" id="tab-commission">
+  <div class="sub-tab-wrap">
+    <button class="sub-tab active" onclick="switchSub('commission','thumbnail',this)">썸네일</button>
+    <button class="sub-tab" onclick="switchSub('commission','illust',this)">일러스트</button>
+    <button class="sub-tab" onclick="switchSub('commission','3d',this)">3D</button>
+    <button class="sub-tab" onclick="switchSub('commission','live2d',this)">Live2D</button>
+    <button class="sub-tab" onclick="switchSub('commission','pixel',this)">픽셀아트</button>
+    <button class="sub-tab" onclick="switchSub('commission','minecraft',this)">마인크래프트</button>
+    <button class="sub-tab" onclick="switchSub('commission','animation',this)">애니메이션·영상</button>
+    <button class="sub-tab" onclick="switchSub('commission','branding',this)">브랜딩·채널아트</button>
+  </div>
+
+<div class="sub-panel" id="commission-3d">
+<div class="price-layout"><div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">08</span><h2 class="sec-title">3D<span class="en">Modeling</span></h2></div>
+<div class="option-block">
+<div class="option-block-title">캐릭터 <span style="color:var(--text-off);font-size:10px">(현재 작업 안함)</span></div>
+<div class="option-row" style="opacity:.4"><div class="opt-name">SD</div><div class="opt-price">50,000</div></div>
+<div class="option-row" style="opacity:.4"><div class="opt-name">LD</div><div class="opt-price">120,000</div></div>
+<div class="option-row" style="opacity:.4"><div class="opt-name">추가 장신구</div><div class="opt-price add">+5,000</div></div>
+<div class="option-row" style="opacity:.4"><div class="opt-name">추가 의상</div><div class="opt-price add">+50,000</div></div>
+</div>
+<div class="option-block">
+<div class="option-block-title">아이템</div>
+<div class="option-row"><div class="opt-name">장신구<div class="opt-sub">소형</div></div><div class="opt-price">2,000</div></div>
+<div class="option-row"><div class="opt-name">단일 아이템<div class="opt-sub">중형</div></div><div class="opt-price">5,000</div></div>
+<div class="option-row"><div class="opt-name">상호작용 아이템<div class="opt-sub">대형</div></div><div class="opt-price">10,000</div></div>
+</div>
+<div class="option-block">
+<div class="option-block-title">배경</div>
+<div class="option-row"><div class="opt-name">단순 형태</div><div class="opt-price">30,000</div></div>
+<div class="option-row"><div class="opt-name">간단한 사물 배치</div><div class="opt-price">100,000</div></div>
+<div class="option-row"><div class="opt-name">상호작용 가능한 아이템 구성</div><div class="opt-price">150,000</div></div>
+</div>
+</div>
+<div class="calc-box" id="calc-3d">
+<div class="calc-title">가격 옵션</div>
+<div class="calc-select-group" data-calc="3d">
+  <label>아이템</label>
+  <div class="calc-select-row">
+    <select onchange="handleOptionChange(this,'3d')">
+      <option value="0">없음</option>
+      <option value="2000">장신구 소형 (2,000)</option>
+      <option value="5000">단일 아이템 중형 (5,000)</option>
+      <option value="10000">상호작용 아이템 대형 (10,000)</option>
+    </select>
+    <div class="qty-ctrl">
+      <button class="qty-btn" onclick="changeQty('3d',0,-1)">−</button>
+      <div class="qty-val">0</div>
+      <button class="qty-btn" onclick="changeQty('3d',0,+1)">+</button>
+    </div>
+  </div>
+</div>
+<div class="calc-select-group" data-calc="3d">
+  <label>배경</label>
+  <div class="calc-select-row">
+    <select onchange="handleOptionChange(this,'3d')">
+      <option value="0">없음</option>
+      <option value="30000">단순 형태 (30,000)</option>
+      <option value="100000">간단한 사물 배치 (100,000)</option>
+      <option value="150000">상호작용 가능한 아이템 구성 (150,000)</option>
+    </select>
+    <div class="qty-ctrl">
+      <button class="qty-btn" onclick="changeQty('3d',1,-1)">−</button>
+      <div class="qty-val">0</div>
+      <button class="qty-btn" onclick="changeQty('3d',1,+1)">+</button>
+    </div>
+  </div>
+</div>
+<div class="calc-divider"></div>
+<div class="calc-extra">
+  <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-3d">
+  <button onclick="applyExtra('3d')">추가</button>
+</div>
+<div class="calc-items-box"></div>
+<div class="calc-total-row">
+  <span class="calc-total-label">결제 금액</span>
+  <span class="calc-total-price">0원</span>
+</div>
+<div class="calc-btn-row">
+  <button class="calc-action-btn add-order" onclick="addOrder('3d',false)">+ 주문 추가</button>
+  <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('3d',true)">옵션 유지 추가</button>
+</div>
+<button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('3d')">초기화</button>
+<div class="calc-orders"></div>
+</div></div>
+</div>
+
+
+  <!-- 썸네일 -->
+  <div class="sub-panel active" id="commission-thumbnail">
+<div class="price-layout">
+<div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">01</span><h2 class="sec-title">썸네일<span class="en">Thumbnail</span></h2></div>
+    <div class="pixel-grid">
+      <div class="price-card"><div class="price-card-label">기본형</div><div class="price-card-name">MD · LD 썸네일</div><div class="price-card-desc">캐릭터 2명 포함<br>레이어 분할 추가금 없음</div><div class="price-card-num">30,000<span class="unit">원</span></div></div>
+      <div class="price-card"><div class="price-card-label">합성형</div><div class="price-card-name">누끼 · 배경 합성 썸네일</div><div class="price-card-desc">합성 + 텍스트 디자인<br>배경·소품 추가 가능</div><div class="price-card-num">15,000<span class="unit">원~</span></div></div>
+      <div class="price-card"><div class="price-card-label">소스형</div><div class="price-card-name">유튜브 투명 소스 (PNG)</div><div class="price-card-desc">영상 편집 · 썸네일용<br>SD / LD 선택</div><div class="price-card-from">SD 기준</div><div class="price-card-num">10,000<span class="unit">원</span></div></div>
+    </div>
+    <div class="option-block">
+      <div class="option-block-title">추가 옵션</div>
+      <div class="option-row"><div class="opt-name">동일 캐릭터 추가 배치 (개당)</div><div class="opt-price add">+2,000</div></div>
+      <div class="option-row"><div class="opt-name">새로운 캐릭터 추가 (개당)</div><div class="opt-price add">+5,000</div></div>
+      <div class="option-row"><div class="opt-name">유튜브 소스 LD</div><div class="opt-price">20,000</div></div>
+      <div class="option-row"><div class="opt-name">합성 썸네일 — 추가 배경 및 소품</div><div class="opt-price add">+5,000</div></div>
+    </div>
+    <!-- 계산기 -->
+
+</div>
+<div class="calc-box" id="calc-thumb">
+      <div class="calc-title">가격 옵션</div>
+        <div class="calc-select-group" data-calc="thumb">
+          <label>기본 유형</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'thumb\')">
+              <option value="0">선택하세요.</option>
+              <option value="30000">MD·LD 썸네일</option>
+              <option value="15000">합성 썸네일</option>
+              <option value="10000">유튜브소스 SD</option>
+              <option value="20000">유튜브소스 LD</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('thumb',0,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('thumb',0,+1)">+</button>
+            </div>
           </div>
         </div>
-        <span class="type-badge video">VIDEO</span>
-        <div class="card-body">
-          <div class="card-title">애니메이션 샘플 클립</div>
-          <div class="card-desc">유튜브 URL을 실제 작업물로 교체하세요</div>
+        <div class="calc-select-group" data-calc="thumb">
+          <label>동일 캐릭터 추가</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'thumb\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="2000">1명 (+2,000)</option>
+              <option value="4000">2명 (+4,000)</option>
+              <option value="6000">3명 (+6,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('thumb',1,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('thumb',1,+1)">+</button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- 추가 버튼 -->
-      <div class="card-add" onclick="openAddModal('workGrid', '작업물')">
-        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        작업물 추가
-      </div>
-    </div>
-  </div>
-
-  <!-- 작업 과정 탭 -->
-  <div class="tab-panel" id="tab-process">
-    <div class="section-label">WIP · 메이킹</div>
-    <div class="grid-3" id="processGrid">
-      <div class="card-add" onclick="openAddModal('processGrid', '작업 과정')">
-        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        메이킹 추가
-      </div>
-    </div>
-  </div>
-
-  <!-- 링크 · 채널 탭 -->
-  <div class="tab-panel" id="tab-links">
-    <div class="section-label">외부 링크 · 채널</div>
-    <div class="grid-2" id="linksGrid">
-
-      <!-- 샘플 링크 카드 -->
-      <div class="card" onclick="openCard(this)" data-type="link" data-url="https://artmug.kr" data-title="Artmug 커미션 페이지">
-        <div class="card-thumb placeholder">
-          <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        <div class="calc-select-group" data-calc="thumb">
+          <label>새 캐릭터 추가</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'thumb\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="5000">1명 (+5,000)</option>
+              <option value="10000">2명 (+10,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('thumb',2,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('thumb',2,+1)">+</button>
+            </div>
+          </div>
         </div>
-        <span class="type-badge link">LINK</span>
-        <div class="card-body">
-          <div class="card-title">Artmug 커미션 페이지</div>
-          <div class="card-desc">artmug.kr · 커미션 가격표 및 작업물</div>
+        <div class="calc-select-group" data-calc="thumb">
+          <label>배경·소품 추가</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'thumb\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="5000">추가 (+5,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('thumb',3,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('thumb',3,+1)">+</button>
+            </div>
+          </div>
         </div>
+      <div class="calc-divider"></div>
+      <div class="calc-extra">
+        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-thumb">
+        <button onclick="applyExtra('thumb')">추가</button>
       </div>
+      <div class="calc-items-box"></div>
+      <div class="calc-total-row">
+        <span class="calc-total-label">결제 금액</span>
+        <span class="calc-total-price">0원</span>
+      </div>
+      <div class="calc-btn-row">
+        <button class="calc-action-btn add-order" onclick="addOrder('thumb',false)">+ 주문 추가</button>
+        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('thumb',true)">옵션 유지 추가</button>
+      </div>
+      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('thumb')">초기화</button>
+      <div class="calc-orders"></div>
+    </div>
+</div>
+</div>
 
-      <div class="card-add" onclick="openAddModal('linksGrid', '링크')">
-        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        링크 추가
+  <!-- 일러스트 -->
+  <div class="sub-panel" id="commission-illust">
+<div class="price-layout">
+<div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">02</span><h2 class="sec-title">일러스트<span class="en">Illustration</span></h2></div>
+    <div class="notice">
+      <strong>스타일 옵션</strong> — 심플(+0) · 얇은선(+20,000) · 반무테(+35,000) 중 택1<br>
+      <strong>상업용</strong>이란 굿즈 제작·판매, 영리 목적 사용 등을 포함합니다. 반드시 사전 고지 필수.
+    </div>
+    <div class="pixel-grid">
+      <div class="option-block"><div class="option-block-title">비상업용 <span style="color:var(--green)">Non-Commercial</span></div>
+        <div class="option-row"><div class="opt-name">흉상 <div class="opt-sub">가슴~명치</div></div><div class="opt-price">10,000</div></div>
+        <div class="option-row"><div class="opt-name">반신 <div class="opt-sub">허벅지~무릎</div></div><div class="opt-price">40,000</div></div>
+        <div class="option-row"><div class="opt-name">전신</div><div class="opt-price">65,000</div></div>
+      </div>
+      <div class="option-block"><div class="option-block-title">상업용 <span style="color:var(--purple)">Commercial</span></div>
+        <div class="option-row"><div class="opt-name">흉상 <div class="opt-sub">가슴~명치</div></div><div class="opt-price">50,000</div></div>
+        <div class="option-row"><div class="opt-name">반신 <div class="opt-sub">허벅지~무릎</div></div><div class="opt-price">80,000</div></div>
+        <div class="option-row"><div class="opt-name">전신</div><div class="opt-price">140,000</div></div>
+      </div>
+	  <div class="option-block"><div class="option-block-title">방송용 <span style="color:var(--purple)">Commercial</span></div>
+		<div class="option-row"><div class="opt-name">흉상</div><div class="opt-price">40,000</div></div>
+		<div class="option-row"><div class="opt-name">반신</div><div class="opt-price">75,000</div></div>
+		<div class="option-row"><div class="opt-name">전신</div><div class="opt-price">115,000</div></div>
+	  </div>
+    </div>
+    <div class="option-block"><div class="option-block-title">배경 추가</div>
+      <div class="option-row"><div class="opt-name">단색 배경</div><div class="opt-price free">추가금 없음</div></div>
+      <div class="option-row"><div class="opt-name">패턴 배경</div><div class="opt-price add">+20,000</div></div>
+      <div class="option-row"><div class="opt-name">자연물 ~ 인공물</div><div class="opt-price add">+40,000~</div></div>
+      <div class="option-row"><div class="opt-name">컨셉아트</div><div class="opt-price">105,000+α</div></div>
+    </div>
+
+</div>
+<div class="calc-box" id="calc-illust">
+      <div class="calc-title">가격 옵션</div>
+        <div class="calc-select-group" data-calc="illust">
+          <label>비상업용</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'illust\')">
+              <option value="0">선택하세요.</option>
+              <option value="10000">흉상 (10,000)</option>
+              <option value="40000">반신 (40,000)</option>
+              <option value="65000">전신 (65,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('illust',0,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('illust',0,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="illust">
+          <label>상업용</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'illust\')">
+              <option value="0">선택하세요.</option>
+              <option value="50000">흉상 (50,000)</option>
+              <option value="80000">반신 (80,000)</option>
+              <option value="140000">전신 (140,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('illust',2,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('illust',2,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="illust">
+          <label>방송용</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'illust\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="40000">흉상 (40,000)</option>
+              <option value="75000">반신 (75,000)</option>
+              <option value="115000">전신 (115,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('illust',3,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('illust',3,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="illust">
+          <label>필수옵션_스타일</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'illust\')">
+              <option value="0">선택하세요.</option>
+              <option value="0">심플 (+0)</option>
+              <option value="20000">얇은선 (+20,000)</option>
+              <option value="35000">반무테 (+35,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('illust',4,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('illust',4,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="illust">
+          <label>옵션_배경추가</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'illust\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="0">단색 (추가금없음)</option>
+              <option value="20000">패턴 (+20,000)</option>
+              <option value="40000">자연물~인공물 (+40,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('illust',5,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('illust',5,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="illust">
+          <label>옵션_인원추가</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'illust\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="10000">1명 추가 (+10,000)</option>
+              <option value="20000">2명 추가 (+20,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('illust',6,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('illust',6,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="illust">
+          <label>기타</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'illust\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="105000">컨셉아트 (105,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('illust',7,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('illust',7,+1)">+</button>
+            </div>
+          </div>
+        </div>
+      <div class="calc-divider"></div>
+      <div class="calc-extra">
+        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-illust">
+        <button onclick="applyExtra('illust')">추가</button>
+      </div>
+      <div class="calc-items-box"></div>
+      <div class="calc-total-row">
+        <span class="calc-total-label">결제 금액</span>
+        <span class="calc-total-price">0원</span>
+      </div>
+      <div class="calc-btn-row">
+        <button class="calc-action-btn add-order" onclick="addOrder('illust',false)">+ 주문 추가</button>
+        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('illust',true)">옵션 유지 추가</button>
+      </div>
+      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('illust')">초기화</button>
+      <div class="calc-orders"></div>
+    </div>
+</div>
+</div>
+
+  <!-- Live2D -->
+  <div class="sub-panel" id="commission-live2d">
+<div class="price-layout">
+<div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">03</span><h2 class="sec-title">Live2D 리깅<span class="en">Live2D Rigging</span></h2></div>
+    <div class="two-col">
+      <div class="option-block"><div class="option-block-title">SD</div>
+        <div class="option-row"><div class="opt-name">간단 움직임</div><div class="opt-price">70,000</div></div>
+        <div class="option-row"><div class="opt-name">디테일 모션</div><div class="opt-price">120,000</div></div>
+      </div>
+      <div class="option-block"><div class="option-block-title">LD</div>
+        <div class="option-row"><div class="opt-name">간단 움직임</div><div class="opt-price">180,000</div></div>
+        <div class="option-row"><div class="opt-name">디테일 모션</div><div class="opt-price">300,000</div></div>
       </div>
     </div>
-  </div>
-
-  <!-- About 탭 -->
-  <div class="tab-panel" id="tab-about">
-    <div class="section-label">소개</div>
-
-    <div class="stat-row">
-      <div class="stat">
-        <span class="stat-num">2+</span>
-        <span class="stat-label">년 프리랜서 경력</span>
+    <div class="option-block"><div class="option-block-title">파츠 분리 추가금</div>
+      <div class="option-row"><div class="opt-name">간단한 분리</div><div class="opt-price add">+10,000</div></div>
+      <div class="option-row"><div class="opt-name">디테일 추가 분리</div><div class="opt-price add">+40,000</div></div>
+      <div class="option-row"><div class="opt-name">가려진 파츠 신규 제작</div><div class="opt-price add">+80,000</div></div>
+      <div class="option-row"><div class="opt-name">분리 전혀 없는 경우</div><div class="opt-price add">+150,000</div></div>
+      <div class="option-row"><div class="opt-name">추가 모션 및 기능적 리깅<div class="opt-sub">소품 ON/OFF, 의상 변경, 표정 토글 등</div></div><div class="opt-price add">+8,000~100,000</div></div>
+    </div>
+    <div class="hl-box">
+      <div class="hl-box-title">일러스트 + 리깅 패키지</div>
+      <div class="hl-total" style="margin-bottom:12px">
+        <div><div class="hl-total-name">SD 패키지 <span class="badge green">심플+디테일</span></div><div class="hl-total-sub">일러스트 · 파츠분리 · 리깅 포함</div></div>
+        <div class="hl-total-price">290,000<span style="font-size:13px;color:var(--text-dim);font-weight:400">원</span></div>
       </div>
-      <div class="stat">
-        <span class="stat-num">입선</span>
-        <span class="stat-label">2026 한국게임학회</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">6+</span>
-        <span class="stat-label">협업 프로젝트</span>
+      <div class="hl-total">
+        <div><div class="hl-total-name">LD 패키지 <span class="badge gold">반무테+디테일</span></div><div class="hl-total-sub">일러스트 · 파츠분리 · 리깅 포함</div></div>
+        <div class="hl-total-price">590,000<span style="font-size:13px;color:var(--text-dim);font-weight:400">원</span></div>
       </div>
     </div>
 
-    <div class="about-grid">
-      <div class="about-card">
-        <h4>툴 스택</h4>
-        <ul>
-          <li>Clip Studio Paint</li>
-          <li>Adobe Photoshop / After Effects</li>
-          <li>Premiere Pro</li>
-          <li>Live2D Cubism</li>
-          <li>Aseprite</li>
-        </ul>
+</div>
+<div class="calc-box" id="calc-live2d">
+      <div class="calc-title">가격 옵션</div>
+        <div class="calc-select-group" data-calc="live2d">
+          <label>SD 리깅</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'live2d\')">
+              <option value="0">선택하세요.</option>
+              <option value="70000">SD 간단 (70,000)</option>
+              <option value="120000">SD 디테일 (120,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('live2d',0,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('live2d',0,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="live2d">
+          <label>LD 리깅</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'live2d\')">
+              <option value="0">선택하세요.</option>
+              <option value="180000">LD 간단 (180,000)</option>
+              <option value="300000">LD 디테일 (300,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('live2d',1,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('live2d',1,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="live2d">
+          <label>파츠 분리</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'live2d\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="10000">간단한 분리 (+10,000)</option>
+              <option value="40000">디테일 추가 분리 (+40,000)</option>
+              <option value="80000">가려진 파츠 제작 (+80,000)</option>
+              <option value="150000">분리 없는 경우 (+150,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('live2d',2,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('live2d',2,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="live2d">
+          <label>추가 기능 리깅</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'live2d\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="8000">간단 기능 (+8,000)</option>
+              <option value="50000">복합 기능 (+50,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('live2d',3,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('live2d',3,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="live2d">
+          <label>패키지</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'live2d\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="290000">SD 패키지 (290,000)</option>
+              <option value="590000">LD 패키지 (590,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('live2d',4,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('live2d',4,+1)">+</button>
+            </div>
+          </div>
+        </div>
+      <div class="calc-divider"></div>
+      <div class="calc-extra">
+        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-live2d">
+        <button onclick="applyExtra('live2d')">추가</button>
       </div>
-      <div class="about-card">
-        <h4>작업 가능 분야</h4>
-        <ul>
-          <li>캐릭터 디자인 · 컨셉아트</li>
-          <li>프레임 애니메이션</li>
-          <li>후보정 · 색보정</li>
-          <li>MV 스타일 애니메이션</li>
-          <li>게임 UI · 이펙트</li>
-        </ul>
+      <div class="calc-items-box"></div>
+      <div class="calc-total-row">
+        <span class="calc-total-label">결제 금액</span>
+        <span class="calc-total-price">0원</span>
       </div>
-      <div class="about-card">
-        <h4>경력</h4>
-        <ul>
-          <li>Sandboxnetwork 외주</li>
-          <li>인천크래프트 외주</li>
-          <li>Artmug · Crepe 커미션</li>
-          <li>크리에이터 제휴 아티스트</li>
-        </ul>
+      <div class="calc-btn-row">
+        <button class="calc-action-btn add-order" onclick="addOrder('live2d',false)">+ 주문 추가</button>
+        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('live2d',true)">옵션 유지 추가</button>
       </div>
-      <div class="about-card">
-        <h4>학력</h4>
-        <ul>
-          <li>한국영상대학교 게임콘텐츠과</li>
-          <li>Unity / UE5 / Maya 전공</li>
-          <li>게임 컨셉아트 · 비주얼 전공</li>
-        </ul>
+      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('live2d')">초기화</button>
+      <div class="calc-orders"></div>
+    </div>
+</div>
+</div>
+
+  <!-- 픽셀아트 -->
+  <div class="sub-panel" id="commission-pixel">
+<div class="price-layout">
+<div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">04</span><h2 class="sec-title">픽셀아트<span class="en">Pixel Art</span></h2></div>
+
+    <div class="pixel-grid">
+      <div class="option-block">
+        <div class="option-block-title">마우스 커서</div>
+        <div class="option-row"><div class="opt-name">용도 기본금 — 개인소장</div><div class="opt-price free">₩0</div></div>
+        <div class="option-row"><div class="opt-name">용도 기본금 — 방송용</div><div class="opt-price">30,000</div></div>
+        <div class="option-row"><div class="opt-name">일반 커서 세트 (캐릭터 제외)</div><div class="opt-price">20,000</div></div>
+        <div class="option-row"><div class="opt-name">캐릭터 커서 48px — 정지</div><div class="opt-price">7,000</div></div>
+        <div class="option-row"><div class="opt-name">캐릭터 커서 — 애니메이션</div><div class="opt-price add">+8,000 / 프레임</div></div>
+      </div>
+
+      <div class="option-block">
+        <div class="option-block-title">픽셀아트 일러스트</div>
+        <div class="option-row"><div class="opt-name">용도 기본금 — 개인소장용</div><div class="opt-price free">₩0</div></div>
+        <div class="option-row"><div class="opt-name">용도 기본금 — 방송용</div><div class="opt-price">12,000</div></div>
+        <div class="option-row"><div class="opt-name">소형 (16~32px)</div><div class="opt-price">7,000</div></div>
+        <div class="option-row"><div class="opt-name">중형 (33~89px)</div><div class="opt-price">17,000</div></div>
+        <div class="option-row"><div class="opt-name">대형 (90px+)</div><div class="opt-price">30,000</div></div>
+        <div class="option-row"><div class="opt-name">움짤 1프레임당 — 소형</div><div class="opt-price add">+3,000 / 프레임</div></div>
+        <div class="option-row"><div class="opt-name">움짤 1프레임당 — 중형</div><div class="opt-price add">+4,000 / 프레임</div></div>
+        <div class="option-row"><div class="opt-name">움짤 1프레임당 — 대형</div><div class="opt-price add">+5,000 / 프레임</div></div>
+        <div class="option-row"><div class="opt-name">배경 작업</div><div class="opt-price">35,000</div></div>
+        <div class="option-row"><div class="opt-name">배경 움짤 1프레임당</div><div class="opt-price add">+8,000 / 프레임</div></div>
+      </div>
+	  
+	  <div class="option-block">
+		<div class="option-block-title">픽셀아트 일러스트</div>
+        <div class="option-row"><div class="opt-name">용도 기본금 — 개인작업용</div><div class="opt-price free">₩0</div></div>
+        <div class="option-row"><div class="opt-name">용도 기본금 — 출시용</div><div class="opt-price free">3,000</div></div>
+        <div class="option-row"><div class="opt-name">소형 (16~32px)<div class="opt-sub">게임소스용 픽셀 캐릭터/간단한 소형 스프라이트 기준</div></div><div class="opt-price">12,000</div></div>
+		<div class="option-row"><div class="opt-name">중형 (16~32px)<div class="opt-sub">게임소스용 픽셀 캐릭터/일반 캐릭터 스프라이트 기준</div></div><div class="opt-price">17,000</div></div>
+		<div class="option-row"><div class="opt-name">대형 (16~32px)<div class="opt-sub">게임소스용 픽셀 캐릭터/대형 캐릭터 또는 보스형 기준</div></div><div class="opt-price">22,000</div></div>
+		<div class="option-row"><div class="opt-name">동작 추가 기본금<div class="opt-sub">Run · Attack · Death 등 별도 동작 추가 시</div></div><div class="opt-price add">+10,000</div></div>
+		<div class="option-row"><div class="opt-name">일반 프레임 추가<div class="opt-sub">Run · Attack · Death 등 일반 동작 프레임</div></div><div class="opt-price add">+4,000 / 프레임</div></div>
+		<div class="option-row"><div class="opt-name">Idle 등 단순 움직임<div class="opt-sub">숨쉬기 · 깜빡임 · 단순 루프 움직임</div></div><div class="opt-price add">+1,000 / 프레임</div></div>
+		<div class="option-row"><div class="opt-name">빠른 마감</div><div class="opt-price">협의</div></div>
       </div>
     </div>
-  </div>
+	
+</div>
+
+<div class="calc-box" id="calc-pixel">
+      <div class="calc-title">가격 옵션</div>
+
+        <div class="calc-select-group">
+          <label>유형</label>
+          <div class="calc-select-row">
+            <select onchange="switchPixelType(this.value)">
+              <option value="cursor">마우스 커서</option>
+              <option value="illustration">픽셀아트 일러스트</option>
+              <option value="game">게임소스</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pixel-calc-options" id="pixel-type-cursor">
+          <div class="calc-select-group" data-calc="pixel">
+            <label>용도 기본금</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음 / 개인소장</option>
+                <option value="30000">방송용</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',0,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',0,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>일반 커서 세트</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="20000">일반 커서 세트 (캐릭터 제외)</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',1,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',1,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>캐릭터 커서</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="7000">캐릭터 커서 48px — 정지</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',2,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',2,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>커서 애니메이션</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="8000">캐릭터 커서 — 애니메이션</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',3,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',3,+1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pixel-calc-options" id="pixel-type-illustration" style="display:none">
+          <div class="calc-select-group" data-calc="pixel">
+            <label>용도 기본금</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음 / 개인소장용</option>
+                <option value="12000">방송용</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',4,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',4,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>크기</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="7000">소형 (16~32px)</option>
+                <option value="17000">중형 (33~89px)</option>
+                <option value="30000">대형 (90px+)</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',5,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',5,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>움짤 프레임</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="3000">소형 +3,000 / 프레임</option>
+                <option value="4000">중형 +4,000 / 프레임</option>
+                <option value="5000">대형 +5,000 / 프레임</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',6,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',6,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>배경 작업</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="35000">배경 작업</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',7,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',7,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>배경 움짤</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="8000">배경 움짤 1프레임당</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',8,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',8,+1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pixel-calc-options" id="pixel-type-game" style="display:none">
+          <div class="calc-select-group" data-calc="pixel">
+            <label>캐릭터 기본 제작</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="12000">소형 캐릭터 기본 제작</option>
+                <option value="17000">중형 캐릭터 기본 제작</option>
+                <option value="22000">대형 캐릭터 기본 제작</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',9,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',9,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>동작 추가 기본금</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="10000">Run / Attack / Death 등 일반 동작</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',10,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',10,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>일반 프레임 추가</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="4000">+4,000 / 프레임</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',11,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',11,+1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>Idle 단순 프레임</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,\'pixel\')">
+                <option value="0">없음</option>
+                <option value="1000">+1,000 / 프레임</option>
+              </select>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty('pixel',12,-1)">−</button>
+                <div class="qty-val">0</div>
+                <button class="qty-btn" onclick="changeQty('pixel',12,+1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <div class="calc-divider"></div>
+      <div class="calc-extra">
+        <input type="number" placeholder="빠른 마감 등 협의 금액 직접 입력 (+/-)" id="extra-pixel">
+        <button onclick="applyExtra('pixel')">추가</button>
+      </div>
+      <div class="calc-items-box"></div>
+      <div class="calc-total-row">
+        <span class="calc-total-label">결제 금액</span>
+        <span class="calc-total-price">0원</span>
+      </div>
+      <div class="calc-btn-row">
+        <button class="calc-action-btn add-order" onclick="addOrder('pixel',false)">+ 주문 추가</button>
+        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('pixel',true)">옵션 유지 추가</button>
+      </div>
+      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('pixel')">초기화</button>
+      <div class="calc-orders"></div>
+    </div>
+</div>
+</div>
+  <!-- 마인크래프트 -->
+  <div class="sub-panel" id="commission-minecraft">
+<div class="price-layout">
+<div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">05</span><h2 class="sec-title">마인크래프트<span class="en">Minecraft</span></h2></div>
+    <div class="pixel-grid">
+      <div class="price-card"><div class="price-card-label">스킨</div><div class="price-card-name">마인크래프트 스킨</div><div class="price-card-desc">프로필 사진 추가금 없음</div><div class="price-card-num">10,000<span class="unit">원</span></div></div>
+      <div class="price-card"><div class="price-card-label">리소스팩</div><div class="price-card-name">도트 아이템 / 아이콘</div><div class="price-card-desc">상업용 추가금 없음</div><div class="price-card-num">8,000<span class="unit">원+α</span></div></div>
+      <div class="price-card"><div class="price-card-label">리소스팩</div><div class="price-card-name">3D 리소스</div><div class="price-card-desc">상업용 추가금 없음</div><div class="price-card-num">13,000<span class="unit">원+α</span></div></div>
+    </div>
+    <div class="option-block"><div class="option-block-title">마인크래프트 애니메이션</div>
+      <div class="option-row"><div class="opt-name">기본금 (1분 이하)</div><div class="opt-price">20,000</div></div>
+      <div class="option-row"><div class="opt-name">1분 초과 시 30초당</div><div class="opt-price add">+40,000</div></div>
+      <div class="option-row"><div class="opt-name">라이팅 + 렌더링</div><div class="opt-price add">+30,000</div></div>
+      <div class="option-row"><div class="opt-name">모델링 추가</div><div class="opt-price add">+25,000</div></div>
+      <div class="option-row"><div class="opt-name">편집 추가</div><div class="opt-price add">+30,000~50,000</div></div>
+    </div>
+
+</div>
+<div class="calc-box" id="calc-mc">
+      <div class="calc-title">가격 옵션</div>
+        <div class="calc-select-group" data-calc="mc">
+          <label>유형</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'mc\')">
+              <option value="0">선택하세요.</option>
+              <option value="10000">스킨 (10,000)</option>
+              <option value="8000">도트 아이템/아이콘 (8,000)</option>
+              <option value="13000">3D 리소스 (13,000)</option>
+              <option value="20000">애니메이션 기본 (20,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('mc',0,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('mc',0,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="mc">
+          <label>1분 초과 (30초당)</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'mc\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="40000">+30초 (+40,000)</option>
+              <option value="80000">+60초 (+80,000)</option>
+              <option value="120000">+90초 (+120,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('mc',1,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('mc',1,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="mc">
+          <label>라이팅+렌더링</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'mc\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="30000">추가 (+30,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('mc',2,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('mc',2,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="mc">
+          <label>모델링</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'mc\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="25000">추가 (+25,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('mc',3,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('mc',3,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="mc">
+          <label>편집</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'mc\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="30000">편집 추가 (+30,000)</option>
+              <option value="50000">편집 추가 (+50,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('mc',4,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('mc',4,+1)">+</button>
+            </div>
+          </div>
+        </div>
+      <div class="calc-divider"></div>
+      <div class="calc-extra">
+        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-mc">
+        <button onclick="applyExtra('mc')">추가</button>
+      </div>
+      <div class="calc-items-box"></div>
+      <div class="calc-total-row">
+        <span class="calc-total-label">결제 금액</span>
+        <span class="calc-total-price">0원</span>
+      </div>
+      <div class="calc-btn-row">
+        <button class="calc-action-btn add-order" onclick="addOrder('mc',false)">+ 주문 추가</button>
+        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('mc',true)">옵션 유지 추가</button>
+      </div>
+      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('mc')">초기화</button>
+      <div class="calc-orders"></div>
+    </div>
+</div>
+</div>
+
+  <!-- 브랜딩·채널아트 -->
+  <div class="sub-panel" id="commission-branding">
+<div class="price-layout">
+<div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">06</span><h2 class="sec-title">브랜딩 · 채널아트<span class="en">Branding</span></h2></div>
+    <div class="two-col">
+      <div class="option-block"><div class="option-block-title">채널아트</div>
+        <div class="option-row"><div class="opt-name">기본금 (텍스트/로고)</div><div class="opt-price">30,000</div></div>
+        <div class="option-row"><div class="opt-name">일러스트 추가 — 흉상</div><div class="opt-price add">+15,000</div></div>
+        <div class="option-row"><div class="opt-name">일러스트 추가 — 반신</div><div class="opt-price add">+35,000</div></div>
+        <div class="option-row"><div class="opt-name">일러스트 추가 — 전신</div><div class="opt-price add">+60,000</div></div>
+        <div class="option-row"><div class="opt-name">패턴 배경</div><div class="opt-price add">+10,000</div></div>
+        <div class="option-row"><div class="opt-name">자연물~인공물 배경</div><div class="opt-price add">+50,000~</div></div>
+      </div>
+      <div class="option-block"><div class="option-block-title">브랜딩 디자인</div>
+        <div class="option-row"><div class="opt-name">기본금</div><div class="opt-price">25,000</div></div>
+        <div class="option-row"><div class="opt-name">방송 대기화면</div><div class="opt-price add">+60,000</div></div>
+        <div class="option-row"><div class="opt-name">아이콘</div><div class="opt-price add">+5,000</div></div>
+        <div class="option-row"><div class="opt-name">포스터</div><div class="opt-price add">+40,000</div></div>
+        <div class="option-row"><div class="opt-name">워드마크 디자인</div><div class="opt-price add">+40,000</div></div>
+        <div class="option-row"><div class="opt-name">심볼 디자인</div><div class="opt-price add">+40,000</div></div>
+        <div class="option-row"><div class="opt-name">워드마크 + 심볼 세트</div><div class="opt-price add">+65,000</div></div>
+      </div>
+    </div>
+
+</div>
+<div class="calc-box" id="calc-brand">
+      <div class="calc-title">가격 옵션</div>
+        <div class="calc-select-group" data-calc="brand">
+          <label>기본 유형</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'brand\')">
+              <option value="0">선택하세요.</option>
+              <option value="30000">채널아트 기본 (30,000)</option>
+              <option value="25000">브랜딩 기본 (25,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('brand',0,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('brand',0,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="brand">
+          <label>일러스트 추가</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'brand\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="15000">흉상 (+15,000)</option>
+              <option value="35000">반신 (+35,000)</option>
+              <option value="60000">전신 (+60,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('brand',1,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('brand',1,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="brand">
+          <label>브랜딩 용도</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'brand\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="60000">방송 대기화면 (+60,000)</option>
+              <option value="40000">포스터 (+40,000)</option>
+              <option value="5000">아이콘 (+5,000)</option>
+              <option value="6000">하단 패널 (+6,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('brand',2,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('brand',2,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="brand">
+          <label>워드마크/심볼</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'brand\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="40000">워드마크 (+40,000)</option>
+              <option value="40000">심볼 (+40,000)</option>
+              <option value="65000">워드마크+심볼 세트 (+65,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('brand',3,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('brand',3,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="brand">
+          <label>배경</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'brand\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="10000">패턴 (+10,000)</option>
+              <option value="50000">자연물~인공물 (+50,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('brand',4,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('brand',4,+1)">+</button>
+            </div>
+          </div>
+        </div>
+      <div class="calc-divider"></div>
+      <div class="calc-extra">
+        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-brand">
+        <button onclick="applyExtra('brand')">추가</button>
+      </div>
+      <div class="calc-items-box"></div>
+      <div class="calc-total-row">
+        <span class="calc-total-label">결제 금액</span>
+        <span class="calc-total-price">0원</span>
+      </div>
+      <div class="calc-btn-row">
+        <button class="calc-action-btn add-order" onclick="addOrder('brand',false)">+ 주문 추가</button>
+        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('brand',true)">옵션 유지 추가</button>
+      </div>
+      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('brand')">초기화</button>
+      <div class="calc-orders"></div>
+    </div>
+</div>
+</div>
+
+  <!-- 애니메이션·영상 -->
+  <div class="sub-panel" id="commission-animation">
+<div class="price-layout">
+<div class="price-main">
+<div class="sec-label-lg"><span class="sec-num">07</span><h2 class="sec-title">애니메이션 · 영상<span class="en">Animation & Video</span></h2></div>
+    <div class="two-col">
+      <div class="option-block"><div class="option-block-title">2D 애니메이션</div>
+        <div class="option-row"><div class="opt-name">영상 기본금</div><div class="opt-price">25,000</div></div>
+        <div class="option-row"><div class="opt-name">장당</div><div class="opt-price add">+5,000</div></div>
+        <div class="option-row"><div class="opt-name">일러스트 추가 (흉상~전신)</div><div class="opt-price add">+20,000~60,000</div></div>
+        <div class="option-row"><div class="opt-name">3D 소품·배경 추가</div><div class="opt-price add">+5,000+α</div></div>
+      </div>
+      <div class="option-block"><div class="option-block-title">3D 애니메이션</div>
+        <div class="option-row"><div class="opt-name">기본금 (1분 이하)</div><div class="opt-price">40,000</div></div>
+        <div class="option-row"><div class="opt-name">1분 초과 시 30초당</div><div class="opt-price add">+60,000</div></div>
+        <div class="option-row"><div class="opt-name">편집 추가</div><div class="opt-price add">+30,000</div></div>
+      </div>
+    </div>
+    <div class="option-block"><div class="option-block-title">영상 편집</div>
+      <div class="option-row"><div class="opt-name">필터 제작 (간단 보정)</div><div class="opt-price">5,000</div></div>
+      <div class="option-row"><div class="opt-name">이펙트 / 화면전환 소스</div><div class="opt-price">10,000</div></div>
+      <div class="option-row"><div class="opt-name">노래커버 영상 편집</div><div class="opt-price">70,000+α</div></div>
+      <div class="option-row"><div class="opt-name">타이포소스 제작</div><div class="opt-price">15,000</div></div>
+    </div>
+
+</div>
+<div class="calc-box" id="calc-anim">
+      <div class="calc-title">가격 옵션</div>
+        <div class="calc-select-group" data-calc="anim">
+          <label>유형</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'anim\')">
+              <option value="0">선택하세요.</option>
+              <option value="25000">2D 애니메이션 기본 (25,000)</option>
+              <option value="40000">3D 애니메이션 기본 (40,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('anim',0,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('anim',0,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="anim">
+          <label>2D 장수 추가</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'anim\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="5000">+1장 (+5,000)</option>
+              <option value="15000">+3장 (+15,000)</option>
+              <option value="25000">+5장 (+25,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('anim',1,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('anim',1,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="anim">
+          <label>3D 초과 (30초당)</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'anim\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="60000">+30초 (+60,000)</option>
+              <option value="120000">+60초 (+120,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('anim',2,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('anim',2,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="anim">
+          <label>일러스트 추가 (2D)</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'anim\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="20000">흉상 (+20,000)</option>
+              <option value="60000">전신 (+60,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('anim',3,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('anim',3,+1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-select-group" data-calc="anim">
+          <label>편집/기타</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,\'anim\')">
+              <option value="0">없음</option>
+              <option value="0">없음</option>
+              <option value="30000">3D 편집 추가 (+30,000)</option>
+              <option value="5000">필터 제작 (5,000)</option>
+              <option value="10000">이펙트/화면전환 (10,000)</option>
+              <option value="70000">노래커버 편집 (70,000)</option>
+              <option value="15000">타이포소스 (15,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('anim',4,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('anim',4,+1)">+</button>
+            </div>
+          </div>
+        </div>
+      <div class="calc-divider"></div>
+      <div class="calc-extra">
+        <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-anim">
+        <button onclick="applyExtra('anim')">추가</button>
+      </div>
+      <div class="calc-items-box"></div>
+      <div class="calc-total-row">
+        <span class="calc-total-label">결제 금액</span>
+        <span class="calc-total-price">0원</span>
+      </div>
+      <div class="calc-btn-row">
+        <button class="calc-action-btn add-order" onclick="addOrder('anim',false)">+ 주문 추가</button>
+        <button class="calc-action-btn add-order" style="background:rgba(94,207,177,.08);border-color:rgba(94,207,177,.3);color:var(--green)" onclick="addOrder('anim',true)">옵션 유지 추가</button>
+      </div>
+      <button class="calc-action-btn reset" style="width:100%;margin-top:6px;cursor:pointer;display:block;text-align:center" onclick="resetCalc('anim')">초기화</button>
+      <div class="calc-orders"></div>
+    </div>
+</div>
+</div>
+
+</div><!-- /tab-commission -->
 
 </div><!-- /content -->
 
-<!-- ── ADD MODAL ── -->
-<div class="modal-backdrop" id="addModal" onclick="closeModalOnBackdrop(event,'addModal')">
+<footer>
+  <div class="footer-brand">BOWONE · Commission Open</div>
+  <div class="footer-links">
+    <a href="https://x.com/agentdh_Bowone" target="_blank">X</a>
+    <a href="https://www.youtube.com/@agentdh" target="_blank">YouTube</a>
+    <a href="https://artmug.kr/index.php?channel=list&field=brand&search=YWdlbnRkaA==" target="_blank">아트머그</a>
+    <a href="https://crepe.cm/@agentdh" target="_blank">크레페</a>
+    <a href="mailto:agentdh@naver.com">이메일</a>
+  </div>
+</footer>
+<!-- MODALS -->
+<div class="modal-backdrop" id="addModal" onclick="closeOnBg(event,'addModal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('addModal')">×</button>
-    <h3 id="addModalTitle">아이템 추가</h3>
-
+    <h3 id="addModalTitle">작업물 추가</h3>
     <div class="type-tabs">
-      <button class="type-tab active" data-type-btn="image" onclick="selectType(this)">🖼 이미지</button>
-      <button class="type-tab" data-type-btn="video" onclick="selectType(this)">▶ 영상</button>
-      <button class="type-tab" data-type-btn="link" onclick="selectType(this)">🔗 링크</button>
+      <button class="type-tab active" data-type="image" onclick="selType(this)">🖼 이미지</button>
+      <button class="type-tab" data-type="video" onclick="selType(this)">▶ 영상</button>
+      <button class="type-tab" data-type="link" onclick="selType(this)">🔗 링크</button>
     </div>
-
-    <div class="form-group">
-      <label>제목</label>
-      <input type="text" id="inputTitle" placeholder="작업물 이름">
-    </div>
-
-    <div class="form-group" id="urlGroup">
-      <label id="urlLabel">URL</label>
-      <input type="url" id="inputUrl" placeholder="https://">
-    </div>
-
-    <!-- 이미지 타입일 때: 파일 업로드 -->
-    <div class="form-group" id="fileGroup" style="display:none;">
-      <label>이미지 파일</label>
-      <input type="file" id="inputFile" accept="image/*" style="color:var(--text-dim);">
-    </div>
-
-    <div class="form-group">
-      <label>설명 (선택)</label>
-      <textarea id="inputDesc" rows="2" placeholder="간단한 설명"></textarea>
-    </div>
-
+    <div class="form-group"><label>제목</label><input type="text" id="iTitle" placeholder="작업물 이름"></div>
+    <div class="form-group" id="urlGrp"><label id="urlLbl">URL</label><input type="url" id="iUrl" placeholder="https://"></div>
+    <div class="form-group" id="fileGrp" style="display:none"><label>이미지 파일</label><input type="file" id="iFile" accept="image/*" style="color:var(--text-dim)"></div>
+    <div class="form-group"><label>설명 (선택)</label><textarea id="iDesc" rows="2" placeholder="간단한 설명"></textarea></div>
     <button class="btn-primary" onclick="addItem()">추가하기</button>
   </div>
 </div>
-
-<!-- ── PROFILE EDIT MODAL ── -->
-<div class="modal-backdrop" id="profileModal" onclick="closeModalOnBackdrop(event,'profileModal')">
+<div class="modal-backdrop" id="profileModal" onclick="closeOnBg(event,'profileModal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('profileModal')">×</button>
     <h3>프로필 편집</h3>
-    <div class="form-group">
-      <label>이름 / 닉네임</label>
-      <input type="text" id="pName" placeholder="BOWONE">
-    </div>
-    <div class="form-group">
-      <label>역할</label>
-      <input type="text" id="pRole" placeholder="Animator · Character Designer">
-    </div>
-    <div class="form-group">
-      <label>한줄 소개</label>
-      <textarea id="pBio" rows="3"></textarea>
-    </div>
-    <div class="form-group">
-      <label>이메일</label>
-      <input type="email" id="pEmail" placeholder="your@email.com">
-    </div>
+    <div class="form-group"><label>닉네임</label><input type="text" id="pName" placeholder="BOWONE"></div>
+    <div class="form-group"><label>역할</label><input type="text" id="pRole" placeholder="Illustrator · Animator"></div>
+    <div class="form-group"><label>한줄 소개</label><textarea id="pBio" rows="3"></textarea></div>
+    <div class="form-group"><label>이메일</label><input type="email" id="pEmail" placeholder="your@email.com"></div>
     <button class="btn-primary" onclick="saveProfile()">저장</button>
   </div>
 </div>
-
-<!-- ── VIDEO PLAYER MODAL ── -->
 <div class="video-modal-backdrop" id="videoModal" onclick="closeVideoModal(event)">
   <div class="video-modal">
     <button class="video-modal-close" onclick="document.getElementById('videoModal').classList.remove('open')">×</button>
@@ -844,302 +2010,378 @@
 </div>
 
 <script>
-/* ══════════════════════════════════════════
-   STORAGE KEY MAP
-   bowone_profile   : { name, role, bio, email, avatar }
-   bowone_cards     : { workGrid: [...], processGrid: [...], linksGrid: [...] }
-══════════════════════════════════════════ */
-const STORAGE_CARDS   = 'bowone_cards';
-const STORAGE_PROFILE = 'bowone_profile';
-
-/* ── HELPERS ── */
-function extractYouTubeId(url) {
-  if (!url) return null;
-  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
-  return m ? m[1] : null;
-}
-function tryGetDomain(url) {
-  try { return new URL(url).hostname; } catch { return url; }
-}
-function readFileAsBase64(file) {
-  return new Promise(resolve => {
-    const r = new FileReader();
-    r.onload = e => resolve(e.target.result);
-    r.readAsDataURL(file);
-  });
-}
-
-/* ── BUILD CARD HTML (from data object) ── */
-function buildCardHTML(item) {
-  /* item: { type, url, title, desc } */
-  const { type, url, title, desc } = item;
-  let thumbInner = '';
-  let badgeClass = '';
-  let badgeText  = '';
-  let thumbClass = 'card-thumb';
-
-  if (type === 'image') {
-    badgeClass = 'image'; badgeText = 'IMAGE';
-    if (url) {
-      thumbInner = `<img src="${url}" alt="${title}">`;
-    } else {
-      thumbClass += ' placeholder';
-      thumbInner = `<svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`;
-    }
-  } else if (type === 'video') {
-    badgeClass = 'video'; badgeText = 'VIDEO';
-    const ytId = extractYouTubeId(url);
-    if (ytId) {
-      thumbInner = `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="썸네일">
-        <div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>`;
-    } else {
-      thumbInner = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--orange);font-size:36px;">▶</div>`;
-    }
-  } else {
-    badgeClass = 'link'; badgeText = 'LINK';
-    const domain = tryGetDomain(url);
-    thumbInner = `<img src="https://www.google.com/s2/favicons?sz=64&domain=${domain}"
-      style="width:48px;height:48px;object-fit:contain;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"
-      onerror="this.style.display='none'" alt="">
-      <svg viewBox="0 0 24 24" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;opacity:0.15;fill:var(--text)"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>`;
-  }
-
-  return `
-    <div class="${thumbClass}">${thumbInner}</div>
-    <span class="type-badge ${badgeClass}">${badgeText}</span>
-    <div class="card-body">
-      <div class="card-title">${title}</div>
-      ${desc ? `<div class="card-desc">${desc}</div>` : ''}
-    </div>`;
-}
-
-function makeCardEl(item) {
-  const el = document.createElement('div');
-  el.className = 'card';
-  el.dataset.type  = item.type;
-  el.dataset.url   = item.url || '';
-  el.dataset.title = item.title;
-  el.setAttribute('onclick', 'openCard(this)');
-  el.innerHTML = buildCardHTML(item);
-  return el;
-}
-
-/* ── PERSIST CARDS ── */
-function saveCards() {
-  const data = {};
-  ['workGrid','processGrid','linksGrid'].forEach(gridId => {
-    const grid = document.getElementById(gridId);
-    data[gridId] = [...grid.querySelectorAll('.card')].map(c => ({
-      type:  c.dataset.type,
-      url:   c.dataset.url,
-      title: c.dataset.title,
-      desc:  c.querySelector('.card-desc')?.textContent || ''
-    }));
-  });
-  try { localStorage.setItem(STORAGE_CARDS, JSON.stringify(data)); } catch(e) {
-    alert('저장 용량 초과: 이미지 파일 크기를 줄여주세요.');
-  }
-}
-
-function loadCards() {
-  const raw = localStorage.getItem(STORAGE_CARDS);
-  if (!raw) return;
-  const data = JSON.parse(raw);
-  ['workGrid','processGrid','linksGrid'].forEach(gridId => {
-    const grid  = document.getElementById(gridId);
-    const items = data[gridId] || [];
-    const addBtn = grid.querySelector('.card-add');
-    items.forEach(item => grid.insertBefore(makeCardEl(item), addBtn));
-  });
-}
-
-/* ── PERSIST PROFILE ── */
-function saveProfileData(obj) {
-  const prev = JSON.parse(localStorage.getItem(STORAGE_PROFILE) || '{}');
-  localStorage.setItem(STORAGE_PROFILE, JSON.stringify({ ...prev, ...obj }));
-}
-
-function loadProfile() {
-  const p = JSON.parse(localStorage.getItem(STORAGE_PROFILE) || '{}');
-  if (p.name) {
-    const h1 = document.querySelector('.profile-info h1');
-    const mid = Math.ceil(p.name.length / 2);
-    h1.innerHTML = p.name.slice(0,mid) + '<span>' + p.name.slice(mid) + '</span>';
-  }
-  if (p.role)   document.querySelector('.role').textContent = p.role;
-  if (p.bio)    document.querySelector('.bio').textContent  = p.bio;
-  if (p.email) {
-    document.getElementById('emailBtn').href = 'mailto:' + p.email;
-    document.getElementById('emailLabel').textContent = p.email;
-  }
-  if (p.avatar) {
-    const img = document.getElementById('avatarImg');
-    img.src = p.avatar;
-    img.style.display = 'block';
-    document.getElementById('avatarWrap').childNodes.forEach(n => {
-      if (n.nodeType === Node.TEXT_NODE) n.textContent = '';
-    });
-  }
-}
-
-/* ── INIT ── */
-window.addEventListener('DOMContentLoaded', () => {
-  loadProfile();
-  loadCards();
-});
-
-/* ── TAB SWITCH ── */
-document.getElementById('tabNav').addEventListener('click', e => {
-  const btn = e.target.closest('.tab-btn');
-  if (!btn) return;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+/* ── MAIN TAB ── */
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-});
+  document.getElementById('tab-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-/* ── AVATAR LOAD ── */
-function loadAvatar(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const b64 = ev.target.result;
-    const img = document.getElementById('avatarImg');
-    img.src = b64;
-    img.style.display = 'block';
-    document.getElementById('avatarWrap').childNodes.forEach(n => {
-      if (n.nodeType === Node.TEXT_NODE) n.textContent = '';
-    });
-    saveProfileData({ avatar: b64 });
-  };
-  reader.readAsDataURL(file);
+/* ── SUB TAB ── */
+function switchSub(parent,id,btn){
+  const parentEl=document.getElementById('tab-'+parent);
+  parentEl.querySelectorAll('.sub-tab').forEach(b=>b.classList.remove('active'));
+  parentEl.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(parent+'-'+id).classList.add('active');
+}
+
+/* ── CALCULATOR ENGINE ── */
+const CALCS={};
+
+function initCalc(key){
+  if(CALCS[key])return;
+  CALCS[key]={items:[],orders:[],extraAdj:0};
+}
+
+function calcFromDOM(key){
+  initCalc(key);
+  const c=CALCS[key];
+  c.items=[];
+  // 각 select-group 수집
+  const groups=document.querySelectorAll(`[data-calc="${key}"]`);
+  groups.forEach((grp,groupIndex)=>{
+    const sel=grp.querySelector('select');
+    const qtyEl=grp.querySelector('.qty-val');
+    if(!sel)return;
+    const val=parseInt(sel.value)||0;
+    const qty=parseInt(qtyEl?.textContent)||0;
+    if(val>0&&qty>0){
+      const label=grp.querySelector('label')?.firstChild?.textContent?.trim()||'';
+      const optText=sel.options[sel.selectedIndex]?.text||'';
+      c.items.push({name:`${label}: ${optText}`,price:val,qty,groupIndex});
+    }
+  });
+  renderCalc(key);
+}
+
+
+function switchPixelType(type){
+  const box=document.getElementById('calc-pixel');
+  if(!box)return;
+
+  box.querySelectorAll('.pixel-calc-options').forEach(panel=>{
+    panel.style.display='none';
+    panel.querySelectorAll('select').forEach(sel=>sel.value='0');
+    panel.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
+  });
+
+  const target=document.getElementById('pixel-type-'+type);
+  if(target)target.style.display='block';
+
+  calcFromDOM('pixel');
+}
+
+function handleOptionChange(select,key){
+  const grp=select.closest(`[data-calc="${key}"]`);
+  if(!grp)return;
+  const qv=grp.querySelector('.qty-val');
+  if(!qv)return;
+  const val=parseInt(select.value)||0;
+  qv.textContent=val>0?'1':'0';
+  calcFromDOM(key);
+}
+
+function renderCalc(key){
+  const c=CALCS[key];
+  const box=document.getElementById(`calc-${key}`);
+  if(!box)return;
+
+  // 아이템 목록
+  const itemsEl=box.querySelector('.calc-items-box');
+  if(itemsEl){
+    if(!c.items.length&&c.extraAdj===0){
+      itemsEl.innerHTML='<div style="font-size:10px;color:var(--text-off);text-align:center;padding:6px 0">옵션을 선택하세요</div>';
+    }else{
+      let html=c.items.map((it,i)=>`
+        <div class="calc-item-row">
+          <span class="calc-item-name">${it.name}${it.qty>1?` ×${it.qty}`:''}</span>
+          <span class="calc-item-price">${(it.price*it.qty).toLocaleString()}</span>
+          <span class="calc-item-del" onclick="removeCalcItem('${key}',${i})">×</span>
+        </div>`).join('');
+      if(c.extraAdj!==0){
+        html+=`<div class="calc-item-row">
+          <span class="calc-item-name">직접 입력</span>
+          <span class="calc-item-price">${c.extraAdj>0?'+':''}${c.extraAdj.toLocaleString()}</span>
+          <span class="calc-item-del" onclick="clearExtra('${key}')">×</span>
+        </div>`;
+      }
+      itemsEl.innerHTML=html;
+    }
+  }
+
+  // 합계
+  const sub=c.items.reduce((s,it)=>s+it.price*it.qty,0)+c.extraAdj;
+  const totalEl=box.querySelector('.calc-total-price');
+  if(totalEl)totalEl.textContent=sub.toLocaleString()+'원';
+
+  // 주문 목록
+  const ordersEl=box.querySelector('.calc-orders');
+  if(ordersEl){
+    let html=c.orders.map((ord,i)=>`
+      <div class="calc-order-item">
+        <div class="calc-order-header">
+          <span class="calc-order-num">ORDER ${String(i+1).padStart(2,'0')}</span>
+          <span class="calc-order-price">${ord.total.toLocaleString()}원</span>
+          <span class="calc-order-del" onclick="removeOrder('${key}',${i})">×</span>
+        </div>
+        <div class="calc-order-items">${ord.desc}</div>
+      </div>`).join('');
+
+    if(c.orders.length>0){
+      const grand=c.orders.reduce((s,o)=>s+o.total,0)+sub;
+      html+=`<div class="calc-grand-total">
+        <span class="calc-grand-label">전체 합계 (${c.orders.length+1}건)</span>
+        <span class="calc-grand-price">${grand.toLocaleString()}원</span>
+      </div>`;
+    }
+    ordersEl.innerHTML=html;
+  }
+}
+
+function removeCalcItem(key,idx){
+  initCalc(key);
+  const item=CALCS[key].items[idx];
+  const box=document.getElementById(`calc-${key}`);
+  if(box&&item){
+    const groups=box.querySelectorAll(`[data-calc="${key}"]`);
+    const grp=groups[item.groupIndex];
+    if(grp){
+      const sel=grp.querySelector('select');
+      if(sel)sel.value='0';
+      const qv=grp.querySelector('.qty-val');
+      if(qv)qv.textContent='0';
+    }
+  }
+  calcFromDOM(key);
+}
+
+function clearExtra(key){
+  initCalc(key);
+  CALCS[key].extraAdj=0;
+  renderCalc(key);
+}
+
+function applyExtra(key){
+  initCalc(key);
+  const input=document.getElementById(`extra-${key}`);
+  const val=parseInt(input.value)||0;
+  if(val===0)return;
+  CALCS[key].extraAdj=(CALCS[key].extraAdj||0)+val;
+  input.value='';
+  renderCalc(key);
+}
+
+function addOrder(key,keepOptions){
+  initCalc(key);
+  const c=CALCS[key];
+  const sub=c.items.reduce((s,it)=>s+it.price*it.qty,0)+c.extraAdj;
+  if(sub===0){alert('옵션을 먼저 선택해주세요.');return;}
+  const desc=c.items.map(it=>`${it.name}${it.qty>1?` ×${it.qty}`:''}(${(it.price*it.qty).toLocaleString()}원)`).join(', ');
+  c.orders.push({total:sub,desc});
+
+  if(!keepOptions){
+    // 옵션 초기화
+    const box=document.getElementById(`calc-${key}`);
+    if(box){
+      box.querySelectorAll('select').forEach(s=>s.value='0');
+      box.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
+    }
+    c.items=[];
+    c.extraAdj=0;
+  }else{
+    // 유지 — items는 그대로, extraAdj만 초기화
+    c.extraAdj=0;
+  }
+  renderCalc(key);
+}
+
+function removeOrder(key,idx){
+  initCalc(key);
+  CALCS[key].orders.splice(idx,1);
+  renderCalc(key);
+}
+
+function changeQty(key,grpIdx,delta){
+  initCalc(key);
+  const box=document.getElementById(`calc-${key}`);
+  if(!box)return;
+  const grp=box.querySelectorAll(`[data-calc="${key}"]`)[grpIdx];
+  if(!grp)return;
+  const sel=grp.querySelector('select');
+  const qv=grp.querySelector('.qty-val');
+  if(!qv)return;
+  const val=parseInt(sel?.value)||0;
+  if(val===0){
+    qv.textContent='0';
+    calcFromDOM(key);
+    return;
+  }
+  let q=parseInt(qv.textContent)||0;
+  q=Math.max(0,q+delta);
+  qv.textContent=q;
+  if(q===0&&sel)sel.value='0';
+  calcFromDOM(key);
+}
+
+function resetCalc(key){
+  initCalc(key);
+  const c=CALCS[key];
+  c.items=[];c.orders=[];c.extraAdj=0;
+  const box=document.getElementById(`calc-${key}`);
+  if(box){
+    box.querySelectorAll('select').forEach(s=>s.value='0');
+    box.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
+  }
+  renderCalc(key);
+}
+
+/* ── PORTFOLIO CARD ── */
+function extractYtId(url){
+  const m=(url||'').match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([^&\n?#]+)/);
+  return m?m[1]:null;
+}
+function openCard(item){
+  if(item.type==='video'){
+    const id=extractYtId(item.url||'');
+    if(id){
+      document.getElementById('videoContainer').innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay" allowfullscreen></iframe>`;
+      document.getElementById('videoModal').classList.add('open');
+    }else{window.open(item.url,'_blank')}
+  }
+}
+function closeVideoModal(e){
+  if(e.target===document.getElementById('videoModal')){
+    document.getElementById('videoModal').classList.remove('open');
+    document.getElementById('videoContainer').innerHTML='';
+  }
 }
 
 /* ── ADD MODAL ── */
-let _targetGrid  = '';
-let _currentType = 'image';
-
-function openAddModal(gridId, label) {
-  _targetGrid  = gridId;
-  _currentType = 'image';
-  document.getElementById('addModalTitle').textContent = label + ' 추가';
-  document.querySelectorAll('[data-type-btn]').forEach(b => b.classList.remove('active'));
-  document.querySelector('[data-type-btn="image"]').classList.add('active');
-  document.getElementById('urlGroup').style.display  = 'none';
-  document.getElementById('fileGroup').style.display = 'block';
-  document.getElementById('inputTitle').value = '';
-  document.getElementById('inputUrl').value   = '';
-  document.getElementById('inputDesc').value  = '';
-  document.getElementById('inputFile').value  = '';
-  document.getElementById('addModal').classList.add('open');
+let _targetGrid='';
+function openAddModal(gridId,label){
+  _targetGrid=gridId;
+  document.getElementById('addModalTitle').textContent=label+' 추가';
+  ['iTitle','iUrl','iDesc'].forEach(id=>{document.getElementById(id).value=''});
+  openModal('addModal');
 }
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function closeOnBg(e,id){if(e.target===document.getElementById(id))closeModal(id)}
 
-function selectType(btn) {
-  _currentType = btn.dataset.typeBtn;
-  document.querySelectorAll('[data-type-btn]').forEach(b => b.classList.remove('active'));
+let _currentType='image';
+function selType(btn){
+  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if (_currentType === 'image') {
-    document.getElementById('urlGroup').style.display  = 'none';
-    document.getElementById('fileGroup').style.display = 'block';
-  } else if (_currentType === 'video') {
-    document.getElementById('urlGroup').style.display  = 'block';
-    document.getElementById('fileGroup').style.display = 'none';
-    document.getElementById('urlLabel').textContent    = '영상 URL (YouTube / 직접 링크)';
-    document.getElementById('inputUrl').placeholder    = 'https://youtube.com/watch?v=...';
-  } else {
-    document.getElementById('urlGroup').style.display  = 'block';
-    document.getElementById('fileGroup').style.display = 'none';
-    document.getElementById('urlLabel').textContent    = '링크 URL';
-    document.getElementById('inputUrl').placeholder    = 'https://';
-  }
+  _currentType=btn.dataset.type;
+  document.getElementById('fileGrp').style.display=_currentType==='image'?'block':'none';
+  document.getElementById('urlGrp').style.display=_currentType==='image'?'none':'block';
+  document.getElementById('urlLbl').textContent=_currentType==='link'?'URL':'영상 URL';
 }
 
-async function addItem() {
-  const title = document.getElementById('inputTitle').value.trim() || '제목 없음';
-  const url   = document.getElementById('inputUrl').value.trim();
-  const desc  = document.getElementById('inputDesc').value.trim();
-  const file  = document.getElementById('inputFile').files[0];
-  const grid  = document.getElementById(_targetGrid);
-
-  let finalUrl = url;
-
-  /* 이미지 파일 → base64 변환 (localStorage 영구 저장용) */
-  if (_currentType === 'image' && file) {
-    finalUrl = await readFileAsBase64(file);
+async function addItem(){
+  const title=document.getElementById('iTitle').value.trim()||'제목 없음';
+  const desc=document.getElementById('iDesc').value.trim();
+  let url='';
+  if(_currentType==='image'){
+    const file=document.getElementById('iFile').files[0];
+    if(file){const r=new FileReader();url=await new Promise(res=>{r.onload=e=>res(e.target.result);r.readAsDataURL(file)});}
+  }else{url=document.getElementById('iUrl').value.trim();}
+  const item={type:_currentType,url,title,desc};
+  const grid=document.getElementById(_targetGrid);
+  if(!grid)return;
+  const addCard=grid.querySelector('.card-add');
+  const div=document.createElement('div');
+  const ytId=extractYtId(url||'');
+  let inner='';
+  if(_currentType==='video'){
+    inner=`<div class="card" onclick="openCard(${JSON.stringify(item).replace(/"/g,'&quot;')})">
+      <div class="card-thumb">${ytId?`<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${title}"><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>`:'<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--orange);font-size:36px">▶</div>'}</div>
+      <span class="type-badge video">VIDEO</span>
+      <div class="card-body"><div class="card-title">${title}</div><div class="card-desc">${desc}</div></div></div>`;
+  }else if(_currentType==='link'){
+    inner=`<div class="card" onclick="window.open('${url}','_blank')">
+      <div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></div>
+      <span class="type-badge link">LINK</span>
+      <div class="card-body"><div class="card-title">${title}</div><div class="card-desc">${desc}</div></div></div>`;
+  }else{
+    inner=`<div class="card">
+      <div class="card-thumb">${url?`<img src="${url}" alt="${title}">`:'<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>'}</div>
+      <span class="type-badge image">IMAGE</span>
+      <div class="card-body"><div class="card-title">${title}</div><div class="card-desc">${desc}</div></div></div>`;
   }
-
-  const item = { type: _currentType, url: finalUrl, title, desc };
-  const addBtn = grid.querySelector('.card-add');
-  grid.insertBefore(makeCardEl(item), addBtn);
-
-  saveCards();
+  div.innerHTML=inner;
+  grid.insertBefore(div.firstElementChild,addCard);
   closeModal('addModal');
 }
 
-/* ── OPEN CARD ── */
-function openCard(card) {
-  const type = card.dataset.type;
-  const url  = card.dataset.url;
-  if (!url) return;
-
-  if (type === 'link' || type === 'image') {
-    window.open(url, '_blank');
-    return;
-  }
-  if (type === 'video') {
-    const ytId = extractYouTubeId(url);
-    const container = document.getElementById('videoContainer');
-    container.innerHTML = ytId
-      ? `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allowfullscreen allow="autoplay"></iframe>`
-      : `<video src="${url}" controls autoplay></video>`;
-    document.getElementById('videoModal').classList.add('open');
-  }
-}
-
-function closeVideoModal(e) {
-  if (e.target.id === 'videoModal') {
-    document.getElementById('videoModal').classList.remove('open');
-    document.getElementById('videoContainer').innerHTML = '';
-  }
-}
-
-/* ── PROFILE EDIT ── */
-function editProfile() {
-  const p = JSON.parse(localStorage.getItem(STORAGE_PROFILE) || '{}');
-  document.getElementById('pName').value  = p.name  || '';
-  document.getElementById('pRole').value  = p.role  || '';
-  document.getElementById('pBio').value   = p.bio   || '';
-  document.getElementById('pEmail').value = p.email || '';
-  document.getElementById('addModal').classList.remove('open');
-  document.getElementById('profileModal').classList.add('open');
-}
-
-function saveProfile() {
-  const name  = document.getElementById('pName').value.trim();
-  const role  = document.getElementById('pRole').value.trim();
-  const bio   = document.getElementById('pBio').value.trim();
-  const email = document.getElementById('pEmail').value.trim();
-
-  if (name) {
-    const h1 = document.querySelector('.profile-info h1');
-    const mid = Math.ceil(name.length / 2);
-    h1.innerHTML = name.slice(0,mid) + '<span>' + name.slice(mid) + '</span>';
-  }
-  if (role)  document.querySelector('.role').textContent = role;
-  if (bio)   document.querySelector('.bio').textContent  = bio;
-  if (email) {
-    document.getElementById('emailBtn').href = 'mailto:' + email;
-    document.getElementById('emailLabel').textContent = email;
-  }
-
-  saveProfileData({ name, role, bio, email });
+/* ── PROFILE ── */
+function saveProfile(){
+  const n=document.getElementById('pName').value.trim();
+  const r=document.getElementById('pRole').value.trim();
+  const b=document.getElementById('pBio').value.trim();
+  if(n)document.getElementById('profileName').innerHTML=n;
+  if(r)document.getElementById('profileRole').textContent=r;
+  if(b)document.getElementById('profileBio').innerHTML=b.replace(/\n/g,'<br>');
   closeModal('profileModal');
 }
 
-/* ── MODAL UTILS ── */
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function closeModalOnBackdrop(e, id) { if (e.target.id === id) closeModal(id); }
+/* ── FADE IN ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})
+},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+
+/* ── AUTO GRID COLUMN LOGIC ── */
+function getBestColumns(count){
+    const fixed={1:1,2:2,3:3,4:4,5:5,6:3,7:7,8:4,9:3,10:5};
+    if(fixed[count]) return fixed[count];
+
+    const limit=7;
+
+    let target=count;
+
+    function isPrime(n){
+        if(n<2) return false;
+        for(let i=2;i<=Math.sqrt(n);i++){
+            if(n%i===0) return false;
+        }
+        return true;
+    }
+
+    while(isPrime(target)) target++;
+
+    let best=1;
+
+    for(let cols=2;cols<=limit;cols++){
+        const rows=Math.ceil(target/cols);
+        const empty=(cols*rows)-count;
+
+        if(best===1){
+            best=cols;
+            bestEmpty=empty;
+            bestDiff=Math.abs(cols-rows);
+            continue;
+        }
+
+        const diff=Math.abs(cols-rows);
+
+        if(
+            empty<bestEmpty ||
+            (empty===bestEmpty && diff<bestDiff)
+        ){
+            best=cols;
+            bestEmpty=empty;
+            bestDiff=diff;
+        }
+    }
+
+    return best;
+}
+
 </script>
 </body>
 </html>
