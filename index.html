@@ -2918,9 +2918,89 @@ async function saveGridOrder(gridId){
     console.error('카드 순서 저장 실패:',err);
   }
 }
+function getGridGroupId(gridId){
+  const grid=document.getElementById(gridId);
+  return grid?.closest('#tab-work .sub-panel')?.id || '';
+}
+function canMoveBetweenGrids(fromGridId,toGridId){
+  if(!fromGridId||!toGridId)return false;
+  if(fromGridId===toGridId)return true;
+  if(!GITHUB_FOLDER_MAP[fromGridId]||!GITHUB_FOLDER_MAP[toGridId])return false;
+  return getGridGroupId(fromGridId) && getGridGroupId(fromGridId)===getGridGroupId(toGridId);
+}
+async function readUrlAsBase64Content(url){
+  const res=await fetch(url,{cache:'no-store'});
+  if(!res.ok)throw new Error('원본 파일을 읽지 못했습니다.');
+  const blob=await res.blob();
+  return await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(String(reader.result||'').split(',')[1]||'');
+    reader.onerror=()=>reject(reader.error||new Error('파일 변환 실패'));
+    reader.readAsDataURL(blob);
+  });
+}
+async function moveGithubFileToGrid(card,toGridId){
+  const fromPath=card.dataset.sourcePath||'';
+  const fromUrl=card.dataset.url||'';
+  const toFolder=GITHUB_FOLDER_MAP[toGridId];
+  if(!fromPath||!fromUrl||!toFolder)return null;
+  const filename=filenameFromPath(fromPath);
+  const toPath=`${toFolder}/${filename}`;
+  if(toPath===fromPath)return {sourcePath:fromPath,url:fromUrl};
+  const content=await readUrlAsBase64Content(fromUrl);
+  const uploadRes=await fetch(WORKER_UPLOAD_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'upload',path:toPath,content})
+  });
+  const uploadText=await uploadRes.text();
+  let uploadData=null;
+  try{uploadData=JSON.parse(uploadText);}catch(_){}
+  if(!uploadRes.ok){
+    throw new Error(uploadData?.message||uploadData?.error||uploadText||'새 폴더 업로드 실패');
+  }
+  await deleteGithubFileByPath(fromPath);
+  return {
+    sourcePath:toPath,
+    url:uploadData?.content?.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${toPath}`
+  };
+}
+async function persistCardGridMove(card,fromGridId,toGridId){
+  if(!card||fromGridId===toGridId)return;
+  const docId=card.dataset.docId||'';
+  let nextSourcePath=card.dataset.sourcePath||'';
+  let nextUrl=card.dataset.url||'';
+  try{
+    if(card.dataset.sourceKind==='github' && nextSourcePath){
+      const moved=await moveGithubFileToGrid(card,toGridId);
+      if(moved){
+        nextSourcePath=moved.sourcePath;
+        nextUrl=moved.url;
+        card.dataset.sourcePath=nextSourcePath;
+        card.dataset.url=nextUrl;
+        const img=card.querySelector('.card-thumb img');
+        if(img)img.src=nextUrl;
+      }
+    }
+    card.dataset.grid=toGridId;
+    if(FIRESTORE_READY && docId){
+      await getCardsCol().doc(docId).set({
+        grid:toGridId,
+        url:nextUrl,
+        sourcePath:nextSourcePath,
+        sourceKind:card.dataset.sourceKind||'',
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+    }
+  }catch(err){
+    console.error('카드 이동 저장 실패:',err);
+    alert('카드 이동은 화면에 반영됐지만 파일/DB 이동에 실패했습니다.\n' + (err.message||''));
+  }
+}
 function setupDragSortable(){
   let dragCard=null;
   let dragGridId='';
+  let lastDropGridId='';
   document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(grid=>{
     grid.querySelectorAll(':scope > .card').forEach(card=>{
       card.draggable=!!isAdmin;
@@ -2934,9 +3014,10 @@ function setupDragSortable(){
 
   window.__portfolioDragStart=function(e){
     const card=e.target.closest('#tab-work .card');
-    if(!isAdmin||!card||e.target.closest('.card-edit,.card-del')){e.preventDefault();return;}
+    if(!isAdmin||!card||e.target.closest('.card-edit,.card-del')||selectionModeGrid){e.preventDefault();return;}
     dragCard=card;
     dragGridId=card.closest('.grid-3,.grid-2')?.id||'';
+    lastDropGridId=dragGridId;
     card.classList.add('dragging');
     if(e.dataTransfer){
       e.dataTransfer.effectAllowed='move';
@@ -2946,29 +3027,40 @@ function setupDragSortable(){
   window.__portfolioDragOver=function(e){
     if(!dragCard)return;
     const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
-    if(!grid||grid.id!==dragGridId)return;
+    if(!grid||!canMoveBetweenGrids(dragGridId,grid.id))return;
     e.preventDefault();
+    lastDropGridId=grid.id;
     const target=e.target.closest('#tab-work .card');
-    if(!target||target===dragCard||target.closest('.card-add'))return;
-    const rect=target.getBoundingClientRect();
-    const before=e.clientY < rect.top + rect.height/2;
-    grid.insertBefore(dragCard,before?target:target.nextSibling);
+    if(target&&target!==dragCard&&!target.closest('.card-add,.card-multi-upload')){
+      const rect=target.getBoundingClientRect();
+      const before=e.clientY < rect.top + rect.height/2;
+      grid.insertBefore(dragCard,before?target:target.nextSibling);
+    }else{
+      const addCard=grid.querySelector(':scope > .card-add');
+      grid.insertBefore(dragCard,addCard||null);
+    }
   };
-  window.__portfolioDrop=function(e){
+  window.__portfolioDrop=async function(e){
     if(!dragCard)return;
-    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
-    if(grid&&grid.id===dragGridId){
+    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2') || document.getElementById(lastDropGridId);
+    if(grid&&canMoveBetweenGrids(dragGridId,grid.id)){
       e.preventDefault();
-      saveGridOrder(dragGridId);
+      lastDropGridId=grid.id;
+      await persistCardGridMove(dragCard,dragGridId,lastDropGridId);
+      await saveGridOrder(dragGridId);
+      await saveGridOrder(lastDropGridId);
+      setupDragSortable();
     }
   };
   window.__portfolioDragEnd=function(){
     if(dragCard){
       dragCard.classList.remove('dragging');
       saveGridOrder(dragGridId);
+      if(lastDropGridId&&lastDropGridId!==dragGridId)saveGridOrder(lastDropGridId);
     }
     dragCard=null;
     dragGridId='';
+    lastDropGridId='';
   };
 
   document.addEventListener('dragstart',window.__portfolioDragStart,true);
@@ -3332,7 +3424,9 @@ function cardSelectionKey(card){
 function getGridTitle(gridId){
   const grid=document.getElementById(gridId);
   const title=grid?.previousElementSibling;
-  return title?.classList?.contains('portfolio-section-title') ? title.textContent.replace(/다중선택|선택삭제|리로드/g,'').trim() : gridId;
+  return title?.classList?.contains('portfolio-section-title') || title?.classList?.contains('sec-label')
+    ? title.textContent.replace(/다중선택|선택삭제|리로드/g,'').trim()
+    : gridId;
 }
 function clearSelection(){
   selectedCardKeys.clear();
@@ -3384,7 +3478,8 @@ function setupSectionAdminControls(){
   Object.keys(GITHUB_FOLDER_MAP).forEach(gridId=>{
     const grid=document.getElementById(gridId);
     const title=grid?.previousElementSibling;
-    if(!grid||!title||!title.classList.contains('portfolio-section-title'))return;
+    const validTitle=title&&(title.classList.contains('portfolio-section-title')||title.classList.contains('sec-label'));
+    if(!grid||!validTitle)return;
     if(title.querySelector('.section-admin-controls'))return;
     const box=document.createElement('span');
     box.className='section-admin-controls';
