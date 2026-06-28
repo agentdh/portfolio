@@ -1,5 +1,12 @@
 {
-  "thumbnail-ld": [],
+  "thumbnail-ld": [
+    {
+      "title": "샘플 LD 썸네일",
+      "desc": "예시 항목 - 실제 이미지로 교체하세요",
+      "src": "./thumbnail/sample.png",
+      "type": "image"
+    }
+  ],
   "thumbnail-sd": [],
   "thumbnail-composite": [],
   "illust-simple": [],
@@ -16,58 +23,9 @@
   "pixel-game": [],
   "mc-skin": [],
   "mc-model": [],
-  "mc-animation": [
-    {
-      "title": "Spider-Man:Homecoming",
-      "desc": "",
-      "src": "https://www.youtube.com/shorts/6yiArsUdr_s",
-      "type": "video"
-    },
-    {
-      "title": "Peter Parker Evil's Dance",
-      "desc": "",
-      "src": "https://www.youtube.com/shorts/T4yUV3NUnbE",
-      "type": "video"
-    },
-    {
-      "title": "연습영상",
-      "desc": "",
-      "src": "https://www.youtube.com/watch?v=hbT-MOSyTIg",
-      "type": "video"
-    },
-    {
-      "title": "총기_테스트",
-      "desc": "",
-      "src": "https://www.youtube.com/watch?v=-l7F_-HwfsI",
-      "type": "video"
-    },
-    {
-      "title": "Steins;Gate OP",
-      "desc": "",
-      "src": "https://www.youtube.com/watch?v=jHtya1rwFjo",
-      "type": "video"
-    },
-    {
-      "title": "K/DA-POPSTARS",
-      "desc": "",
-      "src": "https://www.youtube.com/watch?v=fPcrFhfwXv8",
-      "type": "video"
-    }
-  ],
+  "mc-animation": [],
   "mc-resource": [],
   "mvAnimationGrid": [
-    {
-      "title": "제목 없음",
-      "desc": "",
-      "src": "https://youtube.com/shorts/W5Bc9GofYws",
-      "type": "link"
-    },
-    {
-      "title": "SKY HIGH.배비꼬",
-      "desc": "",
-      "src": "https://youtu.be/UoKUdXDwonM",
-      "type": "link"
-    },
     {
       "title": "SKY HIGH.배비꼬",
       "desc": "MV 애니메이션",

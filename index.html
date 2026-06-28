@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-
 :root{
   --bg:#0D0D14;--bg2:#13131F;--bg3:#1A1A2E;
   --surface:#16161F;--surface2:#1e1e2c;
@@ -112,7 +111,8 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card.drag-over{border-color:var(--cyan)}
 .upload-help{font-size:10px;color:var(--text-off);margin-top:5px;line-height:1.6}
 
-.portfolio-section-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.portfolio-section-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap;cursor:pointer}
+.grid-3.collapsed,.grid-2.collapsed{display:none!important}
 .section-admin-controls{display:inline-flex;gap:6px;align-items:center;margin-left:8px}
 .admin-mini-btn{border:1px solid rgba(0,229,255,.24);background:rgba(0,229,255,.055);color:var(--cyan);border-radius:6px;padding:4px 8px;font-size:10px;font-family:'Noto Sans KR',sans-serif;font-weight:400;cursor:pointer;transition:all .16s}
 .admin-mini-btn:hover{border-color:var(--cyan);background:rgba(0,229,255,.12);color:#fff}
@@ -503,10 +503,35 @@ color:var(--cyan);
 
 
 .pup-empty-grid-card{
-  border:1px dashed rgba(255,255,255,.13);border-radius:var(--radius);
-  min-height:100px;display:flex;align-items:center;justify-content:center;
-  color:var(--text-off);font-size:12px;pointer-events:none;
-  grid-column:1/-1;
+  background:var(--surface);
+  border:1px dashed rgba(255,255,255,.18);
+  border-radius:var(--radius);
+  overflow:hidden;
+  transition:transform .2s,border-color .2s;
+  position:relative;
+  min-height:0;
+  width:100%;
+  pointer-events:none;
+  display:flex;
+  flex-direction:column;
+}
+.pup-empty-grid-card::before{
+  content:'';
+  display:block;
+  width:100%;
+  aspect-ratio:16/10;
+  background:var(--bg3);
+  border-bottom:1px solid var(--border);
+}
+.pup-empty-grid-card::after{
+  content:'비어있음';
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:52px;
+  padding:11px 13px 13px;
+  color:var(--text-off);
+  font-size:12px;
 }
 .grid-3.pup-drop-target,.grid-2.pup-drop-target{
   outline:2px dashed var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.04);
@@ -514,33 +539,65 @@ color:var(--cyan);
 
 .card.selected{outline:2px solid var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.06);}
 
-
-
-/* ── PUBLIC VIEWER MODE ── */
+/* ── Public viewer patch ── */
 .admin-auth-btn,
-.section-admin-controls,
 .card-add,
 .card-multi-upload,
+.op-save-panel,
+.section-admin-controls,
+.admin-mini-btn,
 .card-del,
 .card-edit,
-.card-select-mark,
-#unregistered-panel,
 #port-unrg-panel,
-.pup-upload-area,
-.pup-actions,
-.up-actions{display:none!important;}
-.card{cursor:pointer;}
-.card.drag-ready{cursor:pointer;}
+#unregistered-panel{
+  display:none!important;
+}
+.pup-empty-grid-card{
+  background:var(--surface);
+  border:1px dashed rgba(255,255,255,.13);
+  border-radius:var(--radius);
+  overflow:hidden;
+  min-height:0!important;
+  aspect-ratio:16/10;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text-off);
+  font-size:12px;
+}
+.grid-3.collapsed,
+.grid-2.collapsed{
+  display:none!important;
+}
+.collapsible-section-title{
+  cursor:pointer;
+  user-select:none;
+  transition:color .15s,border-color .15s;
+}
+.collapsible-section-title:hover{
+  color:var(--cyan);
+  border-color:rgba(0,229,255,.3);
+}
+.collapse-arrow{
+  display:inline-block;
+  width:18px;
+  color:var(--gold);
+  font-family:'Space Mono',monospace;
+}
+.card.generated-card{
+  display:block;
+}
+.fade-in{opacity:1!important;transform:none!important;}
 
 </style>
-
 </head>
 <body>
 <div id="page-wrap">
 <div id="main-area">
 <header>
   <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-  <div class="avatar-wrap" onclick="openModal('profileModal')" title="프로필 편집"><span id="avatarInitial">BW</span><img id="avatarImg" src="" alt="" style="display:none"></div>
+  <div class="avatar-wrap"><span id="avatarInitial">BW</span><img id="avatarImg" src="" alt="" style="display:none"></div>
 </div>
   <div class="profile-info">
     <div class="profile-brand">Multimedia Artist · Commission Open</div>
@@ -798,24 +855,25 @@ color:var(--cyan);
         <button class="sub-tab" onclick="switchPortTab('minecraft',this)">마인크래프트</button>
         <button class="sub-tab" onclick="switchPortTab('animation',this)">애니메이션·영상</button>
         <button class="sub-tab" onclick="switchPortTab('branding',this)">브랜딩·채널아트</button>
+      <button class="admin-mini-btn upload" style="margin-left:auto;" onclick="saveToGithub()">저장하기</button>
       </div>
 
       <!-- 썸네일 -->
       <div class="port-sub active" id="port-sub-thumbnail">
-        <div class="portfolio-section-title">LD 썸네일</div>
-        <div class="grid-3 fade-in" id="thumbnail-ld">
+        <div class="portfolio-section-title" onclick="toggleSection('thumbnail-ld')">▶ LD 썸네일</div>
+        <div class="grid-3 fade-in collapsed" id="thumbnail-ld">
           <div class="card-add" onclick="openAddModal('thumbnail-ld','LD 썸네일',this)">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title">SD 썸네일</div>
-        <div class="grid-3 fade-in" id="thumbnail-sd">
+        <div class="portfolio-section-title" onclick="toggleSection('thumbnail-sd')">▶ SD 썸네일</div>
+        <div class="grid-3 fade-in collapsed" id="thumbnail-sd">
           <div class="card-add" onclick="openAddModal('thumbnail-sd','SD 썸네일',this)">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title">합성 썸네일</div>
-        <div class="grid-3 fade-in" id="thumbnail-composite">
+        <div class="portfolio-section-title" onclick="toggleSection('thumbnail-composite')">▶ 합성 썸네일</div>
+        <div class="grid-3 fade-in collapsed" id="thumbnail-composite">
           <div class="card-add" onclick="openAddModal('thumbnail-composite','합성 썸네일',this)">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
           </div>
@@ -2443,32 +2501,6 @@ color:var(--cyan);
 
 
 <!-- ── 미등록 카드 패널 (관리자 전용) ── -->
-<div id="port-unrg-panel">
-  <div class="pup-header">
-    <div class="pup-title">미등록 카드</div>
-    <div class="pup-folder" id="pup-folder-label"></div>
-    <div class="pup-actions">
-      <button class="pup-btn" id="pup-btn-select" onclick="pupToggleSelect()">다중선택</button>
-      <button class="pup-btn danger" onclick="pupDeleteSelected()">선택삭제</button>
-      <button class="pup-btn" onclick="pupRenderFromData()">↺ 리로드</button>
-      <button class="pup-btn warn" onclick="pupResetTab()">초기화</button>
-    </div>
-    <div class="pup-upload-area">
-      <button class="pup-upload-btn" id="pup-upload-btn" onclick="pupOpenBatchUpload()">
-        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        여러 파일 업로드
-        <small>이미지·GIF·영상</small>
-      </button>
-    </div>
-  </div>
-  <div class="pup-list" id="pup-list">
-    <div class="pup-empty">탭을 선택하면 해당 폴더의 미등록 파일이 표시됩니다.</div>
-  </div>
-  <div class="pup-status">
-    <span id="pup-count">0개</span>
-    <span id="pup-sel-count" style="display:none">0개 선택</span>
-  </div>
-</div>
 </div><!-- /page-wrap -->
 
 <!-- MODALS -->
@@ -2512,2054 +2544,237 @@ color:var(--cyan);
 </div>
 
 
-<script>window.PUBLIC_VIEWER_MODE=true;</script>
-<!-- 포트폴리오 매니저 (JSON 기반) -->
-<script src="./portfolio-manager.js"></script>
 <script>
+'use strict';
 
-/* ── MAIN TAB ── */
-function switchTab(id,btn){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tab-'+id).classList.add('active');
-  if(id==='work' && isAdmin) pupShowPanel();
-  else pupHidePanel();
-  window.scrollTo({top:0,behavior:'smooth'});
+let portfolioData = {};
+let currentPortTab = 'thumbnail';
+
+function qs(sel, root=document){ return root.querySelector(sel); }
+function qsa(sel, root=document){ return [...root.querySelectorAll(sel)]; }
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[ch]));
 }
 
-/* ── SUB TAB ── */
-function switchSub(parent,id,btn){
-  const parentEl=document.getElementById('tab-'+parent);
-  parentEl.querySelectorAll('.sub-tab').forEach(b=>b.classList.remove('active'));
-  parentEl.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(parent+'-'+id).classList.add('active');
+function switchTab(id, btn){
+  qsa('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  qsa('.tab-panel').forEach(p=>p.classList.remove('active'));
+  qs('#tab-'+id)?.classList.add('active');
+  revealFade();
 }
 
-/* ── CALCULATOR ENGINE ── */
-const CALCS={};
-
-function initCalc(key){
-  if(CALCS[key])return;
-  CALCS[key]={items:[],orders:[],extraAdj:0};
+function switchPortTab(tabKey, btn){
+  currentPortTab = tabKey;
+  qsa('#tab-work .sub-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  qsa('#tab-work .port-sub').forEach(p=>p.classList.remove('active'));
+  qs('#port-sub-'+tabKey)?.classList.add('active');
+  revealFade();
 }
 
-function calcFromDOM(key){
-  initCalc(key);
-  const c=CALCS[key];
-  c.items=[];
-  // 각 select-group 수집
-  const groups=document.querySelectorAll(`[data-calc="${key}"]`);
-  groups.forEach((grp,groupIndex)=>{
-    const sel=grp.querySelector('select');
-    const qtyEl=grp.querySelector('.qty-val');
-    if(!sel)return;
-    const val=parseInt(sel.value)||0;
-    const qty=parseInt(qtyEl?.textContent)||0;
-    if(val>0&&qty>0){
-      const label=grp.querySelector('label')?.firstChild?.textContent?.trim()||'';
-      const optText=sel.options[sel.selectedIndex]?.text||'';
-      c.items.push({name:`${label}: ${optText}`,price:val,qty,groupIndex});
-    }
-  });
-  
-if(key==='illust'){
-  const peopleGroup = document.querySelectorAll('[data-calc="illust"]')[5];
-
-  if(peopleGroup){
-    const qtyEl = peopleGroup.querySelector('.qty-val');
-    const peopleCount = parseInt(qtyEl?.textContent) || 0;
-
-    c.items = c.items.filter(it => !it.name.includes('옵션_인원추가'));
-
-    if(peopleCount > 0){
-      const subtotal = c.items.reduce((sum,it)=>sum+(it.price*it.qty),0) + c.extraAdj;
-
-      const peoplePrice = Math.round(subtotal * 0.6 * peopleCount);
-
-      c.items.push({
-        name:`옵션_인원추가 (${peopleCount}명)`,
-        price:peoplePrice,
-        qty:1,
-        groupIndex:5
-      });
-    }
-  }
-}
-  
-  renderCalc(key);
+function normalizeSrc(src){
+  if(!src) return '';
+  if(/^https?:\/\//i.test(src)) return src;
+  return src.startsWith('./') ? src : './' + src.replace(/^\/+/, '');
 }
 
-
-function switchPixelType(type){
-  const box=document.getElementById('calc-pixel');
-  if(!box)return;
-
-  box.querySelectorAll('.pixel-calc-options').forEach(panel=>{
-    panel.style.display='none';
-    panel.querySelectorAll('select').forEach(sel=>sel.value='0');
-    panel.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
-  });
-
-  const target=document.getElementById('pixel-type-'+type);
-  if(target)target.style.display='block';
-
-  calcFromDOM('pixel');
+function getYoutubeId(url){
+  const s = String(url || '');
+  const m = s.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+  return m ? m[1] : '';
 }
 
-function handleOptionChange(select,key){
-  const grp=select.closest(`[data-calc="${key}"]`);
-  if(!grp)return;
-  const qv=grp.querySelector('.qty-val');
-  if(!qv)return;
-  const val=parseInt(select.value)||0;
-  qv.textContent=val>0?'1':'0';
-  calcFromDOM(key);
+function inferType(item){
+  if(item.type) return item.type;
+  const src = item.src || item.url || '';
+  if(getYoutubeId(src)) return 'video';
+  if(/\.(mp4|webm|mov)$/i.test(src)) return 'video';
+  return 'image';
 }
 
-function handleIllustTypeChange(){
-  const groups=document.querySelectorAll('#calc-illust select');
-  const type1=groups[0]?.value;
-  const type2=groups[1]?.value;
+function makeCard(item){
+  const type = inferType(item);
+  const src = normalizeSrc(item.src || item.url || item.sourcePath || '');
+  const title = item.title || '제목 없음';
+  const desc = item.desc || '';
+  const yt = getYoutubeId(src);
+  const thumb = yt ? `https://img.youtube.com/vi/${yt}/mqdefault.jpg` : src;
 
-  const base=document.getElementById('illustBaseSelect');
-  const style=document.getElementById('illustStyleSelect');
-  const type2Wrap=document.getElementById('illustType2Wrap');
+  const card = document.createElement('div');
+  card.className = 'card generated-card';
+  card.dataset.type = type;
+  card.dataset.src = src;
+  card.dataset.title = title;
+  card.dataset.desc = desc;
 
-  if(!base || !style) return;
+  const badgeType = yt ? 'video' : type;
+  const imgHtml = thumb
+    ? `<img src="${escapeHtml(thumb)}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.closest('.card-thumb').classList.add('ph');this.remove();">`
+    : '';
 
-  base.innerHTML='<option value="0">선택하세요.</option>';
-  style.innerHTML='<option value="0">선택하세요.</option>';
+  card.innerHTML = `
+    <div class="card-thumb ${thumb ? '' : 'ph'}">
+      ${imgHtml}
+      <span class="type-badge ${escapeHtml(badgeType)}">${escapeHtml(String(badgeType).toUpperCase())}</span>
+      ${badgeType === 'video' ? `<div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>` : ''}
+    </div>
+    <div class="card-body">
+      <div class="card-title">${escapeHtml(title)}</div>
+      <div class="card-desc">${escapeHtml(desc)}</div>
+    </div>
+  `;
 
-  if(type1==='concept'){
-    type2Wrap.style.display='none';
-
-    base.innerHTML += `
-      <option value="105000">기본 구성 (105,000)</option>
-      <option value="30000">의상 추가 (+30,000)</option>
-    `;
-
-    style.innerHTML += `
-      <option value="0">심플 (+0)</option>
-      <option value="30000">셀채색 (+30,000)</option>
-      <option value="50000">반무테 (+50,000)</option>
-    `;
-  }
-  else if(type1==='illustration'){
-    type2Wrap.style.display='block';
-
-    if(type2==='noncommercial'){
-      base.innerHTML += `
-        <option value="10000">흉상 (10,000)</option>
-        <option value="40000">반신 (40,000)</option>
-        <option value="65000">전신 (65,000)</option>
-      `;
-    }
-
-    if(type2==='commercial'){
-      base.innerHTML += `
-        <option value="50000">흉상 (50,000)</option>
-        <option value="80000">반신 (80,000)</option>
-        <option value="140000">전신 (140,000)</option>
-      `;
-    }
-
-    if(type2==='broadcast'){
-      base.innerHTML += `
-        <option value="40000">흉상 (40,000)</option>
-        <option value="75000">반신 (75,000)</option>
-        <option value="115000">전신 (115,000)</option>
-      `;
-    }
-
-    style.innerHTML += `
-      <option value="0">심플 (+0)</option>
-      <option value="20000">얇은선 (+20,000)</option>
-      <option value="35000">반무테 (+35,000)</option>
-    `;
-  }
-
-  calcFromDOM('illust');
-}
-
-function renderCalc(key){
-  const c=CALCS[key];
-  const box=document.getElementById(`calc-${key}`);
-  if(!box)return;
-
-  // 아이템 목록
-  const itemsEl=box.querySelector('.calc-items-box');
-  if(itemsEl){
-    if(!c.items.length&&c.extraAdj===0){
-      itemsEl.innerHTML='<div style="font-size:10px;color:var(--text-off);text-align:center;padding:6px 0">옵션을 선택하세요</div>';
-    }else{
-      let html=c.items.map((it,i)=>`
-        <div class="calc-item-row">
-          <span class="calc-item-name">${it.name}${it.qty>1?` ×${it.qty}`:''}</span>
-          <span class="calc-item-price">${(it.price*it.qty).toLocaleString()}</span>
-          <span class="calc-item-del" onclick="removeCalcItem('${key}',${i})">×</span>
-        </div>`).join('');
-      if(c.extraAdj!==0){
-        html+=`<div class="calc-item-row">
-          <span class="calc-item-name">직접 입력</span>
-          <span class="calc-item-price">${c.extraAdj>0?'+':''}${c.extraAdj.toLocaleString()}</span>
-          <span class="calc-item-del" onclick="clearExtra('${key}')">×</span>
-        </div>`;
-      }
-      itemsEl.innerHTML=html;
-    }
-  }
-
-  // 합계
-  const sub=c.items.reduce((s,it)=>s+it.price*it.qty,0)+c.extraAdj;
-  const totalEl=box.querySelector('.calc-total-price');
-  if(totalEl)totalEl.textContent=sub.toLocaleString()+'원';
-
-  // 주문 목록
-  const ordersEl=box.querySelector('.calc-orders');
-  if(ordersEl){
-    let html=c.orders.map((ord,i)=>`
-      <div class="calc-order-item">
-        <div class="calc-order-header">
-          <span class="calc-order-num">ORDER ${String(i+1).padStart(2,'0')}</span>
-          <span class="calc-order-price">${ord.total.toLocaleString()}원</span>
-          <span class="calc-order-del" onclick="removeOrder('${key}',${i})">×</span>
-        </div>
-        <div class="calc-order-items">${ord.desc}</div>
-      </div>`).join('');
-
-    if(c.orders.length>0){
-      const grand=c.orders.reduce((s,o)=>s+o.total,0)+sub;
-      html+=`<div class="calc-grand-total">
-        <span class="calc-grand-label">전체 합계 (${c.orders.length+1}건)</span>
-        <span class="calc-grand-price">${grand.toLocaleString()}원</span>
-      </div>`;
-    }
-    ordersEl.innerHTML=html;
-  }
-}
-
-function removeCalcItem(key,idx){
-  initCalc(key);
-  const item=CALCS[key].items[idx];
-  const box=document.getElementById(`calc-${key}`);
-  if(box&&item){
-    const groups=box.querySelectorAll(`[data-calc="${key}"]`);
-    const grp=groups[item.groupIndex];
-    if(grp){
-      const sel=grp.querySelector('select');
-      if(sel)sel.value='0';
-      const qv=grp.querySelector('.qty-val');
-      if(qv)qv.textContent='0';
-    }
-  }
-  calcFromDOM(key);
-}
-
-function clearExtra(key){
-  initCalc(key);
-  CALCS[key].extraAdj=0;
-  renderCalc(key);
-}
-
-function applyExtra(key){
-  initCalc(key);
-  const input=document.getElementById(`extra-${key}`);
-  const val=parseInt(input.value)||0;
-  if(val===0)return;
-  CALCS[key].extraAdj=(CALCS[key].extraAdj||0)+val;
-  input.value='';
-  renderCalc(key);
-}
-
-function addOrder(key,keepOptions){
-  initCalc(key);
-  const c=CALCS[key];
-  const sub=c.items.reduce((s,it)=>s+it.price*it.qty,0)+c.extraAdj;
-  if(sub===0){alert('옵션을 먼저 선택해주세요.');return;}
-  const desc=c.items.map(it=>`${it.name}${it.qty>1?` ×${it.qty}`:''}(${(it.price*it.qty).toLocaleString()}원)`).join(', ');
-  c.orders.push({total:sub,desc});
-
-  if(!keepOptions){
-    // 옵션 초기화
-    const box=document.getElementById(`calc-${key}`);
-    if(box){
-      box.querySelectorAll('select').forEach(s=>s.value='0');
-      box.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
-    }
-    c.items=[];
-    c.extraAdj=0;
-  }else{
-    // 유지 — items는 그대로, extraAdj만 초기화
-    c.extraAdj=0;
-  }
-  renderCalc(key);
-}
-
-function removeOrder(key,idx){
-  initCalc(key);
-  CALCS[key].orders.splice(idx,1);
-  renderCalc(key);
-}
-
-function changeQty(key,grpIdx,delta){
-  initCalc(key);
-  const box=document.getElementById(`calc-${key}`);
-  if(!box)return;
-  const grp=box.querySelectorAll(`[data-calc="${key}"]`)[grpIdx];
-  if(!grp)return;
-  const sel=grp.querySelector('select');
-  const qv=grp.querySelector('.qty-val');
-  if(!qv)return;
-  const val=parseInt(sel?.value)||0;
-  if(val===0){
-    qv.textContent='0';
-    calcFromDOM(key);
-    return;
-  }
-  let q=parseInt(qv.textContent)||0;
-  q=Math.max(0,q+delta);
-  qv.textContent=q;
-  if(q===0&&sel)sel.value='0';
-  calcFromDOM(key);
-}
-
-function resetCalc(key){
-  initCalc(key);
-  const c=CALCS[key];
-  c.items=[];c.orders=[];c.extraAdj=0;
-  const box=document.getElementById(`calc-${key}`);
-  if(box){
-    box.querySelectorAll('select').forEach(s=>s.value='0');
-    box.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
-  }
-  renderCalc(key);
-}
-
-/* ── FIRESTORE SETUP ──
-   아래 firebaseConfig 값은 Firebase 콘솔 > 프로젝트 설정 > 일반 > 내 앱 > SDK 설정에서 받은 값으로 교체한다.
-   Firestore 규칙은 사용자가 설정한 개발용 allow read, write: if true 기준으로 동작한다.
-*/
-const firebaseConfig = {
-  apiKey: "AIzaSyDkkBLHMmitOBDxThle6ydskGGfKp4rqak",
-  authDomain: "bowone-portfolio.firebaseapp.com",
-  projectId: "bowone-portfolio",
-  storageBucket: "bowone-portfolio.firebasestorage.app",
-  messagingSenderId: "312049447367",
-  appId: "1:312049447367:web:6fe13a103820aa37bae9e2"
-};
-
-let db=null;
-let FIRESTORE_READY=false;
-try{
-  if(firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('PASTE_') && window.firebase){
-    firebase.initializeApp(firebaseConfig);
-    db=firebase.firestore();
-    FIRESTORE_READY=true;
-  }
-}catch(err){
-  console.error('Firebase 초기화 실패:',err);
-}
-
-
-let auth=null;
-let isAdmin=false;
-
-try{
-  auth=firebase.auth();
-  console.log('Auth initialized');
-}catch(err){
-  console.error('Auth init error:',err);
-}
-
-function updateEditorVisibility(){
-  document.querySelectorAll('.card-add,.card-multi-upload,.section-admin-controls,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
-    el.style.display=isAdmin ? '' : 'none';
-  });
-  setupDragSortable();
-}
-
-function loginWithGoogle(){
-  console.log('login clicked');
-  if(!auth){
-    alert('Firebase Auth 초기화 실패');
-    return;
-  }
-  const provider=new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider)
-    .then(result=>console.log('Login success:',result.user.email))
-    .catch(err=>{
-      console.error(err);
-      alert('로그인 실패: '+err.message);
-    });
-}
-
-function logoutGoogle(){
-  if(auth) auth.signOut();
-}
-
-window.addEventListener('DOMContentLoaded',()=>{
-  const btn=document.getElementById('authBtn');
-  if(!btn) return;
-
-  if(auth){
-    auth.onAuthStateChanged(user=>{
-      console.log('Auth state:', user);
-      isAdmin=!!(user && user.email==='agentdh@naver.com');
-      btn.textContent=isAdmin?'로그아웃':'관리자 로그인';
-      btn.onclick=isAdmin?logoutGoogle:loginWithGoogle;
-      updateEditorVisibility();
-      if(document.getElementById('tab-work')?.classList.contains('active')){ if(isAdmin)pupShowPanel(); else pupHidePanel(); }
-    });
-  }else{
-    btn.textContent='관리자 로그인';
-    btn.onclick=loginWithGoogle;
-  }
-});
-
-const PROFILE_DOC_PATH=['portfolio','profile'];
-const CARDS_COL_PATH=['portfolio','cards','items'];
-const ORDER_DOC_PATH=['portfolio','cardOrder'];
-
-const GITHUB_OWNER='agentdh';
-const GITHUB_REPO='portfolio';
-const GITHUB_BRANCH='main';
-const WORKER_UPLOAD_URL='https://portfolio-upload.agentdh.workers.dev/';
-const GITHUB_FOLDER_MAP={
-  'thumbnail-ld':'thumbnail',
-  'thumbnail-sd':'thumbnail',
-  'thumbnail-composite':'thumbnail',
-  'illust-simple':'illustration',
-  'illust-line':'illustration',
-  'illust-semi-painted':'illustration',
-  'illust-cover':'illustration',
-  'illust-conceptart':'illustration',
-  'work3d-character':'3d',
-  'work3d-item':'3d',
-  'work3d-bg':'3d',
-  'live2d-work':'live2d',
-  'pixel-cursor':'pixelart',
-  'pixel-illust':'pixelart',
-  'pixel-game':'pixelart',
-  'mc-skin':'minecraft',
-  'mc-model':'minecraft',
-  'mc-animation':'minecraft',
-  'mc-resource':'minecraft',
-  'mvAnimationGrid':'animation-video',
-  'animation2DGrid':'animation-video',
-  'animation3DGrid':'animation-video',
-  'virtualPropGrid':'animation-video',
-  'brand-wait':'branding',
-  'brand-symbol':'branding',
-  'brand-emote':'branding',
-  'brand-poster':'branding',
-  'brand-etc':'branding'
-};
-
-// 카테고리(서브탭) → GitHub 폴더 1:1 매핑
-const CATEGORY_FOLDER={
-  'thumbnail':     'thumbnail',
-  'illust':        'illustration',
-  '3d':            '3d',
-  'live2d':        'live2d',
-  'pixel':         'pixelart',
-  'minecraft':     'minecraft',
-  'animation':     'animation-video',
-  'branding':      'branding'
-};
-const IMAGE_EXTS=['jpg','jpeg','png','gif','webp','avif'];
-const VIDEO_EXTS=['mp4','webm','mov'];
-
-
-function getProfileDoc(){return db.collection(PROFILE_DOC_PATH[0]).doc(PROFILE_DOC_PATH[1]);}
-function getCardsCol(){return db.collection(CARDS_COL_PATH[0]).doc(CARDS_COL_PATH[1]).collection(CARDS_COL_PATH[2]);}
-function getOrderDoc(){return db.collection(ORDER_DOC_PATH[0]).doc(ORDER_DOC_PATH[1]);}
-function ensureFirestore(){
-  if(FIRESTORE_READY)return true;
-  alert('Firebase 설정이 아직 연결되지 않았습니다. index.html의 firebaseConfig 값을 먼저 교체해주세요.');
-  return false;
-}
-
-function getFileExt(name){
-  const m=String(name||'').toLowerCase().match(/\.([a-z0-9]+)$/);
-  return m?m[1]:'';
-}
-function getMediaTypeByName(name){
-  const ext=getFileExt(name);
-  if(IMAGE_EXTS.includes(ext))return 'image';
-  if(VIDEO_EXTS.includes(ext))return 'video';
-  return null;
-}
-function titleFromFilename(name){
-  return String(name||'').replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').trim() || '제목 없음';
-}
-function filenameFromPath(path){
-  return String(path||'').split('/').filter(Boolean).pop() || '';
-}
-function setSourceFileInfo(path){
-  const box=document.getElementById('sourceFileInfo');
-  const name=document.getElementById('sourceFileName');
-  if(!box||!name)return;
-  const file=filenameFromPath(path);
-  if(file){
-    name.textContent=file;
-    box.style.display='block';
-  }else{
-    name.textContent='-';
-    box.style.display='none';
-  }
-}
-function setTypeTabsVisible(visible){
-  const tabs=document.querySelector('.type-tabs');
-  if(tabs)tabs.style.display=visible?'flex':'none';
-}
-function setUrlFieldMode({visible=true,readonly=false,label='URL',placeholder='https://'}={}){
-  const grp=document.getElementById('urlGrp');
-  const input=document.getElementById('iUrl');
-  const lbl=document.getElementById('urlLbl');
-  if(grp)grp.style.display=visible?'block':'none';
-  if(input){
-    input.readOnly=!!readonly;
-    input.placeholder=placeholder;
-  }
-  if(lbl)lbl.textContent=label;
-}
-function autoDocIdFromSource(sourcePath){
-  let h=0;
-  for(let i=0;i<sourcePath.length;i++){
-    h=((h<<5)-h)+sourcePath.charCodeAt(i);
-    h|=0;
-  }
-  return 'auto_'+Math.abs(h);
-}
-
-
-
-function sanitizeUploadFilename(name){
-  const original=String(name||'file');
-  const dot=original.lastIndexOf('.');
-  const base=(dot>=0?original.slice(0,dot):original)
-    .trim()
-    .replace(/\s+/g,'-')
-    .replace(/[^a-zA-Z0-9가-힣._-]/g,'-')
-    .replace(/-+/g,'-')
-    .replace(/^-+|-+$/g,'') || 'file';
-  const ext=(dot>=0?original.slice(dot).toLowerCase():'');
-  return `${Date.now()}-${base}${ext}`;
-}
-function readFileAsBase64Content(file){
-  return new Promise((resolve,reject)=>{
-    const reader=new FileReader();
-    reader.onload=()=>{
-      const result=String(reader.result||'');
-      resolve(result.includes(',')?result.split(',')[1]:result);
-    };
-    reader.onerror=()=>reject(reader.error||new Error('파일 읽기 실패'));
-    reader.readAsDataURL(file);
-  });
-}
-async function uploadFileToGithubFolder(file,gridId){
-  const folder=GITHUB_FOLDER_MAP[gridId];
-  if(!folder)throw new Error('현재 패널에 연결된 GitHub 폴더가 없습니다.');
-  const type=getMediaTypeByName(file.name);
-  if(!type)throw new Error('지원하지 않는 파일 형식입니다.');
-  const filename=sanitizeUploadFilename(file.name);
-  const path=`${folder}/${filename}`;
-  const content=await readFileAsBase64Content(file);
-  const res=await fetch(WORKER_UPLOAD_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'upload',path,content})
-  });
-  const text=await res.text();
-  let data=null;
-  try{data=JSON.parse(text);}catch(_){}
-  if(!res.ok){
-    const msg=data?.message||data?.error||text||'GitHub 업로드 실패';
-    throw new Error(msg);
-  }
-  return {
-    grid:gridId,
-    type,
-    title:titleFromFilename(file.name),
-    desc:'',
-    url:data?.content?.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`,
-    sourcePath:path,
-    sourceKind:'github'
-  };
-}
-
-async function deleteGithubFileByPath(path){
-  if(!path)throw new Error('삭제할 GitHub 원본 파일 경로가 없습니다.');
-  const res=await fetch(WORKER_UPLOAD_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'delete',path})
-  });
-  const text=await res.text();
-  let data=null;
-  try{data=JSON.parse(text);}catch(_){}
-  if(!res.ok){
-    const msg=data?.message||data?.error||text||'GitHub 파일 삭제 실패';
-    throw new Error(msg);
-  }
-  return data;
-}
-
-let gridOrderMap={};
-function getCardOrderKey(card){
-  if(!card)return '';
-  if(card.dataset.sourcePath)return 'src:'+card.dataset.sourcePath;
-  if(card.dataset.docId)return 'doc:'+card.dataset.docId;
-  if(card.dataset.staticKey)return 'static:'+card.dataset.staticKey;
-  return '';
-}
-async function loadGridOrder(){
-  gridOrderMap={};
-  if(!FIRESTORE_READY)return;
-  try{
-    const doc=await getOrderDoc().get();
-    if(doc.exists)gridOrderMap=doc.data()||{};
-  }catch(err){
-    console.warn('카드 순서 불러오기 실패:',err);
-  }
-}
-function applyGridOrder(gridId){
-  const grid=document.getElementById(gridId);
-  const order=gridOrderMap[gridId];
-  if(!grid||!Array.isArray(order)||!order.length)return;
-  const addCard=grid.querySelector('.card-add');
-  const cards=[...grid.querySelectorAll(':scope > .card')];
-  const byKey=new Map(cards.map(card=>[getCardOrderKey(card),card]).filter(([k])=>k));
-  const ordered=[];
-  order.forEach(key=>{
-    if(byKey.has(key)){
-      ordered.push(byKey.get(key));
-      byKey.delete(key);
-    }
-  });
-  ordered.push(...cards.filter(card=>byKey.has(getCardOrderKey(card))));
-  ordered.forEach(card=>grid.insertBefore(card,addCard||null));
-}
-function applyAllGridOrders(){
-  Object.keys(GITHUB_FOLDER_MAP).forEach(applyGridOrder);
-}
-async function saveGridOrder(gridId){
-  if(!FIRESTORE_READY||!gridId)return;
-  const grid=document.getElementById(gridId);
-  if(!grid)return;
-  const order=[...grid.querySelectorAll(':scope > .card')].map(getCardOrderKey).filter(Boolean);
-  gridOrderMap[gridId]=order;
-  try{
-    await getOrderDoc().set({[gridId]:order,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-  }catch(err){
-    console.error('카드 순서 저장 실패:',err);
-  }
-}
-function getGridGroupId(gridId){
-  const grid=document.getElementById(gridId);
-  return grid?.closest('#port-grids .port-sub')?.id || grid?.closest('#tab-work .sub-panel')?.id || '';
-}
-function canMoveBetweenGrids(fromGridId,toGridId){
-  if(!fromGridId||!toGridId)return false;
-  if(fromGridId===toGridId)return true;
-  if(!GITHUB_FOLDER_MAP[fromGridId]||!GITHUB_FOLDER_MAP[toGridId])return false;
-  return getGridGroupId(fromGridId) && getGridGroupId(fromGridId)===getGridGroupId(toGridId);
-}
-async function readUrlAsBase64Content(url){
-  const res=await fetch(url,{cache:'no-store'});
-  if(!res.ok)throw new Error('원본 파일을 읽지 못했습니다.');
-  const blob=await res.blob();
-  return await new Promise((resolve,reject)=>{
-    const reader=new FileReader();
-    reader.onload=()=>resolve(String(reader.result||'').split(',')[1]||'');
-    reader.onerror=()=>reject(reader.error||new Error('파일 변환 실패'));
-    reader.readAsDataURL(blob);
-  });
-}
-async function moveGithubFileToGrid(card,toGridId){
-  const fromPath=card.dataset.sourcePath||'';
-  const fromUrl=card.dataset.url||'';
-  const toFolder=GITHUB_FOLDER_MAP[toGridId];
-  if(!fromPath||!fromUrl||!toFolder)return null;
-  const filename=filenameFromPath(fromPath);
-  const toPath=`${toFolder}/${filename}`;
-  if(toPath===fromPath)return {sourcePath:fromPath,url:fromUrl};
-  const content=await readUrlAsBase64Content(fromUrl);
-  const uploadRes=await fetch(WORKER_UPLOAD_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'upload',path:toPath,content})
-  });
-  const uploadText=await uploadRes.text();
-  let uploadData=null;
-  try{uploadData=JSON.parse(uploadText);}catch(_){}
-  if(!uploadRes.ok){
-    throw new Error(uploadData?.message||uploadData?.error||uploadText||'새 폴더 업로드 실패');
-  }
-  await deleteGithubFileByPath(fromPath);
-  return {
-    sourcePath:toPath,
-    url:uploadData?.content?.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${toPath}`
-  };
-}
-async function persistCardGridMove(card,fromGridId,toGridId){
-  if(!card||fromGridId===toGridId)return;
-  const docId=card.dataset.docId||'';
-  let nextSourcePath=card.dataset.sourcePath||'';
-  let nextUrl=card.dataset.url||'';
-  try{
-    if(card.dataset.sourceKind==='github' && nextSourcePath){
-      const moved=await moveGithubFileToGrid(card,toGridId);
-      if(moved){
-        nextSourcePath=moved.sourcePath;
-        nextUrl=moved.url;
-        card.dataset.sourcePath=nextSourcePath;
-        card.dataset.url=nextUrl;
-        const img=card.querySelector('.card-thumb img');
-        if(img)img.src=nextUrl;
-      }
-    }
-    card.dataset.grid=toGridId;
-    if(FIRESTORE_READY && docId){
-      await getCardsCol().doc(docId).set({
-        grid:toGridId,
-        url:nextUrl,
-        sourcePath:nextSourcePath,
-        sourceKind:card.dataset.sourceKind||'',
-        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-      },{merge:true});
-    }
-  }catch(err){
-    console.error('카드 이동 저장 실패:',err);
-    alert('카드 이동은 화면에 반영됐지만 파일/DB 이동에 실패했습니다.\n' + (err.message||''));
-  }
-}
-function setupDragSortable(){
-  let dragCard=null;
-  let dragGridId='';
-  let dragFromPanel=false;
-  let lastDropGridId='';
-  let selectedDragItems=[];
-
-  document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(grid=>{
-    grid.querySelectorAll(':scope > .card').forEach(card=>{
-      card.draggable=!!isAdmin;
-      card.classList.toggle('drag-ready',!!isAdmin);
-    });
-  });
-  document.querySelectorAll('.pup-item').forEach(el=>{ el.draggable=!!isAdmin; });
-
-  if(window.__portfolioDragStart)document.removeEventListener('dragstart',window.__portfolioDragStart,true);
-  if(window.__portfolioDragOver)document.removeEventListener('dragover',window.__portfolioDragOver,true);
-  if(window.__portfolioDrop)document.removeEventListener('drop',window.__portfolioDrop,true);
-  if(window.__portfolioDragEnd)document.removeEventListener('dragend',window.__portfolioDragEnd,true);
-
-  function currentTabSub(){ return document.getElementById('port-sub-'+_pupCurrentTab); }
-  function getActiveSelectedItems(origin){
-    if(!_pupSelectMode) return [origin];
-    if(!origin.classList.contains('selected')) return [origin];
-    const sub=currentTabSub();
-    const cards=sub ? [...sub.querySelectorAll('.card.selected')] : [];
-    const pups=[...document.querySelectorAll('.pup-item.selected')];
-    return [...cards,...pups].filter(Boolean);
-  }
-  function makeDragGhost(count,e){
-    if(!e.dataTransfer || count<=1)return;
-    const ghost=document.createElement('div');
-    ghost.className='pup-drag-ghost';
-    ghost.textContent=`${count}개 이동`;
-    document.body.appendChild(ghost);
-    e.dataTransfer.setDragImage(ghost,10,10);
-    setTimeout(()=>ghost.remove(),0);
-  }
-  function isPanelItem(el){ return el && el.classList.contains('pup-item'); }
-  function isCardItem(el){ return el && el.classList.contains('card'); }
-  function getDragAfterElement(grid,x,y){
-    const cards=[...grid.querySelectorAll(':scope > .card')]
-      .filter(card=>!selectedDragItems.includes(card) && !card.classList.contains('dragging') && !card.closest('.card-add,.card-multi-upload'));
-    for(const child of cards){
-      const box=child.getBoundingClientRect();
-      const beforeRow = y < box.top + box.height * 0.5;
-      const sameRowBefore = y >= box.top && y <= box.bottom && x < box.left + box.width * 0.5;
-      if(beforeRow || sameRowBefore) return child;
-    }
-    return null;
-  }
-  function markSelectedClasses(items,on){
-    items.forEach(el=>{
-      if(isCardItem(el)) el.classList.toggle('dragging',on);
-      if(isPanelItem(el)) el.classList.toggle('dragging-pup',on);
-    });
-  }
-
-  window.__bindPupDrag=function(){
-    document.querySelectorAll('.pup-item').forEach(el=>{ el.draggable=!!isAdmin; });
-  };
-  window.__bindPupDrag();
-
-  window.__portfolioDragStart=function(e){
-    const panelItem=e.target.closest('.pup-item');
-    const card=e.target.closest('#tab-work .card');
-    if(!isAdmin || e.target.closest('.card-edit,.card-del')){e.preventDefault();return;}
-
-    if(panelItem){
-      dragFromPanel=true;
-      dragCard=null;
-      dragGridId='';
-      lastDropGridId='';
-      selectedDragItems=getActiveSelectedItems(panelItem);
-      markSelectedClasses(selectedDragItems,true);
-      makeDragGhost(selectedDragItems.length,e);
-      if(e.dataTransfer){
-        e.dataTransfer.effectAllowed='move';
-        e.dataTransfer.setData('text/plain','pup-items');
-      }
-      return;
-    }
-
-    if(card){
-      dragFromPanel=false;
-      dragCard=card;
-      dragGridId=card.closest('.grid-3,.grid-2')?.id||'';
-      lastDropGridId=dragGridId;
-      selectedDragItems=getActiveSelectedItems(card);
-      markSelectedClasses(selectedDragItems,true);
-      makeDragGhost(selectedDragItems.length,e);
-      if(e.dataTransfer){
-        e.dataTransfer.effectAllowed='move';
-        e.dataTransfer.setData('text/plain',getCardOrderKey(card));
-      }
-      return;
-    }
-
-    e.preventDefault();
-  };
-
-  window.__portfolioDragOver=function(e){
-    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
-    if(!grid)return;
-    if(dragFromPanel){
-      e.preventDefault();
-      grid.classList.add('pup-drop-target');
-      return;
-    }
-    if(!dragCard)return;
-    if(!canMoveBetweenGrids(dragGridId,grid.id))return;
-    e.preventDefault();
-    lastDropGridId=grid.id;
-    const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
-    const addCard=grid.querySelector(':scope > .card-add');
-    const movingCards=selectedDragItems.filter(isCardItem);
-    movingCards.forEach(card=>grid.insertBefore(card,beforeEl||addCard||null));
-  };
-
-  window.__portfolioDrop=async function(e){
-    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
-    if(!grid)return;
-
-    if(dragFromPanel){
-      e.preventDefault();
-      grid.classList.remove('pup-drop-target');
-      const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
-      const addCard=grid.querySelector(':scope > .card-add');
-      const items=[...selectedDragItems];
-      for(const el of items){
-        if(isPanelItem(el)){
-          const kind=el.dataset.kind||'github';
-          let item;
-          let docId='';
-          if(kind==='github'){
-            const sourcePath=el.dataset.sourcePath||'';
-            const name=el.dataset.name||filenameFromPath(sourcePath)||'file';
-            const url=el.dataset.url||'';
-            item={grid:grid.id,type:getMediaTypeByName(name)||'image',title:titleFromFilename(name),desc:'',url,sourcePath,sourceKind:'github'};
-            docId=autoDocIdFromSource(sourcePath);
-            if(ensureFirestore()){
-              await getCardsCol().doc(docId).set({
-                grid:item.grid,type:item.type,title:item.title,desc:'',url:item.url,
-                sourcePath:item.sourcePath,sourceKind:'github',
-                createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-              },{merge:true});
-            }
-            _pupItems=_pupItems.filter(f=>f.sourcePath!==sourcePath);
-          }else{
-            const url=el.dataset.url||'';
-            const title=el.dataset.title||'제목 없음';
-            item={grid:grid.id,type:extractYtId(url)?'video':'link',title,desc:'',url};
-            docId=await saveCard(item);
-            const idx=parseInt(el.dataset.linkIdx||'-1');
-            if(idx>=0)_pupLinkItems=_pupLinkItems.filter((_,i)=>i!==idx);
-          }
-          const card=makeCardEl(item,docId);
-          grid.insertBefore(card,beforeEl||addCard||null);
-          el.remove();
-        }else if(isCardItem(el)){
-          const fromId=el.dataset.grid||el.closest('.grid-3,.grid-2')?.id||'';
-          grid.insertBefore(el,beforeEl||addCard||null);
-          await persistCardGridMove(el,fromId,grid.id);
-        }
-      }
-      await saveGridOrder(grid.id);
-      pupRender();
-      setupDragSortable();
-      return;
-    }
-
-    if(dragCard && grid && canMoveBetweenGrids(dragGridId,grid.id)){
-      e.preventDefault();
-      const addCard=grid.querySelector(':scope > .card-add');
-      const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
-      const movingCards=selectedDragItems.filter(isCardItem);
-      for(const card of movingCards){
-        const fromId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||dragGridId;
-        grid.insertBefore(card,beforeEl||addCard||null);
-        await persistCardGridMove(card,fromId,grid.id);
-        await saveGridOrder(fromId);
-      }
-      await saveGridOrder(grid.id);
-    }
-  };
-
-  window.__portfolioDragEnd=function(){
-    markSelectedClasses(selectedDragItems,false);
-    document.querySelectorAll('.grid-3.pup-drop-target,.grid-2.pup-drop-target').forEach(g=>g.classList.remove('pup-drop-target'));
-    dragCard=null;dragGridId='';dragFromPanel=false;lastDropGridId='';selectedDragItems=[];
-    if(_pupSelectMode)pupUpdateCount();
-  };
-
-  document.addEventListener('dragstart',window.__portfolioDragStart,true);
-  document.addEventListener('dragover',window.__portfolioDragOver,true);
-  document.addEventListener('drop',window.__portfolioDrop,true);
-  document.addEventListener('dragend',window.__portfolioDragEnd,true);
-}
-
-
-/* ── PORTFOLIO CARD ── */
-function extractYtId(url){
-  try{
-    const raw=String(url||'').trim();
-    if(!raw)return null;
-    const u=new URL(raw, window.location.href);
-    const host=u.hostname.replace(/^www\./,'').toLowerCase();
-    let id='';
-    if(host==='youtube.com'||host==='m.youtube.com'||host==='music.youtube.com'){
-      if(u.pathname==='/watch')id=u.searchParams.get('v')||'';
-      else if(u.pathname.startsWith('/shorts/'))id=u.pathname.split('/shorts/')[1]?.split('/')[0]||'';
-      else if(u.pathname.startsWith('/embed/'))id=u.pathname.split('/embed/')[1]?.split('/')[0]||'';
-    }else if(host==='youtu.be'){
-      id=u.pathname.replace(/^\//,'').split('/')[0]||'';
-    }
-    id=(id||'').split(/[?&#]/)[0];
-    return /^[A-Za-z0-9_-]{6,}$/.test(id)?id:null;
-  }catch(e){
-    const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i);
-    return m?m[1]:null;
-  }
-}
-function escapeHTML(v){
-  return String(v??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-}
-function escapeAttr(v){return escapeHTML(v).replace(/'/g,'&#39;');}
-function isVideoUrl(url){
-  const ytId=extractYtId(url||'');
-  const type=getMediaTypeByName(url||'');
-  return !!ytId || type==='video';
-}
-function getDisplayItemFromCard(card){
-  if(!card)return null;
-  let url=card.dataset.url||'';
-  const onclick=card.getAttribute('onclick')||'';
-  if(!url){
-    const m=onclick.match(/window\.open\(['"]([^'"]+)['"]/);
-    if(m)url=m[1];
-  }
-  let type=card.dataset.type||'';
-  if(!type){
-    const badge=(card.querySelector('.type-badge')?.textContent||'').trim().toLowerCase();
-    if(badge.includes('video'))type='video';
-    else if(badge.includes('link'))type='link';
-    else if(url&&isVideoUrl(url))type='video';
-    else type='image';
-  }
-  return {
-    grid:card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'',
-    type,
-    url,
-    title:card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음',
-    desc:card.dataset.desc||card.querySelector('.card-desc')?.textContent?.trim()||'',
-    sourcePath:card.dataset.sourcePath||'',
-    sourceKind:card.dataset.sourceKind||''
-  };
-}
-function openMediaModal(item){
-  if(!item||!item.url)return;
-  const ytId=extractYtId(item.url||'');
-  if(item.type==='link'&&!ytId){
-    window.open(item.url,'_blank');
-    return;
-  }
-  const container=document.getElementById('videoContainer');
-  if(!container)return;
-  const url=item.url||'';
-  const title=escapeHTML(item.title||'제목 없음');
-  const desc=escapeHTML(item.desc||'');
-  let mediaHTML='';
-  if(ytId){
-    mediaHTML=`<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay" allowfullscreen></iframe>`;
-  }else if(item.type==='video' || getMediaTypeByName(url)==='video'){
-    mediaHTML=`<video src="${escapeAttr(url)}" controls autoplay playsinline></video>`;
-  }else{
-    mediaHTML=`<img src="${escapeAttr(url)}" alt="${title}">`;
-  }
-  container.innerHTML=`
-    <div class="media-preview">
-      <div class="media-preview-media">${mediaHTML}</div>
-      <div class="media-preview-title">${title}</div>
-      ${desc?`<div class="media-preview-desc">${desc}</div>`:''}
-    </div>`;
-  document.getElementById('videoModal').classList.add('open');
-}
-function openCard(item){
-  openMediaModal(item);
-}
-function openCardFromElement(card){
-  openMediaModal(getDisplayItemFromCard(card));
-}
-function closeVideoModal(e){
-  if(e.target===document.getElementById('videoModal')){
-    closeVideoOnly();
-  }
-}
-function closeVideoOnly(){
-  document.getElementById('videoModal').classList.remove('open');
-  document.getElementById('videoContainer').innerHTML='';
-}
-function extractUrlFromOnclickAttr(card){
-  const onclick=card?.getAttribute('onclick')||'';
-  const m=onclick.match(/window\.open\(['"]([^'"]+)['"]/);
-  return m?m[1]:'';
-}
-function staticKeyFromCard(card){
-  const url=card.dataset.url||extractUrlFromOnclickAttr(card)||'';
-  const grid=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  const raw=`${grid}|${url}|${card.querySelector('.card-title')?.textContent?.trim()||''}`;
-  return 'static_'+autoDocIdFromSource(raw).replace(/^auto_/,'');
-}
-function applyStaticCardMeta(card,meta){
-  if(!card||!meta)return;
-  if(meta.title){
-    card.dataset.title=meta.title;
-    const titleEl=card.querySelector('.card-title');
-    if(titleEl)titleEl.textContent=meta.title;
-  }
-  if(typeof meta.desc==='string'){
-    card.dataset.desc=meta.desc;
-    let descEl=card.querySelector('.card-desc');
-    if(meta.desc){
-      if(!descEl){
-        descEl=document.createElement('div');
-        descEl.className='card-desc';
-        card.querySelector('.card-body')?.appendChild(descEl);
-      }
-      descEl.textContent=meta.desc;
-    }else if(descEl){
-      descEl.remove();
-    }
-  }
-}
-function applyStaticMetadata(metaByStaticKey){
-  document.querySelectorAll('#tab-work .card').forEach(card=>{
-    if(card.closest('.card-add'))return;
-    const key=card.dataset.staticKey||staticKeyFromCard(card);
-    card.dataset.staticKey=key;
-    if(metaByStaticKey&&metaByStaticKey[key])applyStaticCardMeta(card,metaByStaticKey[key]);
-  });
-}
-function enhanceStaticPortfolioCards(){
-  document.querySelectorAll('#tab-work .card').forEach(card=>{
-    if(card.querySelector('.card-edit'))return;
-    const key=card.dataset.staticKey||staticKeyFromCard(card);
-    card.dataset.staticKey=key;
-    if(!card.dataset.grid)card.dataset.grid=card.closest('.grid-3,.grid-2')?.id||'';
-    if(!card.dataset.url)card.dataset.url=extractUrlFromOnclickAttr(card)||'';
-    if(!card.dataset.type){
-      const item=getDisplayItemFromCard(card);
-      card.dataset.type=item.type;
-    }
-    if(!card.dataset.title)card.dataset.title=card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
-    if(!card.dataset.desc)card.dataset.desc=card.querySelector('.card-desc')?.textContent?.trim()||'';
-    const editBtn=document.createElement('button');
-    editBtn.className='card-edit';
-    editBtn.title='수정';
-    editBtn.textContent='수정';
-    editBtn.setAttribute('onclick','editStaticCard(event)');
-    if(!card.querySelector('.card-select-mark')){const mark=document.createElement('span');mark.className='card-select-mark';mark.textContent='✓';card.insertBefore(mark,card.firstChild);}
-    card.insertBefore(editBtn,card.firstChild);
-  });
-  updateEditorVisibility();
-}
-
-document.addEventListener('click',e=>{
-  const card=e.target.closest('#tab-work .card');
-  if(!card)return;
-  if(e.target.closest('.card-edit,.card-del,.card-add,.card-multi-upload,.section-admin-controls'))return;
-  const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  if(selectionModeGrid && gridId===selectionModeGrid){
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    toggleCardSelection(card);
-    return;
-  }
-  const item=getDisplayItemFromCard(card);
-  if(item&&item.url&&(item.type==='image'||item.type==='video'||extractYtId(item.url))){
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    openMediaModal(item);
-  }
-},true);
-
-function makeCardEl(item,docId){
-  const card=document.createElement('div');
-  card.className='card generated-card';
-  card.dataset.docId=docId||'';
-  card.dataset.type=item.type||'image';
-  card.dataset.url=item.url||'';
-  card.dataset.title=item.title||'';
-  card.dataset.desc=item.desc||'';
-  card.dataset.grid=item.grid||'';
-  card.dataset.sourcePath=item.sourcePath||'';
-  card.dataset.sourceKind=item.sourceKind||'';
-  const type=item.type||'image';
-  const title=escapeHTML(item.title||'제목 없음');
-  const desc=escapeHTML(item.desc||'');
-  const url=item.url||'';
-  const safeUrl=escapeAttr(url);
-  const ytId=extractYtId(url);
-  let thumb='';
-  let badge='IMAGE';
-  let badgeClass='image';
-  let onClick='';
-  if(type==='video' || ytId){
-    badge='VIDEO';badgeClass='video';
-    thumb=ytId
-      ? `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${title}"><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>`
-      : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--orange);font-size:36px">▶</div>`;
-    onClick=`openCard({type:'video',url:'${safeUrl}'})`;
-  }else if(type==='link'){
-    badge='LINK';badgeClass='link';
-    thumb=`<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></div>`;
-    onClick=`window.open('${safeUrl}','_blank')`;
-  }else{
-    badge='IMAGE';badgeClass='image';
-    thumb=url
-      ? `<img src="${safeUrl}" alt="${title}">`
-      : `<div class="card-thumb ph"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>`;
-    onClick=url?`window.open('${safeUrl}','_blank')`:'';
-  }
-  card.setAttribute('onclick','handleCardClick(event,this)');
-  card.innerHTML=`
-    <span class="card-select-mark">✓</span>
-    <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
-    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
-    <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
-    <span class="type-badge ${badgeClass}">${badge}</span>
-    <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
-  updateEditorVisibility();
+  card.addEventListener('click',()=>openCard(item, src, badgeType));
   return card;
 }
 
-function insertCardToGrid(item,docId){
-  const grid=document.getElementById(item.grid);
-  if(!grid)return;
-  if(docId&&grid.querySelector(`[data-doc-id="${docId}"]`))return;
-  grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
-  const addCard=grid.querySelector('.card-add');
-  const card=makeCardEl(item,docId);
-  if(addCard)grid.insertBefore(card,addCard);
-  else grid.appendChild(card);
-  // setupDragSortable은 bulk 렌더 후 1회만 호출 - 여기서 호출 금지
-}
+function openCard(item, src, type){
+  const title = item.title || '제목 없음';
+  const desc = item.desc || '';
+  const yt = getYoutubeId(src);
+  const modal = qs('#videoModal');
+  const container = qs('#videoContainer');
+  if(!modal || !container) return;
 
-function setupMultiUploadButtons(){
-  // 기존 카드형 다중 업로드 UI를 제거하고 섹션 제목 옆 버튼형 UI만 사용한다.
-  document.querySelectorAll('#tab-work .card-multi-upload').forEach(el=>el.remove());
-  setupSectionAdminControls();
-  updateEditorVisibility();
-}
-
-function openBatchUpload(gridId){
-  if(!isAdmin){alert('관리자 로그인 후 사용할 수 있습니다.');return;}
-  if(!GITHUB_FOLDER_MAP[gridId]){alert('이 항목에는 연결된 GitHub 폴더가 없습니다.');return;}
-  const input=document.getElementById('batchUploadInput');
-  if(!input){alert('업로드 입력 요소를 찾지 못했습니다.');return;}
-  input.value='';
-  input.dataset.grid=gridId;
-  input.onchange=()=>handleBatchUpload(input);
-  input.click();
-}
-
-async function handleBatchUpload(input){
-  const gridId=input.dataset.grid||'';
-  const files=[...(input.files||[])];
-  if(!gridId||!files.length)return;
-  const valid=files.filter(file=>getMediaTypeByName(file.name));
-  const invalid=files.filter(file=>!getMediaTypeByName(file.name));
-  if(!valid.length){alert('업로드 가능한 이미지/GIF/영상 파일이 없습니다.');return;}
-  if(invalid.length){
-    alert(`지원하지 않는 파일 ${invalid.length}개는 제외합니다.\n\n${invalid.map(f=>f.name).join('\n')}`);
-  }
-
-  const uploadBtn=document.querySelector(`.section-admin-controls [data-grid="${CSS.escape(gridId)}"], .card-multi-upload[data-grid="${CSS.escape(gridId)}"]`);
-  const oldHTML=uploadBtn?.innerHTML||'';
-  if(uploadBtn){
-    uploadBtn.disabled=true;
-    uploadBtn.innerHTML=`<span>업로드 중...</span><small>0 / ${valid.length}</small>`;
-  }
-
-  let success=0;
-  const failed=[];
-
-  for(const file of valid){
-    try{
-      const uploaded=await uploadFileToGithubFolder(file,gridId);
-      uploaded.title=titleFromFilename(file.name);
-      uploaded.desc='';
-      const docId=autoDocIdFromSource(uploaded.sourcePath);
-      if(ensureFirestore()){
-        await getCardsCol().doc(docId).set({
-          grid:uploaded.grid,
-          type:uploaded.type,
-          title:uploaded.title,
-          desc:uploaded.desc||'',
-          url:uploaded.url||'',
-          sourcePath:uploaded.sourcePath,
-          sourceKind:'github',
-          createdAt:firebase.firestore.FieldValue.serverTimestamp()
-        },{merge:true});
-      }
-      insertCardToGrid(uploaded,docId);
-      success++;
-      if(uploadBtn)uploadBtn.innerHTML=`<span>업로드 중...</span><small>${success} / ${valid.length}</small>`;
-    }catch(err){
-      console.error('다중 업로드 실패:',file.name,err);
-      failed.push(`${file.name}: ${err.message||'실패'}`);
-    }
-  }
-
-  await saveGridOrder(gridId);
-  setupDragSortable();
-
-  if(uploadBtn){
-    uploadBtn.disabled=false;
-    uploadBtn.innerHTML=oldHTML;
-  }
-
-  if(failed.length){
-    alert(`업로드 완료: ${success}개\n실패: ${failed.length}개\n\n${failed.join('\n')}`);
+  let media = '';
+  if(yt){
+    media = `<iframe src="https://www.youtube.com/embed/${escapeHtml(yt)}?autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  }else if(/\.(mp4|webm|mov)$/i.test(src)){
+    media = `<video src="${escapeHtml(src)}" controls autoplay></video>`;
   }else{
-    alert(`업로드 완료: ${success}개`);
+    media = `<img src="${escapeHtml(src)}" alt="${escapeHtml(title)}">`;
+  }
+
+  container.innerHTML = `
+    <div class="media-preview">
+      <div class="media-preview-media">${media}</div>
+      <div class="media-preview-title">${escapeHtml(title)}</div>
+      ${desc ? `<div class="media-preview-desc">${escapeHtml(desc)}</div>` : ''}
+    </div>
+  `;
+  modal.classList.add('open');
+}
+
+function closeVideoOnly(){
+  const modal = qs('#videoModal');
+  const container = qs('#videoContainer');
+  if(container) container.innerHTML = '';
+  modal?.classList.remove('open');
+}
+
+function closeVideoModal(event){
+  if(event.target && event.target.id === 'videoModal') closeVideoOnly();
+}
+
+function clearGrid(grid){
+  qsa(':scope > .generated-card, :scope > .pup-empty-grid-card', grid).forEach(el=>el.remove());
+}
+
+function renderGrid(gridId){
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+
+  clearGrid(grid);
+
+  const addCards = qsa(':scope > .card-add, :scope > .card-multi-upload', grid);
+  addCards.forEach(el=>el.remove());
+
+  const items = Array.isArray(portfolioData[gridId]) ? portfolioData[gridId] : [];
+  items.forEach(item => grid.appendChild(makeCard(item)));
+
+  updateEmptyGrid(grid);
+}
+
+function renderPortfolio(){
+  qsa('#tab-work .grid-3[id], #tab-work .grid-2[id]').forEach(grid=>renderGrid(grid.id));
+  setupCollapsibleSections();
+  revealFade();
+}
+
+function updateEmptyGrid(grid){
+  const hasCard = !!qs(':scope > .generated-card', grid);
+  qsa(':scope > .pup-empty-grid-card', grid).forEach(el=>el.remove());
+
+  if(!hasCard){
+    const empty = document.createElement('div');
+    empty.className = 'pup-empty-grid-card';
+    empty.textContent = '비어있음';
+    grid.appendChild(empty);
   }
 }
 
+function setupCollapsibleSections(){
+  qsa('#tab-work .grid-3[id], #tab-work .grid-2[id]').forEach(grid=>{
+    if(grid.dataset.collapseReady === '1') return;
+    grid.dataset.collapseReady = '1';
+    grid.classList.add('collapsed');
 
-let selectionModeGrid='';
-const selectedCardKeys=new Set();
-function cardSelectionKey(card){
-  return card?.dataset?.docId || card?.dataset?.sourcePath || card?.dataset?.staticKey || '';
-}
-function getGridTitle(gridId){
-  const grid=document.getElementById(gridId);
-  const title=grid?.previousElementSibling;
-  return title?.classList?.contains('portfolio-section-title') || title?.classList?.contains('sec-label')
-    ? title.textContent.replace(/다중선택|선택삭제|리로드/g,'').trim()
-    : gridId;
-}
-function clearSelection(){
-  selectedCardKeys.clear();
-  document.querySelectorAll('#tab-work .card.selected').forEach(card=>card.classList.remove('selected'));
-}
-function setSelectionMode(gridId){
-  if(selectionModeGrid===gridId){selectionModeGrid='';clearSelection();}
-  else{selectionModeGrid=gridId;clearSelection();}
-  document.querySelectorAll('#tab-work .card').forEach(card=>{
-    const gid=card.dataset.grid || card.closest('.grid-3,.grid-2')?.id || '';
-    card.classList.toggle('select-mode',!!selectionModeGrid && gid===selectionModeGrid);
-  });
-}
-function toggleCardSelection(card){
-  const key=cardSelectionKey(card);
-  if(!key)return;
-  if(selectedCardKeys.has(key)){selectedCardKeys.delete(key);card.classList.remove('selected');}
-  else{selectedCardKeys.add(key);card.classList.add('selected');}
-}
-function getSelectedCards(){
-  if(!selectionModeGrid)return [];
-  return [...document.querySelectorAll(`#${CSS.escape(selectionModeGrid)} > .card.selected`)];
-}
-async function deleteSelectedCards(){
-  const cards=getSelectedCards();
-  if(!cards.length){alert('선택된 항목이 없습니다.');return;}
-  const lines=cards.map((card,i)=>`${i+1}. ${card.dataset.title || card.querySelector('.card-title')?.textContent?.trim() || filenameFromPath(card.dataset.sourcePath) || '제목 없음'}${card.dataset.sourcePath ? `\n   ${card.dataset.sourcePath}` : ''}`);
-  const ok=confirm(`선택한 ${cards.length}개 항목을 삭제하겠습니까?\n\n${lines.join('\n')}`);
-  if(!ok){setSelectionMode(selectionModeGrid);return;}
-  const failed=[];
-  for(const card of cards){
-    const docId=card.dataset.docId||'';
-    const sourcePath=card.dataset.sourcePath||'';
-    const sourceKind=card.dataset.sourceKind||'';
-    const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-    try{
-      if(sourceKind==='github' && sourcePath)await deleteGithubFileByPath(sourcePath);
-      if(FIRESTORE_READY && docId)await getCardsCol().doc(docId).delete().catch(()=>{});
-      card.remove();
-      if(gridId)await saveGridOrder(gridId);
-    }catch(err){
-      failed.push(`${card.dataset.title||sourcePath||'항목'}: ${err.message||'삭제 실패'}`);
+    const title = grid.previousElementSibling;
+    if(title && (title.classList.contains('portfolio-section-title') || title.classList.contains('sec-label'))){
+      title.classList.add('collapsible-section-title');
+      title.dataset.gridId = grid.id;
+      const original = title.textContent.trim().replace(/^[▶▼]\s*/, '');
+      title.innerHTML = `<span class="collapse-arrow">▶</span><span>${escapeHtml(original)}</span>`;
+      title.addEventListener('click',()=>toggleSection(grid.id));
     }
-  }
-  setSelectionMode(selectionModeGrid);
-  if(failed.length)alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
-}
-function setupSectionAdminControls(){
-  Object.keys(GITHUB_FOLDER_MAP).forEach(gridId=>{
-    const grid=document.getElementById(gridId);
-    const title=grid?.previousElementSibling;
-    const validTitle=title&&(title.classList.contains('portfolio-section-title')||title.classList.contains('sec-label'));
-    if(!grid||!validTitle)return;
-
-    // 기존 카드형 버튼은 숨김 CSS 처리. 섹션 제목 옆에 버튼형 컨트롤만 둔다.
-    let box=title.querySelector('.section-admin-controls');
-    if(!box){
-      box=document.createElement('span');
-      box.className='section-admin-controls';
-      title.appendChild(box);
-    }
-    box.innerHTML=`
-      <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="${gridId}">여러 파일 업로드</button>
-      <button type="button" class="admin-mini-btn" data-act="add" data-grid="${gridId}">카드 추가</button>`;
-    box.querySelector('[data-act="batch"]').addEventListener('click',e=>{
-      e.preventDefault();e.stopPropagation();openBatchUpload(gridId);
-    });
-    box.querySelector('[data-act="add"]').addEventListener('click',e=>{
-      e.preventDefault();e.stopPropagation();openAddModal(gridId,getGridTitle(gridId));
-    });
   });
-  updateEditorVisibility();
 }
 
+function toggleSection(gridId){
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+  grid.classList.toggle('collapsed');
 
-
-
-
-async function saveCard(item){
-  if(!ensureFirestore())return null;
-  const ref=await getCardsCol().add({
-    grid:item.grid,
-    type:item.type,
-    title:item.title,
-    desc:item.desc||'',
-    url:item.url||'',
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  });
-  return ref.id;
+  const title = document.querySelector(`[data-grid-id="${CSS.escape(gridId)}"]`);
+  const arrow = title?.querySelector('.collapse-arrow');
+  if(arrow) arrow.textContent = grid.classList.contains('collapsed') ? '▶' : '▼';
 }
-async function deleteCard(e,docId){
-  e.stopPropagation();
-  if(!docId)return;
-  const card=document.querySelector(`[data-doc-id="${docId}"]`);
-  if(!card)return;
-  const sourcePath=card.dataset.sourcePath||'';
-  const sourceKind=card.dataset.sourceKind||'';
-  const url=card.dataset.url||'';
-  const title=card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
-  const name=sourcePath?filenameFromPath(sourcePath):title;
-  const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+
+async function loadPortfolio(){
   try{
-    // Firestore에서만 제거 (파일은 유지)
-    if(FIRESTORE_READY&&docId){
-      await getCardsCol().doc(docId).delete().catch(err=>console.warn('Firestore 삭제 실패:',err));
-    }
-    card.remove();
-    if(gridId) await saveGridOrder(gridId);
-    // 미등록 패널로 이동
-    if(sourceKind==='github'&&sourcePath){
-      if(!_pupItems.find(f=>f.sourcePath===sourcePath)){
-        _pupItems.push({name,sourcePath,url,sha:card.dataset.sha||''});
-      }
-    } else {
-      if(!_pupLinkItems.find(f=>(f.url||f.sourcePath)===(url||sourcePath))){
-        _pupLinkItems.push({title,url,sourcePath,docId});
-      }
-    }
-    updateEmptyGrids();
-    pupRender();
+    const res = await fetch('./portfolio.json?t=' + Date.now());
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    portfolioData = await res.json();
   }catch(err){
-    console.error('카드 회수 실패:',err);
-    alert('카드 회수 실패: '+(err.message||''));
+    console.error('portfolio.json 로드 실패:', err);
+    portfolioData = {};
   }
-}
-/* ── ADD MODAL ── */
-let _targetGrid='';
-let _currentType='image';
-let _editingDocId='';
-let _editingSourcePath='';
-let _editingStaticKey='';
-function openAddModal(gridId,label){
-  _editingDocId='';
-  _editingSourcePath='';
-  _editingStaticKey='';
-  const submitBtn=document.getElementById('addSubmitBtn');
-  if(submitBtn)submitBtn.textContent='추가하기';
-  const clicked=window.event?.currentTarget;
-  const actualGrid=clicked?.closest('.grid-3,.grid-2');
-  _targetGrid=(actualGrid&&actualGrid.id)?actualGrid.id:gridId;
-
-  const hasFolder=!!GITHUB_FOLDER_MAP[_targetGrid];
-  _currentType=hasFolder?'image':'link';
-
-  document.getElementById('addModalTitle').textContent=label+' 추가';
-  ['iTitle','iUrl','iDesc'].forEach(id=>{document.getElementById(id).value=''});
-  const file=document.getElementById('iFile');
-  if(file)file.value='';
-
-  setSourceFileInfo('');
-  setTypeTabsVisible(true);
-  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
-
-  if(hasFolder){
-    document.getElementById('fileGrp').style.display='block';
-    document.getElementById('fileLbl').textContent='업로드 파일';
-    document.getElementById('iFile').accept='image/*,.gif,video/mp4,video/webm,video/quicktime';
-    const help=document.getElementById('uploadHelp');
-    if(help)help.textContent=`GitHub 폴더: ${GITHUB_FOLDER_MAP[_targetGrid]}`;
-    setUrlFieldMode({visible:false,readonly:false,label:'URL',placeholder:'https://'});
-  }else{
-    document.getElementById('fileGrp').style.display='none';
-    _currentType='link';
-    document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
-    document.querySelector('.type-tab[data-type="link"]')?.classList.add('active');
-    setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
-  }
-
-  openModal('addModal');
+  renderPortfolio();
 }
 
-function openModal(id){
-  if(id==='profileModal')fillProfileModal();
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function closeOnBg(e,id){if(e.target===document.getElementById(id))closeModal(id)}
-function selType(btn){
-  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  _currentType=btn.dataset.type;
-  setSourceFileInfo('');
-
-  const hasFolder=!!GITHUB_FOLDER_MAP[_targetGrid];
-  if(_currentType==='link' || !hasFolder){
-    document.getElementById('fileGrp').style.display='none';
-    setUrlFieldMode({visible:true,readonly:false,label:'링크 URL',placeholder:'https://'});
-    return;
-  }
-
-  document.getElementById('fileGrp').style.display='block';
-  document.getElementById('fileLbl').textContent=_currentType==='video'?'영상 파일':'이미지 파일';
-  document.getElementById('iFile').accept=_currentType==='video'?'video/mp4,video/webm,video/quicktime':'image/*,.gif';
-  const help=document.getElementById('uploadHelp');
-  if(help)help.textContent=`GitHub 폴더: ${GITHUB_FOLDER_MAP[_targetGrid]}`;
-  setUrlFieldMode({visible:false,readonly:false,label:'URL',placeholder:'https://'});
+function revealFade(){
+  qsa('.fade-in').forEach(el=>el.classList.add('visible'));
 }
 
-function updateCardElement(docId,item){
-  const old=document.querySelector(`[data-doc-id="${docId}"]`);
-  if(!old)return;
-  const fresh=makeCardEl(item,docId);
-  old.replaceWith(fresh);
-}
-function editCard(e,docId){
-  e.stopPropagation();
-  const card=e.currentTarget.closest('.card');
-  if(!card)return;
-
-  _editingDocId=docId||'';
-  _editingSourcePath=card.dataset.sourcePath||'';
-  _targetGrid=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  _currentType=card.dataset.type||'image';
-
-  document.getElementById('addModalTitle').textContent='작업물 수정';
-  document.getElementById('iTitle').value=card.dataset.title||'';
-  document.getElementById('iUrl').value=card.dataset.url||'';
-  document.getElementById('iDesc').value=card.dataset.desc||'';
-
-  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
-  document.getElementById('fileGrp').style.display='none';
-
-  const isGithubSource=!!_editingSourcePath || card.dataset.sourceKind==='github';
-  setSourceFileInfo(isGithubSource ? _editingSourcePath : '');
-  setTypeTabsVisible(false);
-  if(isGithubSource){
-    setUrlFieldMode({visible:false,readonly:true,label:'원본 URL',placeholder:''});
-  }else{
-    setUrlFieldMode({visible:true,readonly:false,label:_currentType==='link'?'링크 URL':'URL',placeholder:'https://'});
-  }
-
-  const submitBtn=document.getElementById('addSubmitBtn');
-  if(submitBtn)submitBtn.textContent='수정 저장';
-  openModal('addModal');
+function disableAdminUi(){
+  qsa('#authBtn, .card-add, .card-multi-upload, .op-save-panel, .section-admin-controls, .admin-mini-btn, .card-del, .card-edit, #port-unrg-panel, #unregistered-panel')
+    .forEach(el=>el.remove());
+  qsa('[onclick^="openAddModal"], [onclick^="openBatchUpload"]').forEach(el=>el.removeAttribute('onclick'));
 }
 
-function editStaticCard(e){
-  e.stopPropagation();
-  const card=e.currentTarget.closest('.card');
-  if(!card)return;
-  const item=getDisplayItemFromCard(card);
-  _editingDocId='';
-  _editingSourcePath='';
-  _editingStaticKey=card.dataset.staticKey||staticKeyFromCard(card);
-  card.dataset.staticKey=_editingStaticKey;
-  _targetGrid=item.grid||'';
-  _currentType=item.type||'image';
-
-  document.getElementById('addModalTitle').textContent='작업물 수정';
-  document.getElementById('iTitle').value=item.title||'';
-  document.getElementById('iUrl').value=item.url||'';
-  document.getElementById('iDesc').value=item.desc||'';
-
-  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.type-tab[data-type="${_currentType}"]`)?.classList.add('active');
-  document.getElementById('fileGrp').style.display='none';
-  setSourceFileInfo('');
-  setTypeTabsVisible(false);
-  setUrlFieldMode({visible:true,readonly:false,label:_currentType==='link'?'링크 URL':'URL',placeholder:'https://'});
-
-  const submitBtn=document.getElementById('addSubmitBtn');
-  if(submitBtn)submitBtn.textContent='수정 저장';
-  openModal('addModal');
-}
-
-async function addItem(){
-  const titleInput=document.getElementById('iTitle').value.trim();
-  const title=titleInput||'제목 없음';
-  const desc=document.getElementById('iDesc').value.trim();
-  const url=document.getElementById('iUrl').value.trim();
-  const file=document.getElementById('iFile')?.files?.[0]||null;
-  const grid=document.getElementById(_targetGrid);
-  if(!grid){alert('추가할 위치를 찾지 못했습니다.');return;}
-
-  if(!_editingDocId && !_editingStaticKey){
-    if(_currentType==='link'){
-      if(!url){alert('링크 URL을 입력해주세요.');return;}
-    }else{
-      if(!file){alert('업로드할 파일을 선택해주세요.');return;}
-      const actualType=getMediaTypeByName(file.name);
-      if(!actualType){alert('지원하지 않는 파일 형식입니다.');return;}
-      if(_currentType==='image'&&actualType!=='image'){alert('이미지 파일을 선택해주세요.');return;}
-      if(_currentType==='video'&&actualType!=='video'){alert('영상 파일을 선택해주세요.');return;}
-    }
-  }else if(!_editingSourcePath && !url){
-    alert('URL을 입력해주세요.');return;
-  }
-
-  try{
-    if(_editingStaticKey){
-      const item={grid:_targetGrid,type:_currentType,url,title,desc};
-      const saveData={...item,staticKey:_editingStaticKey,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
-      await getCardsCol().doc(_editingStaticKey).set(saveData,{merge:true});
-      const card=document.querySelector(`[data-static-key="${_editingStaticKey}"]`);
-      if(card){
-        card.dataset.url=url;
-        card.dataset.type=_currentType;
-        applyStaticCardMeta(card,{title,desc});
-      }
-      _editingStaticKey='';
-      closeModal('addModal');
-      return;
-    }
-
-    if(_editingDocId){
-      const sourcePath=_editingSourcePath||'';
-      const item={grid:_targetGrid,type:_currentType,url,title,desc};
-      const saveData={
-        ...item,
-        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-      };
-      if(sourcePath){
-        saveData.sourcePath=sourcePath;
-        saveData.sourceKind='github';
-      }
-      await getCardsCol().doc(_editingDocId).set(saveData,{merge:true});
-      updateCardElement(_editingDocId,{...item,sourcePath,sourceKind:sourcePath?'github':''});
-      _editingDocId='';
-      _editingSourcePath='';
-      closeModal('addModal');
-      return;
-    }
-
-    if(_currentType==='link'){
-      const linkItem={grid:_targetGrid,type:extractYtId(url)?'video':'link',url,title,desc};
-      const docId=await saveCard(linkItem);
-      if(docId)insertCardToGrid(linkItem,docId);
-      await saveGridOrder(_targetGrid);
-      closeModal('addModal');
-      return;
-    }
-
-    const uploaded=await uploadFileToGithubFolder(file,_targetGrid);
-    uploaded.title=titleInput||titleFromFilename(file.name);
-    uploaded.desc=desc;
-    const docId=autoDocIdFromSource(uploaded.sourcePath);
-    if(ensureFirestore()){
-      await getCardsCol().doc(docId).set({
-        grid:uploaded.grid,
-        type:uploaded.type,
-        title:uploaded.title,
-        desc:uploaded.desc||'',
-        url:uploaded.url||'',
-        sourcePath:uploaded.sourcePath,
-        sourceKind:'github',
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      },{merge:true});
-    }
-    insertCardToGrid(uploaded,docId);
-    await saveGridOrder(_targetGrid);
-    closeModal('addModal');
-  }catch(err){
-    console.error('카드 저장 실패:',err);
-    alert('카드 저장에 실패했습니다. '+(err.message||''));
-  }
-}
-
-
-/* ── PROFILE ── */
-function fillProfileModal(){
-  document.getElementById('pName').value=(document.getElementById('profileName').textContent||'').trim();
-  document.getElementById('pRole').value=(document.getElementById('profileRole').textContent||'').trim();
-  document.getElementById('pBio').value=(document.getElementById('profileBio').innerHTML||'').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]*>/g,'').trim();
-  const emailTxt=(document.getElementById('profileBio').textContent||'').match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-  document.getElementById('pEmail').value=emailTxt?emailTxt[0]:'agentdh@naver.com';
-}
-function applyProfile(p){
-  if(!p)return;
-  if(p.name)document.getElementById('profileName').innerHTML=escapeHTML(p.name);
-  if(p.role)document.getElementById('profileRole').textContent=p.role;
-  if(p.bio)document.getElementById('profileBio').innerHTML=escapeHTML(p.bio).replace(/\n/g,'<br>');
-  if(p.email){
-    document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.href='mailto:'+p.email);
-  }
-}
-async function loadProfile(){
-  if(!FIRESTORE_READY)return;
-  try{
-    const doc=await getProfileDoc().get();
-    if(doc.exists)applyProfile(doc.data());
-  }catch(err){
-    console.error('프로필 불러오기 실패:',err);
-  }
-}
-async function saveProfile(){
-  const n=document.getElementById('pName').value.trim();
-  const r=document.getElementById('pRole').value.trim();
-  const b=document.getElementById('pBio').value.trim();
-  const email=document.getElementById('pEmail').value.trim();
-  const profile={name:n,role:r,bio:b,email,updatedAt:window.firebase?.firestore?.FieldValue?.serverTimestamp?.()||new Date().toISOString()};
-  applyProfile(profile);
-  if(ensureFirestore()){
-    try{await getProfileDoc().set(profile,{merge:true});}
-    catch(err){console.error('프로필 저장 실패:',err);alert('프로필 저장에 실패했습니다.');return;}
-  }
-  closeModal('profileModal');
-}
-
-// DOMContentLoaded → portfolio-manager.js가 처리
-
-
-/* ── FADE IN ── */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})
-},{threshold:.1});
-document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-
-
-/* ── AUTO GRID COLUMN LOGIC ── */
-function getBestColumns(count){
-    const fixed={1:1,2:2,3:3,4:4,5:5,6:3,7:7,8:4,9:3,10:5};
-    if(fixed[count]) return fixed[count];
-
-    const limit=7;
-
-    let target=count;
-
-    function isPrime(n){
-        if(n<2) return false;
-        for(let i=2;i<=Math.sqrt(n);i++){
-            if(n%i===0) return false;
-        }
-        return true;
-    }
-
-    while(isPrime(target)) target++;
-
-    let best=1;
-
-    for(let cols=2;cols<=limit;cols++){
-        const rows=Math.ceil(target/cols);
-        const empty=(cols*rows)-count;
-
-        if(best===1){
-            best=cols;
-            bestEmpty=empty;
-            bestDiff=Math.abs(cols-rows);
-            continue;
-        }
-
-        const diff=Math.abs(cols-rows);
-
-        if(
-            empty<bestEmpty ||
-            (empty===bestEmpty && diff<bestDiff)
-        ){
-            best=cols;
-            bestEmpty=empty;
-            bestDiff=diff;
-        }
-    }
-
-    return best;
-}
-
-
-
-/* ════════════════════════════════════════
-   포트폴리오 탭 전용 함수
-   ════════════════════════════════════════ */
-let _pupCurrentTab = 'thumbnail'; // 현재 선택 탭
-let _pupItems      = [];          // 미등록 GitHub 파일 목록
-let _pupLinkItems  = [];          // 미등록 링크/기타 카드 목록
-let _pupSelectMode = false;
-
-// ── 탭 전환 (포트폴리오 전용)
-function switchPortTab(tabKey, btn){
-  document.querySelectorAll('#port-grids .sub-tab').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  document.querySelectorAll('#port-grids .port-sub').forEach(p=>p.classList.remove('active'));
-  const panel = document.getElementById('port-sub-'+tabKey);
-  if(panel) panel.classList.add('active');
-}
-
-// ── 패널 표시/숨김: 포트폴리오 탭에서만 우측 공백에 overlay로 표시
-
-function upHide(){
-  const panel = document.getElementById('port-unrg-panel');
-  if(panel) panel.classList.remove('admin-visible');
-}
-
-// ── 현재 탭의 GitHub 폴더
-function pupCurrentFolder(){
-  return CATEGORY_FOLDER[_pupCurrentTab] || '';
-}
-
-// ── 현재 탭의 등록된 sourcePath Set 수집
-function pupRegisteredPaths(){
-  const paths = new Set();
-  document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card').forEach(card=>{
-    const sp = card.dataset.sourcePath;
-    if(sp) paths.add(sp);
-  });
-  return paths;
-}
-
-// ── 현재 탭 GitHub 폴더 파일 스캔
-
-
-// ── 리로드: 깨진 카드 제거 + 중복 제거 + 미등록 목록 재구성. 등록 위치 이동 금지.
-
-
-// ── 중복 카드 정리 (같은 sourcePath 여러 개 → 1개 유지)
-async function pupCleanBrokenAndDuplicateCards(githubPathSet){
-  const sub = document.getElementById('port-sub-'+_pupCurrentTab);
-  if(!sub)return;
-  const seen = new Set();
-  const cards = [...sub.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')];
-  const deleteJobs=[];
-  for(const card of cards){
-    const sp = card.dataset.sourcePath || '';
-    const key = sp || card.dataset.docId || card.dataset.staticKey || '';
-    let remove = false;
-
-    // GitHub 원본 카드인데 현재 GitHub 폴더에 없는 경우 깨진 카드로 판단하고 제거한다.
-    if(sp && card.dataset.sourceKind==='github' && !githubPathSet.has(sp)) remove = true;
-
-    // 같은 sourcePath/docId가 현재 탭 여러 위치에 존재하면 첫 번째만 유지한다.
-    if(key){
-      if(seen.has(key)) remove = true;
-      else seen.add(key);
-    }
-
-    if(remove){
-      const docId = card.dataset.docId || '';
-      if(FIRESTORE_READY && docId) deleteJobs.push(getCardsCol().doc(docId).delete().catch(()=>{}));
-      card.remove();
-    }
-  }
-  if(deleteJobs.length) await Promise.allSettled(deleteJobs);
-}
-
-function pupDeduplicateGrids(){
-  const sub = document.getElementById('port-sub-'+_pupCurrentTab);
-  if(!sub)return;
-  const seen = new Set();
-  sub.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]').forEach(card=>{
-    const key = card.dataset.sourcePath || card.dataset.docId || card.dataset.staticKey || '';
-    if(!key)return;
-    if(seen.has(key)){
-      const docId = card.dataset.docId;
-      if(FIRESTORE_READY && docId) getCardsCol().doc(docId).delete().catch(()=>{});
-      card.remove();
-    }else seen.add(key);
-  });
-}
-
-// ── 렌더링
-function pupRender(){
-  const listEl = document.getElementById('pup-list');
-  if(!listEl) return;
-  const total = _pupItems.length + _pupLinkItems.length;
-  if(!total){
-    listEl.innerHTML='<div class="pup-empty">미등록 카드 없음</div>';
-    pupUpdateCount();
-    return;
-  }
-  listEl.innerHTML='';
-
-  // GitHub 파일 아이템
-  _pupItems.forEach((item, idx)=>{
-    const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(item.name);
-    const el = document.createElement('div');
-    el.className='pup-item';
-    el.draggable = !!isAdmin;
-    el.dataset.sourcePath = item.sourcePath;
-    el.dataset.url        = item.url;
-    el.dataset.name       = item.name;
-    el.dataset.sha        = item.sha;
-    el.dataset.idx        = idx;
-    el.dataset.kind       = 'github';
-    el.innerHTML = `
-      ${isImg
-        ? `<img class="pup-thumb" src="${item.url}" loading="lazy" onerror="this.style.display='none'">`
-        : '<div class="pup-thumb"></div>'}
-      <div class="pup-info">
-        <div class="pup-name">${item.name}</div>
-        <div class="pup-path">${item.sourcePath}</div>
-      </div>`;
-    el.addEventListener('click', ()=>{
-      if(_pupSelectMode){ el.classList.toggle('selected'); pupUpdateCount(); }
-    });
-    listEl.appendChild(el);
-  });
-
-  // 링크/기타 카드 아이템
-  _pupLinkItems.forEach((item, idx)=>{
-    const el = document.createElement('div');
-    el.className='pup-item pup-item-link';
-    el.dataset.kind   = 'link';
-    el.dataset.url    = item.url||'';
-    el.dataset.title  = item.title||'';
-    el.dataset.linkIdx= idx;
-    el.innerHTML = `
-      <div class="pup-thumb pup-thumb-link">🔗</div>
-      <div class="pup-info">
-        <div class="pup-name">${item.title||'제목 없음'}</div>
-        <div class="pup-path">${item.url||''}</div>
-      </div>`;
-    el.addEventListener('click', ()=>{
-      if(_pupSelectMode){ el.classList.toggle('selected'); pupUpdateCount(); }
-    });
-    listEl.appendChild(el);
-  });
-
-  if(window.__bindPupDrag) window.__bindPupDrag();
-  pupUpdateCount();
-}
-
-function pupUpdateCount(){
-  const panelItems = document.querySelectorAll('#port-unrg-panel .pup-item').length;
-  const panelSel   = document.querySelectorAll('#port-unrg-panel .pup-item.selected').length;
-  const cardSel    = document.querySelectorAll('#tab-work .card.selected').length;
-  const totalSel   = panelSel + cardSel;
-  const cntEl = document.getElementById('pup-count');
-  const selEl = document.getElementById('pup-sel-count');
-  if(cntEl) cntEl.textContent = panelItems+'개';
-  if(selEl){ selEl.textContent=totalSel+'개 선택'; selEl.style.display=totalSel?'':'none'; }
-}
-
-// ── 다중선택 토글
-function pupToggleSelect(){
-  _pupSelectMode = !_pupSelectMode;
-  const btn = document.getElementById('pup-btn-select');
-  if(btn) btn.classList.toggle('active', _pupSelectMode);
-  if(!_pupSelectMode){
-    // 해제: 패널 + 탭 카드 선택 모두 해제
-    document.querySelectorAll('#port-unrg-panel .pup-item.selected').forEach(el=>el.classList.remove('selected'));
-    document.querySelectorAll('#tab-work .card.selected').forEach(el=>el.classList.remove('selected'));
-    pupUpdateCount();
-  }
-  // ON: 자동 선택 없음 - 카드 클릭 시 handleCardClick에서 선택 처리
-}
-
-// ── 선택삭제 (GitHub + UI)
-async function pupDeleteSelected(){
-  const panelSel = [...document.querySelectorAll('#port-unrg-panel .pup-item.selected')];
-  const cardSel  = [...document.querySelectorAll('#tab-work .card.selected')];
-  const total = panelSel.length + cardSel.length;
-  if(!total){ alert('선택된 항목이 없습니다.'); return; }
-  if(!confirm(`선택된 ${total}개를 삭제합니다.
-GitHub 파일 및 DB에서 완전 삭제됩니다.`)) return;
-
-  // 미등록 패널 아이템 삭제 (GitHub 파일 삭제)
-  for(const el of panelSel){
-    const kind = el.dataset.kind||'github';
-    if(kind==='github'){
-      const sp=el.dataset.sourcePath||'';
-      const sha=el.dataset.sha||'';
-      try{
-        await deleteGithubFileByPath(sp,sha);
-        _pupItems=_pupItems.filter(f=>f.sourcePath!==sp);
-        const folder=pupCurrentFolder();
-        if(_pupGithubCache[folder])
-          _pupGithubCache[folder]=_pupGithubCache[folder].filter(f=>f.sourcePath!==sp);
-        el.remove();
-      }catch(err){ console.error('패널 삭제 실패',sp,err); }
-    } else {
-      const lIdx=parseInt(el.dataset.linkIdx||'-1');
-      if(lIdx>=0) _pupLinkItems=_pupLinkItems.filter((_,i)=>i!==lIdx);
-      el.remove();
-    }
-  }
-
-  // 탭 카드 삭제 (GitHub 파일 + Firestore 완전 삭제)
-  for(const card of cardSel){
-    const docId=card.dataset.docId||'';
-    const sp=card.dataset.sourcePath||'';
-    const sha=card.dataset.sha||'';
-    const sourceKind=card.dataset.sourceKind||'';
-    const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-    try{
-      if(sourceKind==='github'&&sp) await deleteGithubFileByPath(sp,sha);
-      if(FIRESTORE_READY&&docId) await getCardsCol().doc(docId).delete().catch(()=>{});
-      card.remove();
-      if(gridId) await saveGridOrder(gridId);
-    }catch(err){ console.error('카드 삭제 실패',err); }
-  }
-
-  _pupSelectMode=false;
-  const btn=document.getElementById('pup-btn-select');
-  if(btn) btn.classList.remove('active');
-  updateEmptyGrids();
-  pupRender();
-  pupUpdateCount();
-}
-
-// ── 초기화: 등록 카드 회수 + 탭 연동 폴더 전체 파일을 미등록 패널로 통합
-async function pupResetTab(){
-  const subEl=document.getElementById('port-sub-'+_pupCurrentTab);
-  if(!subEl){alert('탭을 찾을 수 없습니다.');return;}
-  const cards=[...subEl.querySelectorAll('.card.generated-card,.card[data-source-path],.card[data-doc-id]')];
-  if(!confirm(`${cards.length}개 카드를 초기화합니다.\n파일은 삭제되지 않습니다.`))return;
-  for(const card of cards){
-    const docId=card.dataset.docId||'';
-    const sourcePath=card.dataset.sourcePath||'';
-    const sourceKind=card.dataset.sourceKind||'';
-    const url=card.dataset.url||'';
-    const title=card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
-    const name=sourcePath?filenameFromPath(sourcePath):title;
-    try{
-      if(FIRESTORE_READY&&docId)await getCardsCol().doc(docId).delete().catch(()=>{});
-      card.remove();
-      if(sourceKind==='github'&&sourcePath){
-        if(!_pupItems.find(f=>f.sourcePath===sourcePath))
-          _pupItems.push({name,sourcePath,url,sha:card.dataset.sha||''});
-      }else{
-        if(!_pupLinkItems.find(f=>(f.url||f.sourcePath)===(url||sourcePath)))
-          _pupLinkItems.push({title,url,sourcePath,docId});
-      }
-    }catch(e){console.error('초기화 실패',e);}
-  }
-  updateEmptyGrids();
-  pupRender();
-}
-
-
-
-// 현재 포트폴리오 탭 전체 선택 모드: 카드 클릭 선택 처리
-if(!window.__vonaPortfolioSelectionClickBound){
-  window.__vonaPortfolioSelectionClickBound=true;
-  document.addEventListener('click',function(e){
-    if(!_pupSelectMode)return;
-    const card=e.target.closest('#port-sub-'+_pupCurrentTab+' .card.generated-card, #port-sub-'+_pupCurrentTab+' .card[data-source-path], #port-sub-'+_pupCurrentTab+' .card[data-doc-id]');
-    if(card && !e.target.closest('.card-edit,.card-del')){
-      e.preventDefault();e.stopPropagation();
-      card.classList.toggle('selected');
-      pupUpdateCount();
-    }
-  },true);
-}
-
-/* ── updateEditorVisibility 연동은 기존 upShow/upHide 재사용 ── */
-
-
-// 미등록 패널에서 여러 파일 업로드 → 현재 탭의 첫 번째 그리드 기준
-function pupOpenBatchUpload(){
-  if(!isAdmin){ alert('관리자 로그인 후 사용할 수 있습니다.'); return; }
-  const tabKey = _pupCurrentTab;
-  // 해당 탭의 첫 번째 grid ID 찾기
-  const subEl = document.getElementById('port-sub-'+tabKey);
-  if(!subEl){ alert('탭을 선택해주세요.'); return; }
-  const firstGrid = subEl.querySelector('.grid-3[id], .grid-2[id]');
-  if(!firstGrid){ alert('업로드 대상 그리드를 찾을 수 없습니다.'); return; }
-  openBatchUpload(firstGrid.id);
-}
-
-
-function updateEmptyGrids(){
-  document.querySelectorAll('#tab-work .grid-3[id], #tab-work .grid-2[id]').forEach(grid=>{
-    const hasCard = !!grid.querySelector(':scope > .card:not(.pup-empty-grid-card)');
-    const existing = grid.querySelector(':scope > .pup-empty-grid-card');
-    if(!hasCard && !existing){
-      const ph = document.createElement('div');
-      ph.className = 'pup-empty-grid-card';
-      ph.textContent = '비어있음';
-      const addCard = grid.querySelector('.card-add');
-      grid.insertBefore(ph, addCard||null);
-    } else if(hasCard && existing){
-      existing.remove();
-    }
-  });
-}
-
-
-function handleCardClick(e, card){
-  // 수정/삭제 버튼 클릭은 무시
-  if(e.target.closest('.card-edit,.card-del')) return;
-  if(_pupSelectMode){
-    // 다중선택 모드: 클릭 = 선택/해제
-    e.stopPropagation();
-    card.classList.toggle('selected');
-    pupUpdateCount();
-  } else {
-    openCardFromElement(card);
-  }
-}
-
-
+function openModal(){}
+function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
+function closeOnBg(event,id){ if(event.target && event.target.id === id) closeModal(id); }
+function saveProfile(){}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  disableAdminUi();
+  loadPortfolio();
+});
+
+window.switchTab = switchTab;
+window.switchPortTab = switchPortTab;
+window.toggleSection = toggleSection;
+window.closeVideoModal = closeVideoModal;
+window.closeVideoOnly = closeVideoOnly;
+window.closeModal = closeModal;
+window.closeOnBg = closeOnBg;
+window.openModal = openModal;
+window.saveProfile = saveProfile;
 </script>
-
 </body>
 </html>
