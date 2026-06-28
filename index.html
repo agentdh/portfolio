@@ -2667,15 +2667,9 @@ function closeVideoModal(e){ if(e.target.id==='videoModal') closeVideoOnly(); }
 function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
 function closeOnBg(e,id){ if(e.target.id===id) closeModal(id); }
 
-async function loadPortfolioJson(){
-  try{
-    const res=await fetch('./portfolio.json?t='+Date.now(),{cache:'no-store'});
-    if(!res.ok) throw new Error('portfolio.json '+res.status);
-    return await res.json();
-  }catch(err){
-    console.error(err);
-    return {};
-  }
+function loadPortfolioJson(){
+  // inline data에서 읽음 - fetch 없음
+  return getInlinePortfolioData();
 }
 
 function renderPortfolio(data){
@@ -2694,21 +2688,8 @@ function renderPortfolio(data){
 }
 
 function setupSectionToggles(){
-  document.querySelectorAll('#tab-work .portfolio-section-title, #tab-work .sec-label').forEach(title=>{
-    const grid=nextGrid(title);
-    if(!grid) return;
-    grid.classList.remove('collapsed'); // 기본 열림
-    let raw=title.textContent.replace(/[▶▼]/g,'').replace(/열기|닫기/g,'').trim();
-    if(!raw) raw='섹션';
-    title.onclick=null;
-    title.innerHTML=`<span class="section-title-label">${escapeHtml(raw)}</span><button type="button" class="section-toggle-btn">닫기</button>`;
-    const btn=title.querySelector('.section-toggle-btn');
-    btn.addEventListener('click',e=>{
-      e.preventDefault(); e.stopPropagation();
-      const closed=grid.classList.toggle('collapsed');
-      btn.textContent=closed?'열기':'닫기';
-    });
-  });
+  // viewer: setupSectionToggles는 forceOpenAllSections로 대체
+  forceOpenAllSections();
 }
 function nextGrid(el){
   let n=el.nextElementSibling;
@@ -2725,11 +2706,13 @@ function addOrder(){alert('견적 계산 기능은 준비 중입니다. 상세 �
 function resetCalc(){}
 function copyOrderText(){navigator.clipboard?.writeText?.('견적 문의');}
 
-window.addEventListener('DOMContentLoaded',async()=>{
-  setupSectionToggles();
-  const data=await loadPortfolioJson();
+window.window.addEventListener('DOMContentLoaded', () => {
+  const data = getInlinePortfolioData();
+  window.portfolioData = data;
+  if(typeof portfolioData !== 'undefined') portfolioData = data;
   renderPortfolio(data);
   document.querySelectorAll('.fade-in').forEach(el=>el.classList.add('visible'));
+  forceOpenAllSections();
 });
 </script>
 
@@ -2742,7 +2725,42 @@ window.addEventListener('load', () => {
     btn.textContent='닫기';
   });
 });
+
+function getInlinePortfolioData(){
+  const el=document.getElementById('portfolio-data');
+  if(!el) return {};
+  try{ return JSON.parse(el.textContent||'{}'); }
+  catch(err){ console.error('[portfolio] inline data parse failed',err); return {}; }
+}
+
+function forceOpenAllSections(){
+  document.querySelectorAll('.grid-3,.grid-2').forEach(grid=>{
+    grid.classList.remove('collapsed');
+  });
+  document.querySelectorAll('.section-toggle-btn').forEach(btn=>{
+    btn.textContent='닫기';
+  });
+}
+
+function toggleSection(gridId){
+  const grid=document.getElementById(gridId);
+  if(!grid) return;
+  const title=grid.previousElementSibling;
+  const btn=title?title.querySelector('.section-toggle-btn'):null;
+  const isCollapsed=grid.classList.contains('collapsed');
+  if(isCollapsed){
+    grid.classList.remove('collapsed');
+    if(btn) btn.textContent='닫기';
+  }else{
+    grid.classList.add('collapsed');
+    if(btn) btn.textContent='열기';
+  }
+}
+
 </script>
 
+<script id="portfolio-data" type="application/json">
+__PORTFOLIO_DATA__
+</script>
 </body>
 </html>
