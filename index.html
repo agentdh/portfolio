@@ -3029,7 +3029,7 @@ async function fetchGithubFolder(gridId,folderPath){
     if(!res.ok)return [];
     const files=await res.json();
     if(!Array.isArray(files))return [];
-    return files
+    const result = files
       .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
       .map(f=>({
         grid:gridId,
@@ -3040,6 +3040,9 @@ async function fetchGithubFolder(gridId,folderPath){
         sourcePath:`${folderPath}/${f.name}`,
         sourceKind:'github'
       }));
+    _pupGithubCache[folder]=result;
+    _pupLoadedFolders.add(folder);
+    return result;
   }catch(err){
     console.warn('GitHub 폴더 스캔 실패:',folderPath,err);
     return [];
@@ -4342,7 +4345,7 @@ function switchPortTab(tabKey, btn){
   if(panel) panel.classList.add('active');
   _pupCurrentTab = tabKey;
   // 미등록 패널 갱신
-  if(isAdmin) pupReload();
+  if(isAdmin) renderPupList && renderPupList();
 }
 
 // ── 패널 표시/숨김: 포트폴리오 탭에서만 우측 공백에 overlay로 표시
@@ -4352,7 +4355,7 @@ function upShow(){
   const workActive = document.getElementById('tab-work')?.classList.contains('active');
   if(isAdmin && workActive){
     panel.classList.add('admin-visible');
-    pupReload();
+    renderPupList && renderPupList();
   }else{
     panel.classList.remove('admin-visible');
   }
@@ -4377,10 +4380,14 @@ function pupRegisteredPaths(){
   return paths;
 }
 
+let _pupGithubCache = {};
+let _pupLoadedFolders = new Set();
+
 // ── 현재 탭 GitHub 폴더 파일 스캔
 async function pupFetchGithubFiles(){
   const folder = pupCurrentFolder();
   if(!folder) return [];
+  if(_pupLoadedFolders.has(folder) && _pupGithubCache[folder]) return _pupGithubCache[folder];
   const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
     const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-store'});
@@ -4417,6 +4424,8 @@ async function pupReload(){
   if(!folder){ listEl.innerHTML='<div class="pup-empty">폴더 매핑 없음</div>'; return; }
 
   listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
+  delete _pupGithubCache[folder];
+  _pupLoadedFolders.delete(folder);
   const githubFiles = await pupFetchGithubFiles();
   const githubPathSet = new Set(githubFiles.map(f=>f.sourcePath));
 
