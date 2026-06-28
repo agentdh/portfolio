@@ -500,26 +500,6 @@ color:var(--cyan);
 .pup-path{font-size:10px!important;}
 @media(max-width:1380px){#port-unrg-panel{display:none!important;}}
 
-/* ── VONA requested patch: empty drop placeholder ── */
-.card-empty{
-  border:1px dashed rgba(255,255,255,.16);
-  border-radius:var(--radius);
-  min-height:148px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  color:var(--text-off);
-  background:rgba(255,255,255,.025);
-  font-size:12px;
-  text-align:center;
-  pointer-events:auto;
-}
-.card-empty strong{font-size:12px;color:var(--text-dim);font-weight:500;}
-.card-empty span{font-size:10px;color:var(--text-off);}
-.grid-3.pup-drop-target .card-empty,.grid-2.pup-drop-target .card-empty{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.055);}
-
 </style>
 </head>
 <body>
@@ -2959,9 +2939,6 @@ const CATEGORY_FOLDER={
 const IMAGE_EXTS=['jpg','jpeg','png','gif','webp','avif'];
 const VIDEO_EXTS=['mp4','webm','mov'];
 let autoFolderItems=[];
-let portfolioData={};
-let _portfolioGithubLoaded=false;
-let _portfolioGithubLoading=null;
 
 
 function getProfileDoc(){return db.collection(PROFILE_DOC_PATH[0]).doc(PROFILE_DOC_PATH[1]);}
@@ -3025,83 +3002,36 @@ function autoDocIdFromSource(sourcePath){
   }
   return 'auto_'+Math.abs(h);
 }
-async function fetchGithubFolder(gridId,folderPath, forceRefresh=false){
-  const folder=folderPath;
-  if(!folder)return [];
-  if(!forceRefresh && Array.isArray(_pupFetchCache?.[folder])){
-    return _pupFetchCache[folder].map(item=>({
-      ...item,
-      grid:gridId || item.grid || ''
-    }));
-  }
-
-  const api=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
+async function fetchGithubFolder(gridId,folderPath){
+  const api=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folderPath).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
-    const res=await fetch(api,{headers:{'Accept':'application/vnd.github+json'},cache:forceRefresh?'no-store':'force-cache'});
+    const res=await fetch(api,{headers:{'Accept':'application/vnd.github+json'}});
     if(!res.ok)return [];
     const files=await res.json();
     if(!Array.isArray(files))return [];
-
-    const result=files
+    return files
       .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
       .map(f=>({
-        grid:gridId||'',
+        grid:gridId,
         type:getMediaTypeByName(f.name),
         title:titleFromFilename(f.name),
         desc:'',
-        name:f.name,
-        url:f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folder}/${f.name}`,
-        sourcePath:`${folder}/${f.name}`,
-        sourceKind:'github',
-        sha:f.sha||''
+        url:f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folderPath}/${f.name}`,
+        sourcePath:`${folderPath}/${f.name}`,
+        sourceKind:'github'
       }));
-
-    _pupFetchCache[folder]=result;
-    _pupGithubCache[folder]=result;
-    _pupLoadedFolders.add(folder);
-    return result.map(item=>({...item,grid:gridId || item.grid || ''}));
   }catch(err){
-    console.warn('GitHub 폴더 스캔 실패:',folder,err);
+    console.warn('GitHub 폴더 스캔 실패:',folderPath,err);
     return [];
   }
 }
-async function loadGithubFolderItems(forceRefresh=false){
-  if(_portfolioGithubLoading && !forceRefresh)return _portfolioGithubLoading;
-  if(_portfolioGithubLoaded && !forceRefresh)return autoFolderItems;
-
-  _portfolioGithubLoading=(async()=>{
-    if(forceRefresh){
-      Object.keys(_pupFetchCache).forEach(k=>delete _pupFetchCache[k]);
-      _pupGithubCache={};
-      _pupLoadedFolders.clear();
-      portfolioData={};
-    }
-
-    autoFolderItems=[];
-    const categoryEntries=Object.entries(CATEGORY_FOLDER);
-    const uniqueFolders=[...new Set(categoryEntries.map(([,folder])=>folder).filter(Boolean))];
-    const folderResults=await Promise.all(uniqueFolders.map(folder=>fetchGithubFolder('',folder,forceRefresh)));
-    const byFolder={};
-    uniqueFolders.forEach((folder,i)=>{byFolder[folder]=folderResults[i]||[];});
-
-    categoryEntries.forEach(([category,folder])=>{
-      portfolioData[category]=(byFolder[folder]||[]).map(item=>({...item}));
-    });
-
-    const gridEntries=Object.entries(GITHUB_FOLDER_MAP);
-    gridEntries.forEach(([gridId,folder])=>{
-      const items=(byFolder[folder]||[]).map(item=>({...item,grid:gridId}));
-      autoFolderItems.push(...items);
-    });
-
-    _portfolioGithubLoaded=true;
-    _portfolioGithubLoading=null;
-    return autoFolderItems;
-  })();
-
-  return _portfolioGithubLoading;
+async function loadGithubFolderItems(){
+  autoFolderItems=[];
+  const entries=Object.entries(GITHUB_FOLDER_MAP);
+  const results=await Promise.all(entries.map(([gridId,folder])=>fetchGithubFolder(gridId,folder)));
+  autoFolderItems=results.flat();
+  return autoFolderItems;
 }
-
 
 function sanitizeUploadFilename(name){
   const original=String(name||'file');
@@ -3146,24 +3076,15 @@ async function uploadFileToGithubFolder(file,gridId){
     const msg=data?.message||data?.error||text||'GitHub 업로드 실패';
     throw new Error(msg);
   }
-  const uploadedItem={
+  return {
     grid:gridId,
     type,
     title:titleFromFilename(file.name),
     desc:'',
-    name:filename,
     url:data?.content?.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`,
     sourcePath:path,
-    sourceKind:'github',
-    sha:data?.content?.sha || ''
+    sourceKind:'github'
   };
-  if(_pupFetchCache[folder] && !_pupFetchCache[folder].some(item=>item.sourcePath===path))_pupFetchCache[folder].push(uploadedItem);
-  const category=Object.keys(CATEGORY_FOLDER).find(key=>CATEGORY_FOLDER[key]===folder);
-  if(category){
-    if(!Array.isArray(portfolioData[category]))portfolioData[category]=[];
-    if(!portfolioData[category].some(item=>item.sourcePath===path))portfolioData[category].push({...uploadedItem});
-  }
-  return uploadedItem;
 }
 
 async function deleteGithubFileByPath(path){
@@ -3683,7 +3604,7 @@ document.addEventListener('click',e=>{
   if(!card)return;
   if(e.target.closest('.card-edit,.card-del,.card-add,.card-multi-upload,.section-admin-controls'))return;
   const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  if(_pupSelectMode && card.closest('#port-sub-'+_pupCurrentTab)){
+  if(selectionModeGrid && gridId===selectionModeGrid){
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
@@ -3741,7 +3662,7 @@ function makeCardEl(item,docId){
   card.innerHTML=`
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
-    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="미등록 카드로 이동">×</button>`:''}
+    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
     <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
     <span class="type-badge ${badgeClass}">${badge}</span>
     <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
@@ -4000,43 +3921,35 @@ async function deleteCard(e,docId){
   if(!docId)return;
 
   const card=document.querySelector(`[data-doc-id="${docId}"]`);
-  if(!card)return;
+  const sourcePath=card?.dataset?.sourcePath||'';
+  const sourceKind=card?.dataset?.sourceKind||'';
+  const gridId=card?.dataset?.grid||card?.closest('.grid-3,.grid-2')?.id||'';
 
-  const sourcePath=card.dataset.sourcePath||'';
-  const sourceKind=card.dataset.sourceKind||'';
-  const url=card.dataset.url||'';
-  const title=card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
-  const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  const folder=pupCurrentFolder ? pupCurrentFolder() : '';
+  const msg=sourceKind==='github' && sourcePath
+    ? `이 카드를 삭제하면 GitHub 원본 파일도 삭제됩니다.\n\n원본 파일: ${filenameFromPath(sourcePath)}\n경로: ${sourcePath}\n\n삭제할까요?`
+    : '이 카드를 삭제할까요?';
+
+  if(!confirm(msg))return;
 
   try{
-    // 탭의 X는 삭제가 아니라 등록 해제다. 원본 파일은 유지하고 Firestore 등록 정보만 제거한다.
+    if(sourceKind==='github' && sourcePath){
+      await deleteGithubFileByPath(sourcePath);
+    }
+
     if(FIRESTORE_READY){
       await getCardsCol().doc(docId).delete().catch(err=>{
-        console.warn('Firestore 등록 해제 실패:',err);
+        console.warn('Firestore 메타데이터 삭제 실패:',err);
       });
     }
 
-    if(sourcePath && (!folder || sourcePath.startsWith(folder+'/') || sourceKind==='github')){
-      const name=filenameFromPath(sourcePath)||title;
-      if(!_pupItems.some(item=>item.sourcePath===sourcePath)){
-        _pupItems.push({name,sourcePath,url,sha:card.dataset.sha||''});
-      }
-    }else{
-      const key=sourcePath||url||title;
-      if(key && !_pupLinkItems.some(item=>(item.sourcePath||item.url||item.title)===key)){
-        _pupLinkItems.push({title,url,docId:'',sourcePath});
-      }
-    }
+    card?.remove();
 
-    card.remove();
-    if(gridId)await saveGridOrder(gridId);
-    pupRender();
-    setupDragSortable();
-    if(typeof updateEmptyGridPlaceholders==='function')updateEmptyGridPlaceholders();
+    if(gridId){
+      await saveGridOrder(gridId);
+    }
   }catch(err){
-    console.error('카드 미등록 이동 실패:',err);
-    alert('미등록 카드로 이동하지 못했습니다. '+(err.message||''));
+    console.error('카드 삭제 실패:',err);
+    alert('카드 삭제에 실패했습니다. '+(err.message||''));
   }
 }
 /* ── ADD MODAL ── */
@@ -4401,7 +4314,7 @@ function switchPortTab(tabKey, btn){
   if(panel) panel.classList.add('active');
   _pupCurrentTab = tabKey;
   // 미등록 패널 갱신
-  if(isAdmin) pupRender && pupRender();
+  if(isAdmin) pupReload();
 }
 
 // ── 패널 표시/숨김: 포트폴리오 탭에서만 우측 공백에 overlay로 표시
@@ -4411,7 +4324,7 @@ function upShow(){
   const workActive = document.getElementById('tab-work')?.classList.contains('active');
   if(isAdmin && workActive){
     panel.classList.add('admin-visible');
-    renderPupList && renderPupList(false);
+    pupReload();
   }else{
     panel.classList.remove('admin-visible');
   }
@@ -4436,169 +4349,338 @@ function pupRegisteredPaths(){
   return paths;
 }
 
-let _pupGithubCache = {};
-let _pupLoadedFolders = new Set();
-
-const _pupFetchCache = {};
-
 // ── 현재 탭 GitHub 폴더 파일 스캔
-async function pupFetchGithubFiles(forceRefresh=false){
-  const folder=pupCurrentFolder();
-  if(!folder)return [];
-  if(forceRefresh && _pupFetchCache[folder])delete _pupFetchCache[folder];
-  if(!forceRefresh && Array.isArray(_pupFetchCache[folder]))return _pupFetchCache[folder];
-
-  const category=Object.keys(CATEGORY_FOLDER).find(key=>CATEGORY_FOLDER[key]===folder);
-  if(!forceRefresh && category && Array.isArray(portfolioData[category])){
-    _pupFetchCache[folder]=portfolioData[category];
-    return _pupFetchCache[folder];
+async function pupFetchGithubFiles(){
+  const folder = pupCurrentFolder();
+  if(!folder) return [];
+  const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
+  try{
+    const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-store'});
+    if(!res.ok){
+      console.warn('GitHub 폴더 스캔 실패:', folder, res.status, res.statusText);
+      return [];
+    }
+    const files = await res.json();
+    if(!Array.isArray(files)){
+      console.warn('GitHub 폴더 응답이 배열이 아님:', folder, files);
+      return [];
+    }
+    return files
+      .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
+      .map(f=>({
+        name: f.name,
+        sourcePath: `${folder}/${f.name}`,
+        url: f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folder}/${f.name}`,
+        sha: f.sha||''
+      }));
+  }catch(e){
+    console.warn('폴더 스캔 실패', e);
+    return [];
   }
-
-  const items=await fetchGithubFolder('',folder,forceRefresh);
-  _pupFetchCache[folder]=items;
-  if(category)portfolioData[category]=items.map(item=>({...item}));
-  return items;
 }
 
-function pupGetCurrentTabItems(){
-  const category=_pupCurrentTab;
-  const folder=pupCurrentFolder();
-  const base=Array.isArray(portfolioData[category])
-    ? portfolioData[category]
-    : (Array.isArray(_pupFetchCache[folder])?_pupFetchCache[folder]:[]);
-  const registered=pupRegisteredPaths();
-  return base
-    .filter(item=>item && item.sourcePath && !registered.has(item.sourcePath))
-    .map(item=>({
-      name:item.name || filenameFromPath(item.sourcePath),
-      sourcePath:item.sourcePath,
-      url:item.url,
-      sha:item.sha||''
-    }));
-}
+// ── 리로드: 깨진 카드 제거 + 중복 제거 + 미등록 목록 재구성. 등록 위치 이동 금지.
+async function pupReload(){
+  const listEl = document.getElementById('pup-list');
+  const folderEl = document.getElementById('pup-folder-label');
+  if(!listEl) return;
+  const folder = pupCurrentFolder();
+  if(folderEl) folderEl.textContent = folder ? '📁 '+folder : '';
+  if(!folder){ listEl.innerHTML='<div class="pup-empty">폴더 매핑 없음</div>'; return; }
 
-function pupRender(){
-  const list=document.getElementById('pup-list');
-  const folderLabel=document.getElementById('pup-folder-label');
-  const count=document.getElementById('pup-count');
-  if(folderLabel)folderLabel.textContent=pupCurrentFolder()||'-';
-  if(!list)return;
+  listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
+  const githubFiles = await pupFetchGithubFiles();
+  const githubPathSet = new Set(githubFiles.map(f=>f.sourcePath));
 
-  _pupItems=pupGetCurrentTabItems();
-  const rows=[];
+  await pupCleanBrokenAndDuplicateCards(githubPathSet);
 
-  _pupItems.forEach(item=>{
-    const name=item.name || filenameFromPath(item.sourcePath);
-    rows.push(`
-      <div class="pup-item" draggable="${isAdmin?'true':'false'}" data-kind="github" data-name="${escapeAttr(name)}" data-source-path="${escapeAttr(item.sourcePath)}" data-url="${escapeAttr(item.url||'')}" data-sha="${escapeAttr(item.sha||'')}">
-        <img class="pup-thumb" src="${escapeAttr(item.url||'')}" alt="${escapeAttr(name)}">
-        <div class="pup-info">
-          <div class="pup-name">${escapeHTML(name)}</div>
-          <div class="pup-path">${escapeHTML(item.sourcePath)}</div>
-        </div>
-      </div>`);
+  const registered = pupRegisteredPaths();
+  _pupItems = githubFiles.filter(f => !registered.has(f.sourcePath));
+  _pupLinkItems = _pupLinkItems.filter((item, idx, arr)=>{
+    const key=item.sourcePath||item.url||item.title||String(idx);
+    return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key)===idx;
   });
-
-  _pupLinkItems.forEach((item,idx)=>{
-    const title=item.title || filenameFromPath(item.sourcePath) || item.url || '링크 카드';
-    rows.push(`
-      <div class="pup-item pup-item-link" draggable="${isAdmin?'true':'false'}" data-kind="link" data-link-idx="${idx}" data-title="${escapeAttr(title)}" data-url="${escapeAttr(item.url||'')}" data-source-path="${escapeAttr(item.sourcePath||'')}">
-        <div class="pup-thumb pup-thumb-link">↗</div>
-        <div class="pup-info">
-          <div class="pup-name">${escapeHTML(title)}</div>
-          <div class="pup-path">${escapeHTML(item.url||item.sourcePath||'link')}</div>
-        </div>
-      </div>`);
-  });
-
-  list.innerHTML=rows.length?rows.join(''):'<div class="pup-empty">미등록 파일이 없습니다.</div>';
-  if(count)count.textContent=`${_pupItems.length+_pupLinkItems.length}개`;
-  if(typeof window.__bindPupDrag==='function')window.__bindPupDrag();
-  pupUpdateCount();
-}
-
-async function renderPupList(forceRefresh=false){
-  const list=document.getElementById('pup-list');
-  const folder=pupCurrentFolder();
-  if(!folder){pupRender();return;}
-
-  if(forceRefresh || !_portfolioGithubLoaded){
-    if(list)list.innerHTML='<div class="up-loading">GitHub 기준으로 불러오는 중...</div>';
-    await loadGithubFolderItems(!!forceRefresh);
-  }
 
   pupRender();
+  setupDragSortable();
 }
 
-async function pupReload(){
-  await renderPupList(true);
-}
+// ── 중복 카드 정리 (같은 sourcePath 여러 개 → 1개 유지)
+async function pupCleanBrokenAndDuplicateCards(githubPathSet){
+  const sub = document.getElementById('port-sub-'+_pupCurrentTab);
+  if(!sub)return;
+  const seen = new Set();
+  const cards = [...sub.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')];
+  const deleteJobs=[];
+  for(const card of cards){
+    const sp = card.dataset.sourcePath || '';
+    const key = sp || card.dataset.docId || card.dataset.staticKey || '';
+    let remove = false;
 
-async function pupResetTab(){
-  await renderPupList(true);
-}
+    // GitHub 원본 카드인데 현재 GitHub 폴더에 없는 경우 깨진 카드로 판단하고 제거한다.
+    if(sp && card.dataset.sourceKind==='github' && !githubPathSet.has(sp)) remove = true;
 
-function pupToggleSelect(){
-  _pupSelectMode=!_pupSelectMode;
-  const btn=document.getElementById('pup-btn-select');
-  if(btn)btn.classList.toggle('active',_pupSelectMode);
-  document.querySelectorAll('#tab-work .card,.pup-item').forEach(el=>el.classList.toggle('select-mode',_pupSelectMode));
-  if(!_pupSelectMode){
-    document.querySelectorAll('#tab-work .card.selected,.pup-item.selected').forEach(el=>el.classList.remove('selected'));
+    // 같은 sourcePath/docId가 현재 탭 여러 위치에 존재하면 첫 번째만 유지한다.
+    if(key){
+      if(seen.has(key)) remove = true;
+      else seen.add(key);
+    }
+
+    if(remove){
+      const docId = card.dataset.docId || '';
+      if(FIRESTORE_READY && docId) deleteJobs.push(getCardsCol().doc(docId).delete().catch(()=>{}));
+      card.remove();
+    }
   }
+  if(deleteJobs.length) await Promise.allSettled(deleteJobs);
+}
+
+function pupDeduplicateGrids(){
+  const sub = document.getElementById('port-sub-'+_pupCurrentTab);
+  if(!sub)return;
+  const seen = new Set();
+  sub.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]').forEach(card=>{
+    const key = card.dataset.sourcePath || card.dataset.docId || card.dataset.staticKey || '';
+    if(!key)return;
+    if(seen.has(key)){
+      const docId = card.dataset.docId;
+      if(FIRESTORE_READY && docId) getCardsCol().doc(docId).delete().catch(()=>{});
+      card.remove();
+    }else seen.add(key);
+  });
+}
+
+// ── 렌더링
+function pupRender(){
+  const listEl = document.getElementById('pup-list');
+  if(!listEl) return;
+  const total = _pupItems.length + _pupLinkItems.length;
+  if(!total){
+    listEl.innerHTML='<div class="pup-empty">미등록 카드 없음</div>';
+    pupUpdateCount();
+    return;
+  }
+  listEl.innerHTML='';
+
+  // GitHub 파일 아이템
+  _pupItems.forEach((item, idx)=>{
+    const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(item.name);
+    const el = document.createElement('div');
+    el.className='pup-item';
+    el.draggable = !!isAdmin;
+    el.dataset.sourcePath = item.sourcePath;
+    el.dataset.url        = item.url;
+    el.dataset.name       = item.name;
+    el.dataset.sha        = item.sha;
+    el.dataset.idx        = idx;
+    el.dataset.kind       = 'github';
+    el.innerHTML = `
+      ${isImg
+        ? `<img class="pup-thumb" src="${item.url}" loading="lazy" onerror="this.style.display='none'">`
+        : '<div class="pup-thumb"></div>'}
+      <div class="pup-info">
+        <div class="pup-name">${item.name}</div>
+        <div class="pup-path">${item.sourcePath}</div>
+      </div>`;
+    el.addEventListener('click', ()=>{
+      if(_pupSelectMode){ el.classList.toggle('selected'); pupUpdateCount(); }
+    });
+    listEl.appendChild(el);
+  });
+
+  // 링크/기타 카드 아이템
+  _pupLinkItems.forEach((item, idx)=>{
+    const el = document.createElement('div');
+    el.className='pup-item pup-item-link';
+    el.dataset.kind   = 'link';
+    el.dataset.url    = item.url||'';
+    el.dataset.title  = item.title||'';
+    el.dataset.linkIdx= idx;
+    el.innerHTML = `
+      <div class="pup-thumb pup-thumb-link">🔗</div>
+      <div class="pup-info">
+        <div class="pup-name">${item.title||'제목 없음'}</div>
+        <div class="pup-path">${item.url||''}</div>
+      </div>`;
+    el.addEventListener('click', ()=>{
+      if(_pupSelectMode){ el.classList.toggle('selected'); pupUpdateCount(); }
+    });
+    listEl.appendChild(el);
+  });
+
+  if(window.__bindPupDrag) window.__bindPupDrag();
   pupUpdateCount();
 }
 
 function pupUpdateCount(){
-  const box=document.getElementById('pup-sel-count');
-  if(!box)return;
-  const n=document.querySelectorAll('#tab-work .card.selected,.pup-item.selected').length;
-  box.style.display=_pupSelectMode?'inline':'none';
-  box.textContent=`${n}개 선택`;
+  const total = document.querySelectorAll('.pup-item').length;
+  const sel = document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.selected, .pup-item.selected').length;
+  const cntEl = document.getElementById('pup-count');
+  const selEl = document.getElementById('pup-sel-count');
+  if(cntEl) cntEl.textContent = total+'개';
+  if(selEl){ selEl.textContent=sel+'개 선택'; selEl.style.display=sel?'':'none'; }
 }
 
-document.addEventListener('click',e=>{
-  const item=e.target.closest('.pup-item');
-  if(!item || !_pupSelectMode)return;
-  e.preventDefault();
-  e.stopPropagation();
-  item.classList.toggle('selected');
+// ── 다중선택 토글
+function pupToggleSelect(){
+  _pupSelectMode = !_pupSelectMode;
+  const btn = document.getElementById('pup-btn-select');
+  if(btn) btn.classList.toggle('active', _pupSelectMode);
+  document.querySelectorAll('#tab-work .card.select-mode,.pup-item.select-mode').forEach(el=>el.classList.remove('select-mode'));
+  document.querySelectorAll('#tab-work .card.selected,.pup-item.selected').forEach(el=>el.classList.remove('selected'));
+  selectedCardKeys.clear();
+  selectionModeGrid = '';
+  if(_pupSelectMode){
+    document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.generated-card, #port-sub-'+_pupCurrentTab+' .card[data-source-path], #port-sub-'+_pupCurrentTab+' .card[data-doc-id], .pup-item')
+      .forEach(el=>el.classList.add('select-mode'));
+  }
   pupUpdateCount();
-},true);
+}
 
+// ── 선택삭제 (GitHub + UI)
 async function pupDeleteSelected(){
-  const selected=[...document.querySelectorAll('.pup-item.selected')];
-  if(!selected.length){alert('선택된 미등록 항목이 없습니다.');return;}
-  if(!confirm(`선택한 ${selected.length}개 미등록 항목을 삭제할까요?\nGitHub 원본 파일도 삭제됩니다.`))return;
+  const selectedCards = [...document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.selected')];
+  const selectedPup   = [...document.querySelectorAll('.pup-item.selected')];
+  const total = selectedCards.length + selectedPup.length;
+  if(!total){ alert('선택된 항목이 없습니다.'); return; }
+  if(!confirm(`선택된 ${total}개를 삭제합니다.\nGitHub 파일은 완전 삭제됩니다.`)) return;
 
-  for(const el of selected){
-    const kind=el.dataset.kind||'github';
+  const failed=[];
+  for(const card of selectedCards){
+    const docId = card.dataset.docId||'';
+    const sp = card.dataset.sourcePath||'';
+    const sourceKind = card.dataset.sourceKind||'';
+    const gridId = card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+    try{
+      if(sourceKind==='github' && sp) await deleteGithubFileByPath(sp);
+      if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
+      card.remove();
+      if(gridId) await saveGridOrder(gridId);
+    }catch(err){ failed.push(`${sp||docId||'카드'}: ${err.message||'삭제 실패'}`); }
+  }
+
+  for(const el of selectedPup){
+    const kind = el.dataset.kind||'github';
     if(kind==='github'){
-      const sourcePath=el.dataset.sourcePath||'';
+      const sp  = el.dataset.sourcePath||'';
+      const sha = el.dataset.sha||'';
       try{
-        if(sourcePath)await deleteGithubFileByPath(sourcePath);
-        const folder=sourcePath.split('/')[0];
-        if(_pupFetchCache[folder])_pupFetchCache[folder]=_pupFetchCache[folder].filter(item=>item.sourcePath!==sourcePath);
-        Object.keys(portfolioData).forEach(key=>{
-          if(Array.isArray(portfolioData[key]))portfolioData[key]=portfolioData[key].filter(item=>item.sourcePath!==sourcePath);
-        });
-      }catch(err){
-        console.error('미등록 파일 삭제 실패:',err);
-        alert(`${sourcePath} 삭제 실패: ${err.message||''}`);
-      }
+        await deleteGithubFileByPath(sp, sha);
+        _pupItems = _pupItems.filter(f=>f.sourcePath !== sp);
+        el.remove();
+      }catch(err){ failed.push(`${sp}: ${err.message||'삭제 실패'}`); }
     }else{
-      const idx=parseInt(el.dataset.linkIdx||'-1');
-      if(idx>=0)_pupLinkItems=_pupLinkItems.filter((_,i)=>i!==idx);
+      const lIdx = parseInt(el.dataset.linkIdx||'0');
+      _pupLinkItems = _pupLinkItems.filter((_,i)=>i!==lIdx);
+      el.remove();
     }
   }
+
+  _pupSelectMode=false;
+  const btn=document.getElementById('pup-btn-select');
+  if(btn) btn.classList.remove('active');
+  document.querySelectorAll('#tab-work .card.select-mode,.pup-item.select-mode').forEach(el=>el.classList.remove('select-mode','selected'));
   pupRender();
+  if(failed.length) alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
 }
 
+// ── 초기화: 등록 카드 회수 + 탭 연동 폴더 전체 파일을 미등록 패널로 통합
+async function pupResetTab(){
+  const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
+  if(!subEl){ alert('탭을 찾을 수 없습니다.'); return; }
+  const folder = pupCurrentFolder();
+  if(!folder){ alert('현재 탭과 연결된 GitHub 폴더가 없습니다.'); return; }
+
+  const cards = [...subEl.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')];
+  if(!confirm(`현재 탭을 초기화합니다.\n\n1) 등록 카드 ${cards.length}개를 미등록 카드로 회수\n2) ${folder} 폴더의 모든 파일을 스캔해 누락 카드 생성\n\n파일 자체는 삭제하지 않습니다.`)) return;
+
+  const byPath = new Map(_pupItems.map(item=>[item.sourcePath,item]));
+  const linkKeys = new Set(_pupLinkItems.map(item=>item.sourcePath||item.url||item.title||''));
+
+  for(const card of cards){
+    const docId      = card.dataset.docId      || '';
+    const sourcePath = card.dataset.sourcePath || '';
+    const url        = card.dataset.url        || '';
+    const sourceKind = card.dataset.sourceKind || '';
+    const title      = card.dataset.title || card.querySelector('.card-title')?.textContent?.trim() || '제목 없음';
+    const name       = sourcePath ? filenameFromPath(sourcePath) : title;
+
+    try{
+      if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
+      card.remove();
+
+      // sourceKind 값이 비어 있는 기존 카드도 sourcePath가 현재 탭 폴더에 속하면 GitHub 파일 카드로 취급한다.
+      // 기존 조건(sourceKind === 'github') 때문에 누락 카드가 link 카드로 빠져 미등록 패널에 생성되지 않는 문제가 있었다.
+      if(sourcePath && sourcePath.startsWith(folder+'/')){
+        if(!byPath.has(sourcePath)){
+          const item={name, sourcePath, url, sha:card.dataset.sha||''};
+          byPath.set(sourcePath,item);
+        }
+      }else{
+        const key=sourcePath||url||title;
+        if(key && !linkKeys.has(key)){
+          _pupLinkItems.push({title, url, docId, sourcePath});
+          linkKeys.add(key);
+        }
+      }
+    }catch(e){
+      console.error('초기화 카드 회수 실패', e);
+    }
+  }
+
+  const githubFiles = await pupFetchGithubFiles();
+  githubFiles.forEach(file=>{
+    if(!byPath.has(file.sourcePath)) byPath.set(file.sourcePath,file);
+  });
+
+  console.log('[pupResetTab]', {
+    tab:_pupCurrentTab,
+    folder,
+    recoveredCards:cards.length,
+    githubFiles:githubFiles.length,
+    finalUnregistered:byPath.size
+  });
+
+  _pupItems = [...byPath.values()];
+  _pupLinkItems = _pupLinkItems.filter((item, idx, arr)=>{
+    const key=item.sourcePath||item.url||item.title||String(idx);
+    return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key)===idx;
+  });
+
+  await Promise.all([...subEl.querySelectorAll('.grid-3[id],.grid-2[id]')].map(g=>saveGridOrder(g.id)));
+  pupRender();
+  setupDragSortable();
+}
+
+
+
+// 현재 포트폴리오 탭 전체 선택 모드: 카드 클릭 선택 처리
+if(!window.__vonaPortfolioSelectionClickBound){
+  window.__vonaPortfolioSelectionClickBound=true;
+  document.addEventListener('click',function(e){
+    if(!_pupSelectMode)return;
+    const card=e.target.closest('#port-sub-'+_pupCurrentTab+' .card.generated-card, #port-sub-'+_pupCurrentTab+' .card[data-source-path], #port-sub-'+_pupCurrentTab+' .card[data-doc-id]');
+    if(card && !e.target.closest('.card-edit,.card-del')){
+      e.preventDefault();e.stopPropagation();
+      card.classList.toggle('selected');
+      pupUpdateCount();
+    }
+  },true);
+}
+
+/* ── updateEditorVisibility 연동은 기존 upShow/upHide 재사용 ── */
+
+
+// 미등록 패널에서 여러 파일 업로드 → 현재 탭의 첫 번째 그리드 기준
 function pupOpenBatchUpload(){
-  const sub=document.getElementById('port-sub-'+_pupCurrentTab);
-  const grid=sub?.querySelector('.grid-3,.grid-2');
-  if(!grid){alert('업로드할 섹션을 찾지 못했습니다.');return;}
-  openBatchUpload(grid.id);
+  if(!isAdmin){ alert('관리자 로그인 후 사용할 수 있습니다.'); return; }
+  const tabKey = _pupCurrentTab;
+  // 해당 탭의 첫 번째 grid ID 찾기
+  const subEl = document.getElementById('port-sub-'+tabKey);
+  if(!subEl){ alert('탭을 선택해주세요.'); return; }
+  const firstGrid = subEl.querySelector('.grid-3[id], .grid-2[id]');
+  if(!firstGrid){ alert('업로드 대상 그리드를 찾을 수 없습니다.'); return; }
+  openBatchUpload(firstGrid.id);
 }
 
 </script>
