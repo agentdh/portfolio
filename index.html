@@ -4356,9 +4356,15 @@ async function pupFetchGithubFiles(){
   const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
     const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-store'});
-    if(!res.ok) return [];
+    if(!res.ok){
+      console.warn('GitHub 폴더 스캔 실패:', folder, res.status, res.statusText);
+      return [];
+    }
     const files = await res.json();
-    if(!Array.isArray(files)) return [];
+    if(!Array.isArray(files)){
+      console.warn('GitHub 폴더 응답이 배열이 아님:', folder, files);
+      return [];
+    }
     return files
       .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
       .map(f=>({
@@ -4603,7 +4609,9 @@ async function pupResetTab(){
       if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
       card.remove();
 
-      if(sourceKind==='github' && sourcePath && sourcePath.startsWith(folder+'/')){
+      // sourceKind 값이 비어 있는 기존 카드도 sourcePath가 현재 탭 폴더에 속하면 GitHub 파일 카드로 취급한다.
+      // 기존 조건(sourceKind === 'github') 때문에 누락 카드가 link 카드로 빠져 미등록 패널에 생성되지 않는 문제가 있었다.
+      if(sourcePath && sourcePath.startsWith(folder+'/')){
         if(!byPath.has(sourcePath)){
           const item={name, sourcePath, url, sha:card.dataset.sha||''};
           byPath.set(sourcePath,item);
@@ -4623,6 +4631,14 @@ async function pupResetTab(){
   const githubFiles = await pupFetchGithubFiles();
   githubFiles.forEach(file=>{
     if(!byPath.has(file.sourcePath)) byPath.set(file.sourcePath,file);
+  });
+
+  console.log('[pupResetTab]', {
+    tab:_pupCurrentTab,
+    folder,
+    recoveredCards:cards.length,
+    githubFiles:githubFiles.length,
+    finalUnregistered:byPath.size
   });
 
   _pupItems = [...byPath.values()];
