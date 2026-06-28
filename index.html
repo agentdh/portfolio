@@ -354,8 +354,8 @@ color:var(--cyan);
 
 
 /* ── 관리자 미등록 이미지 패널 ── */
-#page-wrap{display:flex;align-items:flex-start;position:relative;}
-#main-area{flex:1;min-width:0;}
+#page-wrap{display:flex;align-items:flex-start;position:relative;gap:0;}
+#main-area{flex:1;min-width:0;overflow:hidden;}
 #unregistered-panel{
   width:260px;flex-shrink:0;margin-left:16px;
   position:sticky;top:72px;max-height:calc(100vh - 90px);
@@ -389,13 +389,15 @@ color:var(--cyan);
 @media(max-width:1100px){#unregistered-panel{display:none!important;}}
 
 /* ══ 포트폴리오 탭 레이아웃 ══ */
-#port-layout{display:flex;gap:16px;align-items:flex-start;}
+#port-layout{display:block;}
 #port-unrg-panel{
-  width:220px;flex-shrink:0;
+  width:240px;flex-shrink:0;
   position:sticky;top:72px;max-height:calc(100vh - 90px);
   display:none;flex-direction:column;
   background:var(--bg2);border:1px solid var(--border2);
   border-radius:var(--radius);overflow:hidden;
+  margin-left:12px;
+  align-self:flex-start;
 }
 #port-unrg-panel.admin-visible{display:flex;}
 #port-grids{flex:1;min-width:0;}
@@ -432,6 +434,24 @@ color:var(--cyan);
 
 /* 드래그 타깃 강조 */
 .grid-3.pup-drop-target,.grid-2.pup-drop-target{outline:2px dashed var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.04);}
+
+.pup-upload-area{padding:6px 12px 8px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.pup-upload-btn{
+  width:100%;padding:8px 10px;
+  background:rgba(0,229,255,.06);
+  border:1px dashed rgba(0,229,255,.25);
+  border-radius:6px;color:var(--cyan);
+  font-size:10px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:6px;
+  transition:all .15s;
+}
+.pup-upload-btn:hover{background:rgba(0,229,255,.12);border-color:rgba(0,229,255,.5);}
+.pup-upload-btn svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
+.pup-upload-btn small{font-size:9px;color:var(--text-dim);margin-left:auto;}
+
+.pup-item-link{cursor:default;}
+.pup-item-link.pup-item{cursor:pointer;}
+.pup-thumb-link{display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--cyan);}
 </style>
 </head>
 <body>
@@ -686,26 +706,6 @@ color:var(--cyan);
   <!-- 포트폴리오 레이아웃: 미등록 패널(좌) + 그리드(우) -->
   <div id="port-layout">
 
-    <!-- ── 미등록 이미지 패널 (관리자 전용, 좌측 고정) ── -->
-    <div id="port-unrg-panel">
-      <div class="pup-header">
-        <div class="pup-title">미등록 이미지</div>
-        <div class="pup-folder" id="pup-folder-label"></div>
-        <div class="pup-actions">
-          <button class="pup-btn" id="pup-btn-select" onclick="pupToggleSelect()">다중선택</button>
-          <button class="pup-btn danger" onclick="pupDeleteSelected()">선택삭제</button>
-          <button class="pup-btn" onclick="pupReload()">↺ 리로드</button>
-          <button class="pup-btn warn" onclick="pupResetTab()">초기화</button>
-        </div>
-      </div>
-      <div class="pup-list" id="pup-list">
-        <div class="pup-empty">탭을 선택하면 해당 폴더의 미등록 파일이 표시됩니다.</div>
-      </div>
-      <div class="pup-status">
-        <span id="pup-count">0개</span>
-        <span id="pup-sel-count" style="display:none">0개 선택</span>
-      </div>
-    </div>
 
     <!-- ── 메인 그리드 영역 ── -->
     <div id="port-grids">
@@ -2361,6 +2361,34 @@ color:var(--cyan);
 </div><!-- /main-area -->
 
 
+
+<!-- ── 미등록 카드 패널 (관리자 전용) ── -->
+<div id="port-unrg-panel">
+  <div class="pup-header">
+    <div class="pup-title">미등록 카드</div>
+    <div class="pup-folder" id="pup-folder-label"></div>
+    <div class="pup-actions">
+      <button class="pup-btn" id="pup-btn-select" onclick="pupToggleSelect()">다중선택</button>
+      <button class="pup-btn danger" onclick="pupDeleteSelected()">선택삭제</button>
+      <button class="pup-btn" onclick="pupReload()">↺ 리로드</button>
+      <button class="pup-btn warn" onclick="pupResetTab()">초기화</button>
+    </div>
+    <div class="pup-upload-area">
+      <button class="pup-upload-btn" id="pup-upload-btn" onclick="pupOpenBatchUpload()">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        여러 파일 업로드
+        <small>이미지·GIF·영상</small>
+      </button>
+    </div>
+  </div>
+  <div class="pup-list" id="pup-list">
+    <div class="pup-empty">탭을 선택하면 해당 폴더의 미등록 파일이 표시됩니다.</div>
+  </div>
+  <div class="pup-status">
+    <span id="pup-count">0개</span>
+    <span id="pup-sel-count" style="display:none">0개 선택</span>
+  </div>
+</div>
 </div><!-- /page-wrap -->
 
 <!-- MODALS -->
@@ -4217,7 +4245,8 @@ function getBestColumns(count){
    포트폴리오 탭 전용 함수
    ════════════════════════════════════════ */
 let _pupCurrentTab = 'thumbnail'; // 현재 선택 탭
-let _pupItems      = [];          // 미등록 파일 목록
+let _pupItems      = [];          // 미등록 GitHub 파일 목록
+let _pupLinkItems  = [];          // 미등록 링크/기타 카드 목록
 let _pupSelectMode = false;
 
 // ── 탭 전환 (포트폴리오 전용)
@@ -4329,12 +4358,15 @@ function pupDeduplicateGrids(){
 function pupRender(){
   const listEl = document.getElementById('pup-list');
   if(!listEl) return;
-  if(!_pupItems.length){
-    listEl.innerHTML='<div class="pup-empty">미등록 파일 없음</div>';
+  const total = _pupItems.length + _pupLinkItems.length;
+  if(!total){
+    listEl.innerHTML='<div class="pup-empty">미등록 카드 없음</div>';
     pupUpdateCount();
     return;
   }
   listEl.innerHTML='';
+
+  // GitHub 파일 아이템
   _pupItems.forEach((item, idx)=>{
     const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(item.name);
     const el = document.createElement('div');
@@ -4345,6 +4377,7 @@ function pupRender(){
     el.dataset.name       = item.name;
     el.dataset.sha        = item.sha;
     el.dataset.idx        = idx;
+    el.dataset.kind       = 'github';
     el.innerHTML = `
       ${isImg
         ? `<img class="pup-thumb" src="${item.url}" loading="lazy" onerror="this.style.display='none'">`
@@ -4358,17 +4391,37 @@ function pupRender(){
     });
     listEl.appendChild(el);
   });
-  // 드래그 바인딩
+
+  // 링크/기타 카드 아이템
+  _pupLinkItems.forEach((item, idx)=>{
+    const el = document.createElement('div');
+    el.className='pup-item pup-item-link';
+    el.dataset.kind   = 'link';
+    el.dataset.url    = item.url||'';
+    el.dataset.title  = item.title||'';
+    el.dataset.linkIdx= idx;
+    el.innerHTML = `
+      <div class="pup-thumb pup-thumb-link">🔗</div>
+      <div class="pup-info">
+        <div class="pup-name">${item.title||'제목 없음'}</div>
+        <div class="pup-path">${item.url||''}</div>
+      </div>`;
+    el.addEventListener('click', ()=>{
+      if(_pupSelectMode){ el.classList.toggle('selected'); pupUpdateCount(); }
+    });
+    listEl.appendChild(el);
+  });
+
   if(window.__bindPupDrag) window.__bindPupDrag();
   pupUpdateCount();
 }
 
 function pupUpdateCount(){
-  const cnt  = document.querySelectorAll('.pup-item').length;
-  const sel  = document.querySelectorAll('.pup-item.selected').length;
+  const total = document.querySelectorAll('.pup-item').length;
+  const sel   = document.querySelectorAll('.pup-item.selected').length;
   const cntEl = document.getElementById('pup-count');
   const selEl = document.getElementById('pup-sel-count');
-  if(cntEl) cntEl.textContent = cnt+'개';
+  if(cntEl) cntEl.textContent = total+'개';
   if(selEl){ selEl.textContent=sel+'개 선택'; selEl.style.display=sel?'':'none'; }
 }
 
@@ -4387,45 +4440,85 @@ function pupToggleSelect(){
 async function pupDeleteSelected(){
   const selected = [...document.querySelectorAll('.pup-item.selected')];
   if(!selected.length){ alert('선택된 항목이 없습니다.'); return; }
-  if(!confirm(`선택된 ${selected.length}개 파일을 GitHub에서 완전 삭제합니다.`)) return;
+  if(!confirm(`선택된 ${selected.length}개를 삭제합니다.\nGitHub 파일은 완전 삭제됩니다.`)) return;
   for(const el of selected){
-    const sp  = el.dataset.sourcePath||'';
-    const sha = el.dataset.sha||'';
-    try{
-      await deleteGithubFileByPath(sp, sha);
-      _pupItems = _pupItems.filter(f=>f.sourcePath !== sp);
+    const kind = el.dataset.kind||'github';
+    if(kind==='github'){
+      const sp  = el.dataset.sourcePath||'';
+      const sha = el.dataset.sha||'';
+      try{
+        await deleteGithubFileByPath(sp, sha);
+        _pupItems = _pupItems.filter(f=>f.sourcePath !== sp);
+        el.remove();
+      }catch(err){ console.error('삭제 실패', sp, err); }
+    } else {
+      // 링크 카드: 목록에서만 제거
+      const lIdx = parseInt(el.dataset.linkIdx||'0');
+      _pupLinkItems = _pupLinkItems.filter((_,i)=>i!==lIdx);
       el.remove();
-    }catch(err){ console.error('삭제 실패', sp, err); }
+    }
   }
   _pupSelectMode=false;
   const btn=document.getElementById('pup-btn-select');
   if(btn) btn.classList.remove('active');
-  pupUpdateCount();
+  pupRender();
 }
 
 // ── 초기화: 현재 탭 등록 카드 → 모두 미등록 패널로
 async function pupResetTab(){
   const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
   if(!subEl){ alert('탭을 찾을 수 없습니다.'); return; }
+  // 등록된 카드 전체 (github + link 모두)
   const cards = [...subEl.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')];
   if(!cards.length){ alert('초기화할 카드가 없습니다.'); return; }
-  if(!confirm(`${cards.length}개 카드를 초기화합니다.
-파일은 삭제되지 않으며 등록 상태만 해제됩니다.`)) return;
+  if(!confirm(`${cards.length}개 카드를 초기화합니다.\n파일은 삭제되지 않으며 등록 상태만 해제됩니다.`)) return;
+
   for(const card of cards){
-    const docId = card.dataset.docId||'';
+    const docId     = card.dataset.docId     || '';
+    const sourcePath= card.dataset.sourcePath|| '';
+    const url       = card.dataset.url       || '';
+    const sourceKind= card.dataset.sourceKind|| '';
+    const title     = card.dataset.title     || card.querySelector('.card-title')?.textContent?.trim() || '';
+    const name      = sourcePath ? sourcePath.split('/').pop() : '';
+
     try{
       if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete();
       card.remove();
+
+      // 미등록 패널에 항목 추가
+      // github 파일: pup-item으로 추가
+      // link 카드: 별도 link 아이템으로 추가
+      if(sourceKind === 'github' && sourcePath){
+        // _pupItems에 추가 (현재 탭 폴더에 해당하는 경우만)
+        const folder = pupCurrentFolder();
+        if(sourcePath.startsWith(folder+'/')){
+          if(!_pupItems.find(f=>f.sourcePath===sourcePath)){
+            _pupItems.push({name, sourcePath, url, sha: card.dataset.sha||''});
+          }
+        }
+      } else {
+        // link/기타 카드 → 패널에 link 아이템으로 추가
+        _pupLinkItems.push({title, url, docId, sourcePath});
+      }
     }catch(e){ console.error('초기화 실패', e); }
   }
-  // autoFolderItems에서 해당 탭 항목 제거 후 미등록 패널 갱신
-  const folder = pupCurrentFolder();
-  autoFolderItems = autoFolderItems.filter(f => !f.sourcePath?.startsWith(folder+'/') ||
-    !Object.keys(GITHUB_FOLDER_MAP).filter(k=>GITHUB_FOLDER_MAP[k]===folder).includes(f.grid));
-  await pupReload();
+  pupRender();
 }
 
 /* ── updateEditorVisibility 연동은 기존 upShow/upHide 재사용 ── */
+
+
+// 미등록 패널에서 여러 파일 업로드 → 현재 탭의 첫 번째 그리드 기준
+function pupOpenBatchUpload(){
+  if(!isAdmin){ alert('관리자 로그인 후 사용할 수 있습니다.'); return; }
+  const tabKey = _pupCurrentTab;
+  // 해당 탭의 첫 번째 grid ID 찾기
+  const subEl = document.getElementById('port-sub-'+tabKey);
+  if(!subEl){ alert('탭을 선택해주세요.'); return; }
+  const firstGrid = subEl.querySelector('.grid-3[id], .grid-2[id]');
+  if(!firstGrid){ alert('업로드 대상 그리드를 찾을 수 없습니다.'); return; }
+  openBatchUpload(firstGrid.id);
+}
 
 </script>
 </body>
