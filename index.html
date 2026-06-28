@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+
 :root{
   --bg:#0D0D14;--bg2:#13131F;--bg3:#1A1A2E;
   --surface:#16161F;--surface2:#1e1e2c;
@@ -512,7 +513,9 @@ color:var(--cyan);
 }
 
 .card.selected{outline:2px solid var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.06);}
+
 </style>
+
 </head>
 <body>
 <div id="page-wrap">
@@ -2430,7 +2433,7 @@ color:var(--cyan);
     <div class="pup-actions">
       <button class="pup-btn" id="pup-btn-select" onclick="pupToggleSelect()">다중선택</button>
       <button class="pup-btn danger" onclick="pupDeleteSelected()">선택삭제</button>
-      <button class="pup-btn" onclick="pupReload(true)">↺ 리로드</button>
+      <button class="pup-btn" onclick="pupRenderFromData()">↺ 리로드</button>
       <button class="pup-btn warn" onclick="pupResetTab()">초기화</button>
     </div>
     <div class="pup-upload-area">
@@ -2495,15 +2498,18 @@ color:var(--cyan);
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 
+<!-- 포트폴리오 매니저 (JSON 기반) -->
+<script src="./portfolio-manager.js"></script>
 <script>
+
 /* ── MAIN TAB ── */
 function switchTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
-  if(id==='work' && isAdmin) upShow();
-  else upHide();
+  if(id==='work' && isAdmin) pupShowPanel();
+  else pupHidePanel();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -2856,7 +2862,6 @@ function updateEditorVisibility(){
   document.querySelectorAll('.card-add,.card-multi-upload,.section-admin-controls,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
     el.style.display=isAdmin ? '' : 'none';
   });
-  // upShow는 탭 전환/로그인 시에만 호출 - 여기서 호출하면 setupDragSortable 연쇄 API 폭발
   setupDragSortable();
 }
 
@@ -2890,7 +2895,7 @@ window.addEventListener('DOMContentLoaded',()=>{
       btn.textContent=isAdmin?'로그아웃':'관리자 로그인';
       btn.onclick=isAdmin?logoutGoogle:loginWithGoogle;
       updateEditorVisibility();
-      if(document.getElementById('tab-work')?.classList.contains('active')){ if(isAdmin)upShow(); else upHide(); }
+      if(document.getElementById('tab-work')?.classList.contains('active')){ if(isAdmin)pupShowPanel(); else pupHidePanel(); }
     });
   }else{
     btn.textContent='관리자 로그인';
@@ -2950,7 +2955,6 @@ const CATEGORY_FOLDER={
 };
 const IMAGE_EXTS=['jpg','jpeg','png','gif','webp','avif'];
 const VIDEO_EXTS=['mp4','webm','mov'];
-let autoFolderItems=[];
 
 
 function getProfileDoc(){return db.collection(PROFILE_DOC_PATH[0]).doc(PROFILE_DOC_PATH[1]);}
@@ -3014,43 +3018,8 @@ function autoDocIdFromSource(sourcePath){
   }
   return 'auto_'+Math.abs(h);
 }
-async function fetchGithubFolder(gridId,folderPath){
-  const api=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folderPath).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
-  try{
-    const res=await fetch(api,{headers:{'Accept':'application/vnd.github+json'}});
-    if(!res.ok)return [];
-    const files=await res.json();
-    if(!Array.isArray(files))return [];
-    return files
-      .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
-      .map(f=>({
-        grid:gridId,
-        type:getMediaTypeByName(f.name),
-        title:titleFromFilename(f.name),
-        desc:'',
-        url:f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folderPath}/${f.name}`,
-        sourcePath:`${folderPath}/${f.name}`,
-        sourceKind:'github'
-      }));
-  }catch(err){
-    console.warn('GitHub 폴더 스캔 실패:',folderPath,err);
-    return [];
-  }
-}
-async function loadGithubFolderItems(){
-  autoFolderItems=[];
-  // 폴더 중복 제거: 같은 폴더를 여러 grid가 가리켜도 1번만 스캔
-  // 기본 gridId = 해당 폴더를 가리키는 첫 번째 grid
-  const folderToGrid={};
-  Object.entries(GITHUB_FOLDER_MAP).forEach(([gridId,folder])=>{
-    if(!(folder in folderToGrid)) folderToGrid[folder]=gridId;
-  });
-  const results=await Promise.all(
-    Object.entries(folderToGrid).map(([folder,gridId])=>fetchGithubFolder(gridId,folder))
-  );
-  autoFolderItems=results.flat();
-  return autoFolderItems;
-}
+
+
 
 function sanitizeUploadFilename(name){
   const original=String(name||'file');
@@ -3693,14 +3662,12 @@ function insertCardToGrid(item,docId){
   const grid=document.getElementById(item.grid);
   if(!grid)return;
   if(docId&&grid.querySelector(`[data-doc-id="${docId}"]`))return;
-  // 빈 placeholder 제거
   grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
   const addCard=grid.querySelector('.card-add');
   const card=makeCardEl(item,docId);
   if(addCard)grid.insertBefore(card,addCard);
   else grid.appendChild(card);
-  updateEmptyGrids();
-  setupDragSortable();
+  // setupDragSortable은 bulk 렌더 후 1회만 호출 - 여기서 호출 금지
 }
 
 function setupMultiUploadButtons(){
@@ -3786,8 +3753,6 @@ async function handleBatchUpload(input){
 
 
 let selectionModeGrid='';
-let _pupGithubCache={};  // 폴더별 캐시 {folder:[...] | null}
-let _pupFetching={};     // 중복 fetch 방지
 const selectedCardKeys=new Set();
 function cardSelectionKey(card){
   return card?.dataset?.docId || card?.dataset?.sourcePath || card?.dataset?.staticKey || '';
@@ -3871,75 +3836,10 @@ function setupSectionAdminControls(){
   });
   updateEditorVisibility();
 }
-async function cleanupMissingGithubMetadata(gridId){
-  if(!FIRESTORE_READY)return;
-  const existing=new Set(autoFolderItems.filter(item=>!gridId || item.grid===gridId).map(item=>item.sourcePath).filter(Boolean));
-  try{
-    const snap=await getCardsCol().get();
-    const jobs=[];
-    snap.forEach(doc=>{
-      const item=doc.data();
-      if(item.sourceKind==='github' && item.sourcePath && (!gridId || item.grid===gridId) && !existing.has(item.sourcePath)){
-        jobs.push(getCardsCol().doc(doc.id).delete());
-      }
-    });
-    await Promise.allSettled(jobs);
-  }catch(err){console.warn('없는 GitHub 카드 정리 실패:',err);}
-}
-async function reloadPortfolioClean(gridId){
-  // 섹션별 리로드는 더 이상 카드 재생성/재배치를 하지 않는다.
-  // 실제 리로드 정리는 미등록 패널의 pupReload()에서 현재 탭 전체 기준으로만 수행한다.
-  if(!isAdmin){alert('관리자 로그인 후 사용할 수 있습니다.');return;}
-  await pupReload();
-}
 
-async function loadCards(){
-  const metaBySource={};
-  const metaByStaticKey={};
-  const linkItems=[];
 
-  if(FIRESTORE_READY){
-    try{
-      const snap=await getCardsCol().orderBy('createdAt','asc').get();
-      snap.forEach(doc=>{
-        const item=doc.data(); item._docId=doc.id;
-        if(item.sourcePath)     metaBySource[item.sourcePath]=item;
-        else if(item.staticKey) metaByStaticKey[item.staticKey]=item;
-        else                    linkItems.push(item);
-      });
-    }catch(err){
-      console.error('Firestore 로드 실패:', err);
-    }
-  }
 
-  // Firestore에 등록된 GitHub 카드만 그리드에 렌더링
-  Object.values(metaBySource).forEach(item=>{
-    if(!item.sourcePath||!item.grid)return;
-    insertCardToGrid({...item,sourceKind:'github'},item._docId||autoDocIdFromSource(item.sourcePath));
-  });
 
-  // 링크 등 sourcePath 없는 카드
-  linkItems.forEach(item=>insertCardToGrid(item,item._docId));
-
-  applyStaticMetadata(metaByStaticKey);
-  enhanceStaticPortfolioCards();
-  setupMultiUploadButtons();
-  setupSectionAdminControls();
-
-  // GitHub 파일 중 Firestore에 미등록인 것 → 미등록 패널(_pupItems)
-  const registeredPaths=new Set(Object.keys(metaBySource));
-  _pupItems=autoFolderItems
-    .filter(item=>!registeredPaths.has(item.sourcePath))
-    .map(item=>({
-      name:filenameFromPath(item.sourcePath),
-      sourcePath:item.sourcePath,
-      url:item.url,
-      sha:item.sha||''
-    }));
-  // 패널이 열려있으면 바로 렌더
-  const panel=document.getElementById('port-unrg-panel');
-  if(panel&&panel.classList.contains('admin-visible')) pupRender();
-}
 
 async function saveCard(item){
   if(!ensureFirestore())return null;
@@ -4263,30 +4163,9 @@ async function saveProfile(){
   closeModal('profileModal');
 }
 
-window.addEventListener('DOMContentLoaded',async()=>{
-  loadProfile();
-  await loadGridOrder();
-  await loadGithubFolderItems();
-  // loadGithubFolderItems 결과를 캐시에 저장 → 탭 전환 시 재스캔 없음
-  if(autoFolderItems.length){
-    const ff={};
-    autoFolderItems.forEach(item=>{
-      const folder=GITHUB_FOLDER_MAP[item.grid];
-      if(!folder)return;
-      if(!ff[folder])ff[folder]=[];
-      if(!ff[folder].find(f=>f.sourcePath===item.sourcePath))
-        ff[folder].push({name:item.sourcePath.split('/').pop(),sourcePath:item.sourcePath,url:item.url,sha:item.sha||''});
-    });
-    Object.entries(ff).forEach(([f,files])=>{ _pupGithubCache[f]=files; });
-    console.log('초기 캐시:', Object.keys(ff).length, '폴더');
-  }
-  await loadCards();
-  applyAllGridOrders();
-  setupDragSortable();
-  const workActive=document.getElementById('tab-work')?.classList.contains('active');
-  if(workActive && isAdmin) upShow();
-  updateEmptyGrids();
-});
+window.
+// DOMContentLoaded → portfolio-manager.js가 처리
+;;
 
 /* ── FADE IN ── */
 const obs=new IntersectionObserver(entries=>{
@@ -4354,30 +4233,18 @@ let _pupSelectMode = false;
 
 // ── 탭 전환 (포트폴리오 전용)
 function switchPortTab(tabKey, btn){
-  // 서브탭 버튼 active
   document.querySelectorAll('#port-grids .sub-tab').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  // 서브패널 active
   document.querySelectorAll('#port-grids .port-sub').forEach(p=>p.classList.remove('active'));
   const panel = document.getElementById('port-sub-'+tabKey);
   if(panel) panel.classList.add('active');
   _pupCurrentTab = tabKey;
-  // 미등록 패널 갱신
-  if(isAdmin) pupReload(false);
+  // JSON 캐시 기반 렌더 - API 호출 없음
+  if(isAdmin) pupRenderFromData();
 }
 
 // ── 패널 표시/숨김: 포트폴리오 탭에서만 우측 공백에 overlay로 표시
-function upShow(){
-  const panel = document.getElementById('port-unrg-panel');
-  if(!panel) return;
-  const workActive = document.getElementById('tab-work')?.classList.contains('active');
-  if(isAdmin && workActive){
-    panel.classList.add('admin-visible');
-    pupReload(false);
-  }else{
-    panel.classList.remove('admin-visible');
-  }
-}
+
 function upHide(){
   const panel = document.getElementById('port-unrg-panel');
   if(panel) panel.classList.remove('admin-visible');
@@ -4399,74 +4266,10 @@ function pupRegisteredPaths(){
 }
 
 // ── 현재 탭 GitHub 폴더 파일 스캔
-async function pupFetchGithubFiles(force=false){
-  const folder = pupCurrentFolder();
-  if(!folder) return [];
-  // 캐시 HIT → API 호출 없이 반환
-  if(!force && folder in _pupGithubCache) return _pupGithubCache[folder] || [];
-  // 동일 폴더 fetch 진행 중 → 같은 Promise 재사용
-  if(folder in _pupFetching) return _pupFetching[folder];
-  const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
-  _pupFetching[folder] = (async()=>{
-    try{
-      const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}});
-      if(!res.ok){
-        console.warn(`GitHub API ${res.status}: ${folder}`);
-        if(!(folder in _pupGithubCache)) _pupGithubCache[folder] = null;
-        return _pupGithubCache[folder] || [];
-      }
-      const files = await res.json();
-      if(!Array.isArray(files)) return _pupGithubCache[folder] || [];
-      const mapped = files
-        .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
-        .map(f=>({
-          name: f.name,
-          sourcePath: `${folder}/${f.name}`,
-          url: f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folder}/${f.name}`,
-          sha: f.sha||''
-        }));
-      _pupGithubCache[folder] = mapped;
-      return mapped;
-    }catch(e){
-      console.warn('폴더 스캔 실패:', folder, e);
-      return _pupGithubCache[folder] || [];
-    }finally{
-      delete _pupFetching[folder];
-    }
-  })();
-  return _pupFetching[folder];
-}
+
 
 // ── 리로드: 깨진 카드 제거 + 중복 제거 + 미등록 목록 재구성. 등록 위치 이동 금지.
-async function pupReload(force=false){
-  const listEl   = document.getElementById('pup-list');
-  const folderEl = document.getElementById('pup-folder-label');
-  if(!listEl) return;
-  const folder = pupCurrentFolder();
-  if(folderEl) folderEl.textContent = folder ? '📁 '+folder : '';
-  if(!folder){ listEl.innerHTML='<div class="pup-empty">폴더 매핑 없음</div>'; return; }
-  if(force){ delete _pupGithubCache[folder]; delete _pupFetching[folder]; }
-  const hasCached = folder in _pupGithubCache;
-  if(!hasCached) listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
-  const githubFiles = await pupFetchGithubFiles(false);
-  const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
-  const existingCards = subEl ? subEl.querySelectorAll('.card.generated-card,.card[data-source-path]').length : 0;
-  if(!githubFiles.length && existingCards>0 && _pupGithubCache[folder]===null){
-    listEl.innerHTML='<div class="pup-empty">GitHub 스캔 불가 (기존 카드 유지)</div>'; return;
-  }
-  if(force){
-    const githubPathSet = new Set(githubFiles.map(f=>f.sourcePath));
-    await pupCleanBrokenAndDuplicateCards(githubPathSet);
-  }
-  const registered = pupRegisteredPaths();
-  _pupItems = githubFiles.filter(f => !registered.has(f.sourcePath));
-  _pupLinkItems = _pupLinkItems.filter((item,idx,arr)=>{
-    const key=item.sourcePath||item.url||item.title||String(idx);
-    return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key)===idx;
-  });
-  pupRender();
-  setupDragSortable();
-}
+
 
 // ── 중복 카드 정리 (같은 sourcePath 여러 개 → 1개 유지)
 async function pupCleanBrokenAndDuplicateCards(githubPathSet){
@@ -4655,71 +4458,31 @@ GitHub 파일 및 DB에서 완전 삭제됩니다.`)) return;
 
 // ── 초기화: 등록 카드 회수 + 탭 연동 폴더 전체 파일을 미등록 패널로 통합
 async function pupResetTab(){
-  const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
-  if(!subEl){ alert('탭을 찾을 수 없습니다.'); return; }
-  const folder = pupCurrentFolder();
-  if(!folder){ alert('현재 탭과 연결된 GitHub 폴더가 없습니다.'); return; }
-
-  const cards = [...subEl.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')];
-  if(!confirm(`현재 탭을 초기화합니다.\n\n1) 등록 카드 ${cards.length}개를 미등록 카드로 회수\n2) ${folder} 폴더의 모든 파일을 스캔해 누락 카드 생성\n\n파일 자체는 삭제하지 않습니다.`)) return;
-
-  const byPath = new Map(_pupItems.map(item=>[item.sourcePath,item]));
-  const linkKeys = new Set(_pupLinkItems.map(item=>item.sourcePath||item.url||item.title||''));
-
+  const subEl=document.getElementById('port-sub-'+_pupCurrentTab);
+  if(!subEl){alert('탭을 찾을 수 없습니다.');return;}
+  const cards=[...subEl.querySelectorAll('.card.generated-card,.card[data-source-path],.card[data-doc-id]')];
+  if(!confirm(`${cards.length}개 카드를 초기화합니다.\n파일은 삭제되지 않습니다.`))return;
   for(const card of cards){
-    const docId      = card.dataset.docId      || '';
-    const sourcePath = card.dataset.sourcePath || '';
-    const url        = card.dataset.url        || '';
-    const sourceKind = card.dataset.sourceKind || '';
-    const title      = card.dataset.title || card.querySelector('.card-title')?.textContent?.trim() || '제목 없음';
-    const name       = sourcePath ? filenameFromPath(sourcePath) : title;
-
+    const docId=card.dataset.docId||'';
+    const sourcePath=card.dataset.sourcePath||'';
+    const sourceKind=card.dataset.sourceKind||'';
+    const url=card.dataset.url||'';
+    const title=card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
+    const name=sourcePath?filenameFromPath(sourcePath):title;
     try{
-      if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
+      if(FIRESTORE_READY&&docId)await getCardsCol().doc(docId).delete().catch(()=>{});
       card.remove();
-
-      // sourceKind 값이 비어 있는 기존 카드도 sourcePath가 현재 탭 폴더에 속하면 GitHub 파일 카드로 취급한다.
-      // 기존 조건(sourceKind === 'github') 때문에 누락 카드가 link 카드로 빠져 미등록 패널에 생성되지 않는 문제가 있었다.
-      if(sourcePath && sourcePath.startsWith(folder+'/')){
-        if(!byPath.has(sourcePath)){
-          const item={name, sourcePath, url, sha:card.dataset.sha||''};
-          byPath.set(sourcePath,item);
-        }
+      if(sourceKind==='github'&&sourcePath){
+        if(!_pupItems.find(f=>f.sourcePath===sourcePath))
+          _pupItems.push({name,sourcePath,url,sha:card.dataset.sha||''});
       }else{
-        const key=sourcePath||url||title;
-        if(key && !linkKeys.has(key)){
-          _pupLinkItems.push({title, url, docId, sourcePath});
-          linkKeys.add(key);
-        }
+        if(!_pupLinkItems.find(f=>(f.url||f.sourcePath)===(url||sourcePath)))
+          _pupLinkItems.push({title,url,sourcePath,docId});
       }
-    }catch(e){
-      console.error('초기화 카드 회수 실패', e);
-    }
+    }catch(e){console.error('초기화 실패',e);}
   }
-
-  delete _pupGithubCache[pupCurrentFolder()];
-const githubFiles = await pupFetchGithubFiles(true);
-  githubFiles.forEach(file=>{
-    if(!byPath.has(file.sourcePath)) byPath.set(file.sourcePath,file);
-  });
-
-  console.log('[pupResetTab]', {
-    tab:_pupCurrentTab,
-    folder,
-    recoveredCards:cards.length,
-    githubFiles:githubFiles.length,
-    finalUnregistered:byPath.size
-  });
-
-  _pupItems = [...byPath.values()];
-  _pupLinkItems = _pupLinkItems.filter((item, idx, arr)=>{
-    const key=item.sourcePath||item.url||item.title||String(idx);
-    return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key)===idx;
-  });
-
-  await Promise.all([...subEl.querySelectorAll('.grid-3[id],.grid-2[id]')].map(g=>saveGridOrder(g.id)));
+  updateEmptyGrids();
   pupRender();
-  setupDragSortable();
 }
 
 
@@ -4784,6 +4547,8 @@ function handleCardClick(e, card){
   }
 }
 
+
 </script>
+
 </body>
 </html>

@@ -1,0 +1,44 @@
+{
+  "thumbnail-ld": [
+    {
+      "title": "샘플 LD 썸네일",
+      "desc": "예시 항목 - 실제 이미지로 교체하세요",
+      "src": "./images/thumbnail/ld/sample.png",
+      "type": "image"
+    }
+  ],
+  "thumbnail-sd": [],
+  "thumbnail-composite": [],
+  "illust-simple": [],
+  "illust-line": [],
+  "illust-semi-painted": [],
+  "illust-cover": [],
+  "illust-conceptart": [],
+  "work3d-character": [],
+  "work3d-item": [],
+  "work3d-bg": [],
+  "live2d-work": [],
+  "pixel-cursor": [],
+  "pixel-illust": [],
+  "pixel-game": [],
+  "mc-skin": [],
+  "mc-model": [],
+  "mc-animation": [],
+  "mc-resource": [],
+  "mvAnimationGrid": [
+    {
+      "title": "SKY HIGH.배비꼬",
+      "desc": "MV 애니메이션",
+      "src": "https://www.youtube.com/watch?v=example",
+      "type": "video"
+    }
+  ],
+  "animation2DGrid": [],
+  "animation3DGrid": [],
+  "virtualPropGrid": [],
+  "brand-wait": [],
+  "brand-symbol": [],
+  "brand-emote": [],
+  "brand-poster": [],
+  "brand-etc": []
+}
