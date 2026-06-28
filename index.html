@@ -3887,42 +3887,50 @@ async function reloadPortfolioClean(gridId){
 }
 
 async function loadCards(){
-  const firestoreItems=[];
-  const metaBySource={};
+  const metaBySource={};   // sourcePath → Firestore 문서
   const metaByStaticKey={};
+  const linkItems=[];       // sourcePath 없는 카드 (링크 등)
+
   if(FIRESTORE_READY){
     try{
       const snap=await getCardsCol().orderBy('createdAt','asc').get();
       snap.forEach(doc=>{
         const item=doc.data(); item._docId=doc.id;
-        if(item.sourcePath)metaBySource[item.sourcePath]=item;
-        else if(item.staticKey)metaByStaticKey[item.staticKey]=item;
-        else firestoreItems.push(item);
+        if(item.sourcePath)       metaBySource[item.sourcePath]=item;
+        else if(item.staticKey)   metaByStaticKey[item.staticKey]=item;
+        else                      linkItems.push(item);
       });
     }catch(err){
-      console.error('카드 불러오기 실패:',err);
+      console.error('Firestore 로드 실패 (카드 렌더링은 GitHub 기준으로 진행):', err);
     }
   }
-  Object.values(metaBySource).forEach(item=>{
-    if(!item.sourcePath||!item.grid)return;
-    insertCardToGrid({...item,sourceKind:'github'},item._docId||autoDocIdFromSource(item.sourcePath));
+
+  // ── GitHub 파일 기준 렌더링 (무조건)
+  // autoFolderItems = loadGithubFolderItems() 결과 (모든 폴더 파일)
+  autoFolderItems.forEach(item=>{
+    const sp = item.sourcePath;
+    const fsMeta = metaBySource[sp];
+    // Firestore 메타데이터 있으면 grid/title/desc 등 반영
+    const merged = fsMeta
+      ? {...item, ...fsMeta, sourceKind:'github'}
+      : {...item, sourceKind:'github'};
+    const docId = fsMeta?._docId || autoDocIdFromSource(sp);
+    insertCardToGrid(merged, docId);
+    // 렌더됐으면 metaBySource에서 제거 (중복 방지)
+    delete metaBySource[sp];
   });
-  firestoreItems.forEach(item=>insertCardToGrid(item,item._docId));
+
+  // Firestore에 있지만 GitHub 파일은 없는 카드 (링크·수동 추가 등)
+  Object.values(metaBySource).forEach(item=>{
+    if(!item.grid)return;
+    insertCardToGrid(item, item._docId);
+  });
+  linkItems.forEach(item=>insertCardToGrid(item, item._docId));
+
   applyStaticMetadata(metaByStaticKey);
   enhanceStaticPortfolioCards();
   setupMultiUploadButtons();
   setupSectionAdminControls();
-  // Firestore 카드 0개 + GitHub 파일 있음 → fallback 렌더링 (광고차단기 등)
-  const totalFS=Object.keys(metaBySource).length+firestoreItems.length;
-  if(totalFS===0 && autoFolderItems.length>0){
-    console.warn('Firestore 0개 → GitHub fallback 렌더링');
-    autoFolderItems.forEach(item=>{
-      const docId=autoDocIdFromSource(item.sourcePath);
-      const g=document.getElementById(item.grid);
-      if(g && !g.querySelector(`[data-source-path="${item.sourcePath}"]`))
-        insertCardToGrid(item,docId);
-    });
-  }
 }
 
 async function saveCard(item){
