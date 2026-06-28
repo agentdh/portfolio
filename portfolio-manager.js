@@ -185,7 +185,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   // Firestore에서 등록 정보 로드 (grid 위치, 순서 등)
   if (typeof loadGridOrder === 'function') await loadGridOrder();
 
-  // Firestore 카드 메타 로드 후 렌더링
+  // JSON 기본 위치 + Firestore 메타를 합쳐 렌더링
   await loadCardsFromFirestore();
 
   // 드래그/UI 초기화
@@ -204,7 +204,15 @@ window.addEventListener('DOMContentLoaded', async () => {
 //    JSON에 있는 파일 중 Firestore에 grid 저장된 것 → 해당 grid
 //    Firestore에 없는 것 → _pupItems (미등록 패널)
 // ══════════════════════════════════════════════
+function clearRenderedPortfolioCards() {
+  document.querySelectorAll('#tab-work .grid-3[id], #tab-work .grid-2[id]').forEach(grid => {
+    grid.querySelectorAll(':scope > .generated-card, :scope > .pup-empty-grid-card').forEach(el => el.remove());
+  });
+}
+
 async function loadCardsFromFirestore() {
+  clearRenderedPortfolioCards();
+
   const metaBySource = {};
   const metaByStaticKey = {};
   const linkItems = [];
@@ -239,29 +247,25 @@ async function loadCardsFromFirestore() {
   allJsonItems.forEach(item => {
     const src = item.src || item.url || '';
     const fsMeta = metaBySource[src];
-    if (fsMeta && fsMeta.grid) {
-      // Firestore에 grid 저장됨 → 해당 grid에 렌더
-      if (typeof insertCardToGrid === 'function') {
-        insertCardToGrid({
-          grid: fsMeta.grid,
-          type: item.type || 'image',
-          title: fsMeta.title || item.title || '',
-          desc: fsMeta.desc || item.desc || '',
-          url: src,
-          sourcePath: src,
-          sourceKind: fsMeta.sourceKind || 'github',
-          sha: item.sha || '',
-        }, fsMeta._docId || src);
-      }
-      delete metaBySource[src];
-    } else {
-      // 미등록 → 패널
-      unregistered.push({
-        name: src.split('/').pop() || item.title || '파일',
-        sourcePath: src,
+    const targetGrid = (fsMeta && fsMeta.grid) ? fsMeta.grid : item.defaultGrid;
+
+    // Firestore 메타가 없어도 portfolio.json의 기본 grid에 반드시 렌더링한다.
+    // 이게 빠지면 모든 카드가 미등록 패널로 빠져 각 탭이 빈 상태가 된다.
+    if (targetGrid && typeof insertCardToGrid === 'function') {
+      insertCardToGrid({
+        grid: targetGrid,
+        type: item.type || 'image',
+        title: (fsMeta && fsMeta.title) || item.title || '',
+        desc: (fsMeta && fsMeta.desc) || item.desc || '',
         url: src,
+        sourcePath: src,
+        sourceKind: (fsMeta && fsMeta.sourceKind) || item.sourceKind || (src.startsWith('http') ? 'link' : 'local'),
         sha: item.sha || '',
-      });
+      }, (fsMeta && fsMeta._docId) || item.docId || src);
+    }
+
+    if (fsMeta) {
+      delete metaBySource[src];
     }
   });
 
