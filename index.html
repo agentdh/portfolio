@@ -521,6 +521,10 @@ color:var(--cyan);
   background:rgba(0,229,255,.075);
 }
 
+
+/* 다중선택 카드 스타일 */
+.card.selectable{cursor:pointer;}
+.card.card-selected{outline:2px solid var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.06);}
 </style>
 </head>
 <body>
@@ -3274,209 +3278,194 @@ async function persistCardGridMove(card,fromGridId,toGridId){
   }
 }
 function setupDragSortable(){
-  updateEmptyGridPlaceholders();
-  let dragCard=null;
-  let dragGridId='';
-  let dragFromPanel=false;
-  let lastDropGridId='';
-  let selectedDragItems=[];
-
+  // 포트폴리오 탭 그리드 카드에 draggable 설정
   document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(grid=>{
     grid.querySelectorAll(':scope > .card').forEach(card=>{
-      if(!isRealPortfolioCard(card))return;
-      card.draggable=!!isAdmin;
-      card.classList.toggle('drag-ready',!!isAdmin);
+      card.draggable = !!isAdmin;
     });
   });
-  document.querySelectorAll('.pup-item').forEach(el=>{ el.draggable=!!isAdmin; });
 
-  if(window.__portfolioDragStart)document.removeEventListener('dragstart',window.__portfolioDragStart,true);
-  if(window.__portfolioDragOver)document.removeEventListener('dragover',window.__portfolioDragOver,true);
-  if(window.__portfolioDrop)document.removeEventListener('drop',window.__portfolioDrop,true);
-  if(window.__portfolioDragEnd)document.removeEventListener('dragend',window.__portfolioDragEnd,true);
+  // 기존 이벤트 제거
+  ['__pDragStart','__pDragOver','__pDrop','__pDragEnd'].forEach(k=>{
+    if(window[k]) document.removeEventListener(k.replace('__p','drag').replace('D','d'), window[k], true);
+  });
+  if(window.__pDragStart) document.removeEventListener('dragstart', window.__pDragStart, true);
+  if(window.__pDragOver)  document.removeEventListener('dragover',  window.__pDragOver,  true);
+  if(window.__pDrop)      document.removeEventListener('drop',      window.__pDrop,      true);
+  if(window.__pDragEnd)   document.removeEventListener('dragend',   window.__pDragEnd,   true);
 
-  function currentTabSub(){ return document.getElementById('port-sub-'+_pupCurrentTab); }
-  function getActiveSelectedItems(origin){
-    if(!_pupSelectMode) return [origin];
-    if(!origin.classList.contains('selected')) return [origin];
-    const sub=currentTabSub();
-    const cards=sub ? [...sub.querySelectorAll('.card.selected')] : [];
-    const pups=[...document.querySelectorAll('.pup-item.selected')];
-    return [...cards,...pups].filter(Boolean);
-  }
-  function makeDragGhost(count,e){
-    if(!e.dataTransfer || count<=1)return;
-    const ghost=document.createElement('div');
-    ghost.className='pup-drag-ghost';
-    ghost.textContent=`${count}개 이동`;
-    document.body.appendChild(ghost);
-    e.dataTransfer.setDragImage(ghost,10,10);
-    setTimeout(()=>ghost.remove(),0);
-  }
-  function isPanelItem(el){ return el && el.classList.contains('pup-item'); }
-  function isCardItem(el){ return el && el.classList.contains('card'); }
-  function getDragAfterElement(grid,x,y){
-    const cards=[...grid.querySelectorAll(':scope > .card')]
-      .filter(card=>isRealPortfolioCard(card) && !selectedDragItems.includes(card) && !card.classList.contains('dragging') && !card.closest('.card-add,.card-multi-upload'));
-    for(const child of cards){
-      const box=child.getBoundingClientRect();
-      const beforeRow = y < box.top + box.height * 0.5;
-      const sameRowBefore = y >= box.top && y <= box.bottom && x < box.left + box.width * 0.5;
-      if(beforeRow || sameRowBefore) return child;
-    }
-    return null;
-  }
-  function markSelectedClasses(items,on){
-    items.forEach(el=>{
-      if(isCardItem(el)) el.classList.toggle('dragging',on);
-      if(isPanelItem(el)) el.classList.toggle('dragging-pup',on);
+  let _dc  = null;      // 드래그 중인 카드
+  let _dgId = '';       // 카드 출발 gridId
+  let _lastGId = '';    // 마지막 dragover gridId
+  let _fromPanel = false;
+  let _selPup = [];     // 패널 다중선택 아이템들
+
+  // ── 패널 아이템 draggable 바인딩
+  function bindPupDrag(){
+    document.querySelectorAll('#port-unrg-panel .pup-item').forEach(el=>{
+      el.draggable = !!isAdmin;
+      el.ondragstart = function(e){
+        if(!isAdmin){ e.preventDefault(); return; }
+        _fromPanel = true;
+        _dc = null; _dgId = ''; _lastGId = '';
+        const sel = [...document.querySelectorAll('#port-unrg-panel .pup-item.selected')];
+        _selPup = sel.length && el.classList.contains('selected') ? sel : [el];
+        el.classList.add('dragging-pup');
+        if(e.dataTransfer){ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain','pup'); }
+      };
+      el.ondragend = function(){
+        el.classList.remove('dragging-pup');
+        _fromPanel = false; _selPup = [];
+        document.querySelectorAll('.pup-drop-target').forEach(g=>g.classList.remove('pup-drop-target'));
+      };
     });
   }
+  bindPupDrag();
+  window.__bindPupDrag = bindPupDrag;
 
-  window.__bindPupDrag=function(){
-    document.querySelectorAll('.pup-item').forEach(el=>{ el.draggable=!!isAdmin; });
-  };
-  window.__bindPupDrag();
+  // ── 다중선택 모드에서 그리드 카드 드래그
+  // (selectionModeGrid가 활성일 때 선택된 카드 전체 이동)
+  let _selCards = []; // 다중선택 카드 목록
 
-  window.__portfolioDragStart=function(e){
-    const panelItem=e.target.closest('.pup-item');
-    const card=e.target.closest('#tab-work .card');
-    if(!isAdmin || e.target.closest('.card-edit,.card-del')){e.preventDefault();return;}
-    if(card && !isRealPortfolioCard(card)){e.preventDefault();return;}
+  window.__pDragStart = function(e){
+    // 패널 아이템은 ondragstart에서 처리
+    if(e.target.closest('#port-unrg-panel')) return;
 
-    if(panelItem){
-      dragFromPanel=true;
-      dragCard=null;
-      dragGridId='';
-      lastDropGridId='';
-      selectedDragItems=getActiveSelectedItems(panelItem);
-      markSelectedClasses(selectedDragItems,true);
-      makeDragGhost(selectedDragItems.length,e);
-      if(e.dataTransfer){
-        e.dataTransfer.effectAllowed='move';
-        e.dataTransfer.setData('text/plain','pup-items');
-      }
-      return;
+    const card = e.target.closest('#tab-work .card');
+    if(!isAdmin || !card || e.target.closest('.card-edit,.card-del')) return;
+
+    _dc = card;
+    _fromPanel = false;
+    _dgId = card.closest('.grid-3,.grid-2')?.id || '';
+    _lastGId = _dgId;
+
+    if(selectionModeGrid && card.classList.contains('card-selected')){
+      // 다중선택 모드: 선택된 카드 전체 드래그
+      _selCards = [...document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.card-selected')];
+    } else {
+      _selCards = [card];
     }
 
-    if(card){
-      dragFromPanel=false;
-      dragCard=card;
-      dragGridId=card.closest('.grid-3,.grid-2')?.id||'';
-      lastDropGridId=dragGridId;
-      selectedDragItems=getActiveSelectedItems(card);
-      markSelectedClasses(selectedDragItems,true);
-      makeDragGhost(selectedDragItems.length,e);
-      if(e.dataTransfer){
-        e.dataTransfer.effectAllowed='move';
-        e.dataTransfer.setData('text/plain',getCardOrderKey(card));
-      }
-      return;
-    }
-
-    e.preventDefault();
+    card.classList.add('dragging');
+    if(e.dataTransfer){ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', getCardOrderKey(card)); }
   };
 
-  window.__portfolioDragOver=function(e){
-    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
-    if(!grid)return;
-    if(dragFromPanel){
+  window.__pDragOver = function(e){
+    const grid = e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
+    if(!grid) return;
+
+    if(_fromPanel){
       e.preventDefault();
+      document.querySelectorAll('.pup-drop-target').forEach(g=>g.classList.remove('pup-drop-target'));
       grid.classList.add('pup-drop-target');
+      _lastGId = grid.id;
       return;
     }
-    if(!dragCard)return;
-    if(!canMoveBetweenGrids(dragGridId,grid.id))return;
+    if(!_dc) return;
+    if(!canMoveBetweenGrids(_dgId, grid.id)) return;
     e.preventDefault();
-    lastDropGridId=grid.id;
-    const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
-    const addCard=grid.querySelector(':scope > .card-add');
-    const movingCards=selectedDragItems.filter(isCardItem);
-    movingCards.forEach(card=>grid.insertBefore(card,beforeEl||addCard||null));
-  };
+    _lastGId = grid.id;
 
-  window.__portfolioDrop=async function(e){
-    const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
-    if(!grid)return;
-
-    if(dragFromPanel){
-      e.preventDefault();
-      grid.classList.remove('pup-drop-target');
-      grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
-      const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
-      const addCard=grid.querySelector(':scope > .card-add');
-      const items=[...selectedDragItems];
-      for(const el of items){
-        if(isPanelItem(el)){
-          const kind=el.dataset.kind||'github';
-          let item;
-          let docId='';
-          if(kind==='github'){
-            const sourcePath=el.dataset.sourcePath||'';
-            const name=el.dataset.name||filenameFromPath(sourcePath)||'file';
-            const url=el.dataset.url||'';
-            item={grid:grid.id,type:getMediaTypeByName(name)||'image',title:titleFromFilename(name),desc:'',url,sourcePath,sourceKind:'github'};
-            docId=autoDocIdFromSource(sourcePath);
-            if(ensureFirestore()){
-              await getCardsCol().doc(docId).set({
-                grid:item.grid,type:item.type,title:item.title,desc:'',url:item.url,
-                sourcePath:item.sourcePath,sourceKind:'github',
-                createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-              },{merge:true});
-            }
-            _pupItems=_pupItems.filter(f=>f.sourcePath!==sourcePath);
-          }else{
-            const url=el.dataset.url||'';
-            const title=el.dataset.title||'제목 없음';
-            item={grid:grid.id,type:extractYtId(url)?'video':'link',title,desc:'',url};
-            docId=await saveCard(item);
-            const idx=parseInt(el.dataset.linkIdx||'-1');
-            if(idx>=0)_pupLinkItems=_pupLinkItems.filter((_,i)=>i!==idx);
-          }
-          const card=makeCardEl(item,docId);
-          grid.insertBefore(card,beforeEl||addCard||null);
-          el.remove();
-        }else if(isCardItem(el)){
-          const fromId=el.dataset.grid||el.closest('.grid-3,.grid-2')?.id||'';
-          grid.insertBefore(el,beforeEl||addCard||null);
-          await persistCardGridMove(el,fromId,grid.id);
+    // 단일 카드 위치 정렬
+    if(_selCards.length <= 1){
+      const target = e.target.closest('#tab-work .card');
+      if(target && target !== _dc && !target.classList.contains('card-add') && !target.classList.contains('card-multi-upload')){
+        const rect = target.getBoundingClientRect();
+        const before = e.clientY < rect.top + rect.height / 2;
+        grid.insertBefore(_dc, before ? target : target.nextSibling);
+      } else {
+        const addCard = grid.querySelector(':scope > .card-add');
+        if(_dc.parentElement !== grid || _dc.nextElementSibling !== addCard){
+          grid.insertBefore(_dc, addCard || null);
         }
       }
-      await saveGridOrder(grid.id);
-      pupRender();
-      setupDragSortable();
+    }
+  };
+
+  window.__pDrop = async function(e){
+    const grid = e.target.closest('#tab-work .grid-3,#tab-work .grid-2')
+                || (_lastGId ? document.getElementById(_lastGId) : null);
+    if(!grid) return;
+
+    // ── 패널 → 그리드 등록
+    if(_fromPanel && _selPup.length){
+      e.preventDefault();
+      grid.classList.remove('pup-drop-target');
+      for(const el of _selPup){
+        const kind       = el.dataset.kind || 'github';
+        const sourcePath = el.dataset.sourcePath || '';
+        const url        = el.dataset.url   || '';
+        const name       = el.dataset.name  || '';
+        const sha        = el.dataset.sha   || '';
+        const title      = (el.dataset.title || name).replace(/\.[^.]+$/, '') || '제목 없음';
+
+        const newItem = {
+          grid: grid.id,
+          type: getMediaTypeByName(name) || 'image',
+          title, desc: '', url,
+          sourcePath: sourcePath || '',
+          sourceKind: kind === 'link' ? 'link' : 'github',
+          sha,
+        };
+        try{
+          let docId = '';
+          if(FIRESTORE_READY){
+            newItem.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            const ref = await getCardsCol().add(newItem);
+            docId = ref.id;
+          }
+          insertCardToGrid(newItem, docId || autoDocIdFromSource(sourcePath || url));
+          el.remove();
+          if(kind === 'github'){
+            _pupItems = _pupItems.filter(f => f.sourcePath !== sourcePath);
+          } else {
+            _pupLinkItems = _pupLinkItems.filter(f => (f.url||f.sourcePath) !== (url||sourcePath));
+          }
+        }catch(err){
+          console.error('패널→그리드 등록 실패', err);
+          alert('등록 실패: ' + err.message);
+        }
+      }
+      pupUpdateCount();
+      setupDragSortable(); // 새 카드에 draggable 적용
+      _fromPanel = false; _selPup = [];
       return;
     }
 
-    if(dragCard && grid && canMoveBetweenGrids(dragGridId,grid.id)){
-      e.preventDefault();
-      grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
-      const addCard=grid.querySelector(':scope > .card-add');
-      const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
-      const movingCards=selectedDragItems.filter(isCardItem);
-      for(const card of movingCards){
-        const fromId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||dragGridId;
-        grid.insertBefore(card,beforeEl||addCard||null);
-        await persistCardGridMove(card,fromId,grid.id);
-        await saveGridOrder(fromId);
+    // ── 그리드 카드 이동
+    if(!_dc || !canMoveBetweenGrids(_dgId, grid.id)) return;
+    e.preventDefault();
+    _lastGId = grid.id;
+
+    if(_selCards.length > 1){
+      // 다중선택 카드 전체 이동
+      const addCard = grid.querySelector(':scope > .card-add');
+      for(const c of _selCards){
+        const fromG = c.closest('.grid-3,.grid-2')?.id || _dgId;
+        grid.insertBefore(c, addCard || null);
+        await persistCardGridMove(c, fromG, grid.id);
       }
-      await saveGridOrder(grid.id);
+      clearSelection();
+    } else {
+      await persistCardGridMove(_dc, _dgId, grid.id);
     }
+    await saveGridOrder(_dgId);
+    if(_lastGId !== _dgId) await saveGridOrder(_lastGId);
+    setupDragSortable();
   };
 
-  window.__portfolioDragEnd=function(){
-    markSelectedClasses(selectedDragItems,false);
-    document.querySelectorAll('.grid-3.pup-drop-target,.grid-2.pup-drop-target').forEach(g=>g.classList.remove('pup-drop-target'));
-    dragCard=null;dragGridId='';dragFromPanel=false;lastDropGridId='';selectedDragItems=[];
-    updateEmptyGridPlaceholders();
-    if(_pupSelectMode)pupUpdateCount();
+  window.__pDragEnd = function(){
+    if(_dc){ _dc.classList.remove('dragging'); }
+    document.querySelectorAll('.pup-drop-target').forEach(g=>g.classList.remove('pup-drop-target'));
+    if(_dgId)  saveGridOrder(_dgId);
+    if(_lastGId && _lastGId !== _dgId) saveGridOrder(_lastGId);
+    _dc = null; _fromPanel = false; _dgId = ''; _lastGId = ''; _selPup = []; _selCards = [];
   };
 
-  document.addEventListener('dragstart',window.__portfolioDragStart,true);
-  document.addEventListener('dragover',window.__portfolioDragOver,true);
-  document.addEventListener('drop',window.__portfolioDrop,true);
-  document.addEventListener('dragend',window.__portfolioDragEnd,true);
+  document.addEventListener('dragstart', window.__pDragStart, true);
+  document.addEventListener('dragover',  window.__pDragOver,  true);
+  document.addEventListener('drop',      window.__pDrop,      true);
+  document.addEventListener('dragend',   window.__pDragEnd,   true);
 }
 
 
@@ -3928,9 +3917,8 @@ async function cleanupMissingGithubMetadata(gridId){
   }catch(err){console.warn('없는 GitHub 카드 정리 실패:',err);}
 }
 async function reloadPortfolioClean(gridId){
-  // 섹션별 리로드는 더 이상 카드 재생성/재배치를 하지 않는다.
-  // 실제 리로드 정리는 미등록 패널의 pupReload()에서 현재 탭 전체 기준으로만 수행한다.
   if(!isAdmin){alert('관리자 로그인 후 사용할 수 있습니다.');return;}
+  if(!confirm('현재 탭을 GitHub 기준으로 다시 불러옵니다.')) return;
   await pupReload(true);
 }
 
@@ -4383,16 +4371,14 @@ let _pupLoadedFolders = new Set();
 
 // ── 탭 전환 (포트폴리오 전용)
 function switchPortTab(tabKey, btn){
-  // 서브탭 버튼 active
   document.querySelectorAll('#port-grids .sub-tab').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  // 서브패널 active
   document.querySelectorAll('#port-grids .port-sub').forEach(p=>p.classList.remove('active'));
   const panel = document.getElementById('port-sub-'+tabKey);
   if(panel) panel.classList.add('active');
   _pupCurrentTab = tabKey;
-  // 미등록 패널 갱신
-  if(isAdmin) pupReload();
+  // 탭 이동: API 호출 없이 캐시/등록 현황만 반영
+  if(isAdmin) pupRenderCurrentTab();
 }
 
 // ── 패널 표시/숨김: 포트폴리오 탭에서만 우측 공백에 overlay로 표시
@@ -4402,7 +4388,8 @@ function upShow(){
   const workActive = document.getElementById('tab-work')?.classList.contains('active');
   if(isAdmin && workActive){
     panel.classList.add('admin-visible');
-    pupReload();
+    // 최초 1회만 API 호출, 이후엔 캐시 사용
+    pupRenderCurrentTab();
   }else{
     panel.classList.remove('admin-visible');
   }
@@ -4431,18 +4418,21 @@ function pupRegisteredPaths(){
 async function pupFetchGithubFiles(force=false){
   const folder = pupCurrentFolder();
   if(!folder) return [];
+  // 캐시 HIT → 즉시 반환 (API 호출 없음)
   if(!force && _pupGithubCache[folder]) return _pupGithubCache[folder];
+
   const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
-    const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-store'});
+    const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}});
     if(!res.ok){
-      console.warn('GitHub 폴더 스캔 실패:', folder, res.status, res.statusText);
-      return [];
+      // 403(rate limit) or 4xx: 기존 캐시 유지, 카드 절대 건드리지 않음
+      console.warn(`GitHub API ${res.status}: ${folder} - 기존 캐시 유지`);
+      return _pupGithubCache[folder] || [];
     }
     const files = await res.json();
     if(!Array.isArray(files)){
       console.warn('GitHub 폴더 응답이 배열이 아님:', folder, files);
-      return [];
+      return _pupGithubCache[folder] || [];
     }
     const mapped = files
       .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
@@ -4456,37 +4446,59 @@ async function pupFetchGithubFiles(force=false){
     _pupLoadedFolders.add(folder);
     return mapped;
   }catch(e){
-    console.warn('폴더 스캔 실패', e);
-    return [];
+    console.warn('폴더 스캔 실패 - 기존 캐시 유지:', folder, e);
+    return _pupGithubCache[folder] || [];
   }
 }
 
 // ── 리로드: 깨진 카드 제거 + 중복 제거 + 미등록 목록 재구성. 등록 위치 이동 금지.
-async function pupReload(forceFetch=false){
-  const listEl = document.getElementById('pup-list');
+async function pupReload(force=false){
+  const listEl  = document.getElementById('pup-list');
   const folderEl = document.getElementById('pup-folder-label');
   if(!listEl) return;
   const folder = pupCurrentFolder();
   if(folderEl) folderEl.textContent = folder ? '📁 '+folder : '';
   if(!folder){ listEl.innerHTML='<div class="pup-empty">폴더 매핑 없음</div>'; return; }
 
-  listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
-  delete _pupGithubCache[folder];
-  _pupLoadedFolders.delete(folder);
-  const githubFiles = await pupFetchGithubFiles(true);
-  const githubPathSet = new Set(githubFiles.map(f=>f.sourcePath));
+  // force=true 일 때만 캐시 무효화 (버튼 클릭 / 업로드 완료 / 삭제 완료 / 초기화)
+  if(force){
+    delete _pupGithubCache[folder];
+    _pupLoadedFolders.delete(folder);
+  }
 
-  await pupCleanBrokenAndDuplicateCards(githubPathSet);
+  // 캐시 없을 때만 로딩 표시
+  const hasCached = !!_pupGithubCache[folder];
+  if(!hasCached) listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
+
+  // force=true 이거나 캐시 없을 때만 API 호출
+  const githubFiles = await pupFetchGithubFiles(force && !hasCached ? true : false);
+
+  // API 실패로 빈 배열 + 기존 카드 있으면 렌더 스킵 (카드 보호)
+  const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
+  const existingCards = subEl ? subEl.querySelectorAll('.card.generated-card, .card[data-source-path]').length : 0;
+  if(!githubFiles.length && existingCards > 0 && !_pupGithubCache[folder]){
+    console.warn('API 실패 + 기존 카드 있음 → 렌더 스킵');
+    listEl.innerHTML = '<div class="pup-empty">GitHub 스캔 실패 (기존 카드 유지)</div>';
+    return;
+  }
+
+  // 중복 정리는 force 시에만
+  if(force){
+    const githubPathSet = new Set(githubFiles.map(f=>f.sourcePath));
+    await pupCleanBrokenAndDuplicateCards(githubPathSet);
+  }
 
   const registered = pupRegisteredPaths();
   _pupItems = githubFiles.filter(f => !registered.has(f.sourcePath));
+
+  // 링크 아이템 중복 제거
   _pupLinkItems = _pupLinkItems.filter((item, idx, arr)=>{
     const key=item.sourcePath||item.url||item.title||String(idx);
     return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key)===idx;
   });
 
   pupRender();
-  setupDragSortable();
+  // setupDragSortable 은 여기서 호출하지 않음 - 초기화 시 1회만 호출
 }
 
 // ── 중복 카드 정리 (같은 sourcePath 여러 개 → 1개 유지)
@@ -4597,12 +4609,15 @@ function pupRender(){
 }
 
 function pupUpdateCount(){
-  const total = document.querySelectorAll('.pup-item').length;
-  const sel = document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.selected, .pup-item.selected').length;
+  const panelItems = document.querySelectorAll('#port-unrg-panel .pup-item').length;
+  const panelSel   = document.querySelectorAll('#port-unrg-panel .pup-item.selected').length;
+  const cardSel    = document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.card-selected').length;
+  const totalSel   = panelSel + cardSel;
+
   const cntEl = document.getElementById('pup-count');
   const selEl = document.getElementById('pup-sel-count');
-  if(cntEl) cntEl.textContent = total+'개';
-  if(selEl){ selEl.textContent=sel+'개 선택'; selEl.style.display=sel?'':'none'; }
+  if(cntEl) cntEl.textContent = panelItems + '개';
+  if(selEl){ selEl.textContent = totalSel + '개 선택'; selEl.style.display = totalSel ? '' : 'none'; }
 }
 
 // ── 다중선택 토글
@@ -4610,70 +4625,82 @@ function pupToggleSelect(){
   _pupSelectMode = !_pupSelectMode;
   const btn = document.getElementById('pup-btn-select');
   if(btn) btn.classList.toggle('active', _pupSelectMode);
-  document.querySelectorAll('#tab-work .card.select-mode,.pup-item.select-mode').forEach(el=>el.classList.remove('select-mode'));
-  document.querySelectorAll('#tab-work .card.selected,.pup-item.selected').forEach(el=>el.classList.remove('selected'));
-  selectedCardKeys.clear();
-  selectionModeGrid = '';
-  if(_pupSelectMode){
-    document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.generated-card, #port-sub-'+_pupCurrentTab+' .card[data-source-path], #port-sub-'+_pupCurrentTab+' .card[data-doc-id], .pup-item')
-      .forEach(el=>{ if(!el.classList.contains('card') || isRealPortfolioCard(el)) el.classList.add('select-mode'); });
+
+  if(!_pupSelectMode){
+    // 패널 아이템 선택 해제
+    document.querySelectorAll('#port-unrg-panel .pup-item.selected').forEach(el=>el.classList.remove('selected'));
+    // 탭 카드 선택 해제
+    clearSelection();
+    selectionModeGrid = '';
+  } else {
+    // 탭 카드 다중선택 모드 활성화 (현재 탭 전체)
+    const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
+    if(subEl){
+      selectionModeGrid = _pupCurrentTab; // 현재 탭 기준
+      // 모든 카드에 클릭 선택 이벤트 활성화
+      subEl.querySelectorAll('.card.generated-card, .card[data-source-path]').forEach(card=>{
+        card.classList.add('selectable');
+        card.onclick = function(e){
+          if(!_pupSelectMode) return;
+          if(e.target.closest('.card-edit,.card-del')) return;
+          card.classList.toggle('card-selected');
+          pupUpdateCount();
+        };
+      });
+    }
   }
   pupUpdateCount();
 }
 
 // ── 선택삭제 (GitHub + UI)
 async function pupDeleteSelected(){
-  const selectedCards = [...document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.selected')];
-  const selectedPup   = [...document.querySelectorAll('.pup-item.selected')];
-  const total = selectedCards.length + selectedPup.length;
+  const panelSel = [...document.querySelectorAll('#port-unrg-panel .pup-item.selected')];
+  const cardSel  = [...document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.card-selected')];
+  const total    = panelSel.length + cardSel.length;
   if(!total){ alert('선택된 항목이 없습니다.'); return; }
-  if(!confirm(`선택된 ${total}개를 삭제합니다.\nGitHub 파일은 완전 삭제됩니다.`)) return;
+  if(!confirm(`선택된 ${total}개를 삭제합니다.
+GitHub 파일은 완전 삭제, 등록 카드는 DB에서 제거됩니다.`)) return;
 
-  const failed=[];
-  for(const card of selectedCards){
-    const docId = card.dataset.docId||'';
-    const sp = card.dataset.sourcePath||'';
-    const sourceKind = card.dataset.sourceKind||'';
-    const gridId = card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-    try{
-      if(sourceKind==='github' && sp){
-        await deleteGithubFileByPath(sp);
-        const folder = sp.split('/').slice(0,-1).join('/');
-        if(folder){ delete _pupGithubCache[folder]; _pupLoadedFolders.delete(folder); }
-      }
-      if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
-      card.remove();
-      if(gridId) await saveGridOrder(gridId);
-    }catch(err){ failed.push(`${sp||docId||'카드'}: ${err.message||'삭제 실패'}`); }
-  }
-
-  for(const el of selectedPup){
-    const kind = el.dataset.kind||'github';
-    if(kind==='github'){
-      const sp  = el.dataset.sourcePath||'';
+  // 패널 아이템 삭제
+  for(const el of panelSel){
+    const kind = el.dataset.kind || 'github';
+    if(kind === 'github'){
+      const sp = el.dataset.sourcePath||'';
       const sha = el.dataset.sha||'';
       try{
         await deleteGithubFileByPath(sp, sha);
-        const folder = sp.split('/').slice(0,-1).join('/');
-        if(folder){ delete _pupGithubCache[folder]; _pupLoadedFolders.delete(folder); }
         _pupItems = _pupItems.filter(f=>f.sourcePath !== sp);
+        // 캐시에서도 제거
+        const folder = pupCurrentFolder();
+        if(_pupGithubCache[folder]){
+          _pupGithubCache[folder] = _pupGithubCache[folder].filter(f=>f.sourcePath!==sp);
+        }
         el.remove();
-      }catch(err){ failed.push(`${sp}: ${err.message||'삭제 실패'}`); }
-    }else{
-      const lIdx = parseInt(el.dataset.linkIdx||'0');
-      _pupLinkItems = _pupLinkItems.filter((_,i)=>i!==lIdx);
+      }catch(err){ console.error('삭제 실패', sp, err); }
+    } else {
+      _pupLinkItems = _pupLinkItems.filter((_,i,arr)=>arr[i]!==el._linkRef);
       el.remove();
     }
   }
 
-  _pupSelectMode=false;
-  const btn=document.getElementById('pup-btn-select');
+  // 탭 카드 삭제
+  for(const card of cardSel){
+    const docId = card.dataset.docId||'';
+    const sp    = card.dataset.sourcePath||'';
+    const sha   = card.dataset.sha||'';
+    try{
+      if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete();
+      if(sp && sha) await deleteGithubFileByPath(sp, sha);
+      card.remove();
+    }catch(err){ console.error('카드 삭제 실패', err); }
+  }
+
+  _pupSelectMode = false;
+  selectionModeGrid = '';
+  const btn = document.getElementById('pup-btn-select');
   if(btn) btn.classList.remove('active');
-  document.querySelectorAll('#tab-work .card.select-mode,.pup-item.select-mode').forEach(el=>el.classList.remove('select-mode','selected'));
   pupRender();
-  updateEmptyGridPlaceholders();
-  setupDragSortable();
-  if(failed.length) alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
+  pupUpdateCount();
 }
 
 // ── 초기화: 등록 카드 회수 + 탭 연동 폴더 전체 파일을 미등록 패널로 통합
@@ -4760,6 +4787,26 @@ function pupOpenBatchUpload(){
   const firstGrid = subEl.querySelector('.grid-3[id], .grid-2[id]');
   if(!firstGrid){ alert('업로드 대상 그리드를 찾을 수 없습니다.'); return; }
   openBatchUpload(firstGrid.id);
+}
+
+
+// 탭 전환 / upShow 시 호출 - API 호출 최소화
+async function pupRenderCurrentTab(){
+  const folder = pupCurrentFolder();
+  if(!folder) return;
+  const folderEl = document.getElementById('pup-folder-label');
+  if(folderEl) folderEl.textContent = folder ? '📁 '+folder : '';
+
+  // 캐시 있으면 API 없이 렌더
+  const cached = _pupGithubCache[folder];
+  if(cached){
+    const registered = pupRegisteredPaths();
+    _pupItems = cached.filter(f => !registered.has(f.sourcePath));
+    pupRender();
+    return;
+  }
+  // 캐시 없으면 최초 1회 API 호출
+  await pupReload(false);
 }
 
 </script>
