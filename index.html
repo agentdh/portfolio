@@ -500,6 +500,27 @@ color:var(--cyan);
 .pup-path{font-size:10px!important;}
 @media(max-width:1380px){#port-unrg-panel{display:none!important;}}
 
+.pup-empty-grid-card{
+  min-height:148px;
+  border:1px dashed rgba(0,229,255,.24);
+  border-radius:var(--radius);
+  background:rgba(0,229,255,.035);
+  color:var(--text-off);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:12px;
+  pointer-events:none;
+  user-select:none;
+}
+.grid-3.pup-drop-target .pup-empty-grid-card,
+.grid-2.pup-drop-target .pup-empty-grid-card{
+  color:var(--cyan);
+  border-color:var(--cyan);
+  background:rgba(0,229,255,.075);
+}
+
 </style>
 </head>
 <body>
@@ -2418,7 +2439,7 @@ color:var(--cyan);
     <div class="pup-actions">
       <button class="pup-btn" id="pup-btn-select" onclick="pupToggleSelect()">다중선택</button>
       <button class="pup-btn danger" onclick="pupDeleteSelected()">선택삭제</button>
-      <button class="pup-btn" onclick="pupReload()">↺ 리로드</button>
+      <button class="pup-btn" onclick="pupReload(true)">↺ 리로드</button>
       <button class="pup-btn warn" onclick="pupResetTab()">초기화</button>
     </div>
     <div class="pup-upload-area">
@@ -3164,6 +3185,25 @@ function canMoveBetweenGrids(fromGridId,toGridId){
   if(!GITHUB_FOLDER_MAP[fromGridId]||!GITHUB_FOLDER_MAP[toGridId])return false;
   return getGridGroupId(fromGridId) && getGridGroupId(fromGridId)===getGridGroupId(toGridId);
 }
+
+function isRealPortfolioCard(el){
+  return !!(el && el.classList && el.classList.contains('card') &&
+    !el.classList.contains('card-add') &&
+    !el.classList.contains('card-multi-upload'));
+}
+function updateEmptyGridPlaceholders(scope){
+  const root = scope || document.getElementById('tab-work') || document;
+  root.querySelectorAll('#tab-work .grid-3[id], #tab-work .grid-2[id]').forEach(grid=>{
+    grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
+    const hasCard = [...grid.querySelectorAll(':scope > .card')].some(isRealPortfolioCard);
+    if(!hasCard){
+      const empty=document.createElement('div');
+      empty.className='pup-empty-grid-card';
+      empty.textContent='비어있음';
+      grid.appendChild(empty);
+    }
+  });
+}
 async function readUrlAsBase64Content(url){
   const res=await fetch(url,{cache:'no-store'});
   if(!res.ok)throw new Error('원본 파일을 읽지 못했습니다.');
@@ -3234,6 +3274,7 @@ async function persistCardGridMove(card,fromGridId,toGridId){
   }
 }
 function setupDragSortable(){
+  updateEmptyGridPlaceholders();
   let dragCard=null;
   let dragGridId='';
   let dragFromPanel=false;
@@ -3242,6 +3283,7 @@ function setupDragSortable(){
 
   document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(grid=>{
     grid.querySelectorAll(':scope > .card').forEach(card=>{
+      if(!isRealPortfolioCard(card))return;
       card.draggable=!!isAdmin;
       card.classList.toggle('drag-ready',!!isAdmin);
     });
@@ -3275,7 +3317,7 @@ function setupDragSortable(){
   function isCardItem(el){ return el && el.classList.contains('card'); }
   function getDragAfterElement(grid,x,y){
     const cards=[...grid.querySelectorAll(':scope > .card')]
-      .filter(card=>!selectedDragItems.includes(card) && !card.classList.contains('dragging') && !card.closest('.card-add,.card-multi-upload'));
+      .filter(card=>isRealPortfolioCard(card) && !selectedDragItems.includes(card) && !card.classList.contains('dragging') && !card.closest('.card-add,.card-multi-upload'));
     for(const child of cards){
       const box=child.getBoundingClientRect();
       const beforeRow = y < box.top + box.height * 0.5;
@@ -3300,6 +3342,7 @@ function setupDragSortable(){
     const panelItem=e.target.closest('.pup-item');
     const card=e.target.closest('#tab-work .card');
     if(!isAdmin || e.target.closest('.card-edit,.card-del')){e.preventDefault();return;}
+    if(card && !isRealPortfolioCard(card)){e.preventDefault();return;}
 
     if(panelItem){
       dragFromPanel=true;
@@ -3359,6 +3402,7 @@ function setupDragSortable(){
     if(dragFromPanel){
       e.preventDefault();
       grid.classList.remove('pup-drop-target');
+      grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
       const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
       const addCard=grid.querySelector(':scope > .card-add');
       const items=[...selectedDragItems];
@@ -3407,6 +3451,7 @@ function setupDragSortable(){
 
     if(dragCard && grid && canMoveBetweenGrids(dragGridId,grid.id)){
       e.preventDefault();
+      grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
       const addCard=grid.querySelector(':scope > .card-add');
       const beforeEl=getDragAfterElement(grid,e.clientX,e.clientY);
       const movingCards=selectedDragItems.filter(isCardItem);
@@ -3424,6 +3469,7 @@ function setupDragSortable(){
     markSelectedClasses(selectedDragItems,false);
     document.querySelectorAll('.grid-3.pup-drop-target,.grid-2.pup-drop-target').forEach(g=>g.classList.remove('pup-drop-target'));
     dragCard=null;dragGridId='';dragFromPanel=false;lastDropGridId='';selectedDragItems=[];
+    updateEmptyGridPlaceholders();
     if(_pupSelectMode)pupUpdateCount();
   };
 
@@ -3603,12 +3649,21 @@ document.addEventListener('click',e=>{
   const card=e.target.closest('#tab-work .card');
   if(!card)return;
   if(e.target.closest('.card-edit,.card-del,.card-add,.card-multi-upload,.section-admin-controls'))return;
+  if(!isRealPortfolioCard(card))return;
   const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  if(selectionModeGrid && gridId===selectionModeGrid){
+  if((_pupSelectMode && card.closest('#port-sub-'+_pupCurrentTab)) || (selectionModeGrid && gridId===selectionModeGrid)){
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
-    toggleCardSelection(card);
+    card.classList.toggle('selected');
+    if(typeof cardSelectionKey==='function'){
+      const key=cardSelectionKey(card);
+      if(key){
+        if(card.classList.contains('selected')) selectedCardKeys.add(key);
+        else selectedCardKeys.delete(key);
+      }
+    }
+    pupUpdateCount();
     return;
   }
   const item=getDisplayItemFromCard(card);
@@ -3674,10 +3729,12 @@ function insertCardToGrid(item,docId){
   const grid=document.getElementById(item.grid);
   if(!grid)return;
   if(docId&&grid.querySelector(`[data-doc-id="${docId}"]`))return;
+  grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
   const addCard=grid.querySelector('.card-add');
   const card=makeCardEl(item,docId);
   if(addCard)grid.insertBefore(card,addCard);
   else grid.appendChild(card);
+  updateEmptyGridPlaceholders();
   setupDragSortable();
 }
 
@@ -3755,6 +3812,12 @@ async function handleBatchUpload(input){
     uploadBtn.innerHTML=oldHTML;
   }
 
+  const folder = GITHUB_FOLDER_MAP[gridId] || pupCurrentFolder();
+  if(folder){
+    delete _pupGithubCache[folder];
+    _pupLoadedFolders.delete(folder);
+  }
+  updateEmptyGridPlaceholders();
   if(failed.length){
     alert(`업로드 완료: ${success}개\n실패: ${failed.length}개\n\n${failed.join('\n')}`);
   }else{
@@ -3819,6 +3882,8 @@ async function deleteSelectedCards(){
     }
   }
   setSelectionMode(selectionModeGrid);
+  updateEmptyGridPlaceholders();
+  setupDragSortable();
   if(failed.length)alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
 }
 function setupSectionAdminControls(){
@@ -3866,7 +3931,7 @@ async function reloadPortfolioClean(gridId){
   // 섹션별 리로드는 더 이상 카드 재생성/재배치를 하지 않는다.
   // 실제 리로드 정리는 미등록 패널의 pupReload()에서 현재 탭 전체 기준으로만 수행한다.
   if(!isAdmin){alert('관리자 로그인 후 사용할 수 있습니다.');return;}
-  await pupReload();
+  await pupReload(true);
 }
 
 async function loadCards(){
@@ -3921,35 +3986,45 @@ async function deleteCard(e,docId){
   if(!docId)return;
 
   const card=document.querySelector(`[data-doc-id="${docId}"]`);
-  const sourcePath=card?.dataset?.sourcePath||'';
-  const sourceKind=card?.dataset?.sourceKind||'';
-  const gridId=card?.dataset?.grid||card?.closest('.grid-3,.grid-2')?.id||'';
+  if(!card)return;
 
-  const msg=sourceKind==='github' && sourcePath
-    ? `이 카드를 삭제하면 GitHub 원본 파일도 삭제됩니다.\n\n원본 파일: ${filenameFromPath(sourcePath)}\n경로: ${sourcePath}\n\n삭제할까요?`
-    : '이 카드를 삭제할까요?';
-
-  if(!confirm(msg))return;
+  const sourcePath=card.dataset.sourcePath||'';
+  const sourceKind=card.dataset.sourceKind||'';
+  const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+  const url=card.dataset.url||'';
+  const title=card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||filenameFromPath(sourcePath)||'제목 없음';
 
   try{
-    if(sourceKind==='github' && sourcePath){
-      await deleteGithubFileByPath(sourcePath);
-    }
-
     if(FIRESTORE_READY){
       await getCardsCol().doc(docId).delete().catch(err=>{
         console.warn('Firestore 메타데이터 삭제 실패:',err);
       });
     }
 
-    card?.remove();
+    if(sourceKind==='github' && sourcePath){
+      const name=filenameFromPath(sourcePath)||title;
+      if(!_pupItems.some(f=>f.sourcePath===sourcePath)){
+        _pupItems.push({name, sourcePath, url, sha:card.dataset.sha||''});
+      }
+    }else{
+      const key=sourcePath||url||title;
+      if(key && !_pupLinkItems.some(item=>(item.sourcePath||item.url||item.title||'')===key)){
+        _pupLinkItems.push({title, url, docId:'', sourcePath});
+      }
+    }
+
+    card.remove();
 
     if(gridId){
       await saveGridOrder(gridId);
     }
+
+    pupRender();
+    updateEmptyGridPlaceholders();
+    setupDragSortable();
   }catch(err){
-    console.error('카드 삭제 실패:',err);
-    alert('카드 삭제에 실패했습니다. '+(err.message||''));
+    console.error('카드 미등록 이동 실패:',err);
+    alert('카드를 미등록으로 이동하지 못했습니다. '+(err.message||''));
   }
 }
 /* ── ADD MODAL ── */
@@ -4237,6 +4312,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   setupMultiUploadButtons();
   setupSectionAdminControls();
   setupDragSortable();
+  updateEmptyGridPlaceholders();
 });
 
 /* ── FADE IN ── */
@@ -4302,6 +4378,8 @@ let _pupCurrentTab = 'thumbnail'; // 현재 선택 탭
 let _pupItems      = [];          // 미등록 GitHub 파일 목록
 let _pupLinkItems  = [];          // 미등록 링크/기타 카드 목록
 let _pupSelectMode = false;
+let _pupGithubCache = {};
+let _pupLoadedFolders = new Set();
 
 // ── 탭 전환 (포트폴리오 전용)
 function switchPortTab(tabKey, btn){
@@ -4350,9 +4428,10 @@ function pupRegisteredPaths(){
 }
 
 // ── 현재 탭 GitHub 폴더 파일 스캔
-async function pupFetchGithubFiles(){
+async function pupFetchGithubFiles(force=false){
   const folder = pupCurrentFolder();
   if(!folder) return [];
+  if(!force && _pupGithubCache[folder]) return _pupGithubCache[folder];
   const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
     const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-store'});
@@ -4365,7 +4444,7 @@ async function pupFetchGithubFiles(){
       console.warn('GitHub 폴더 응답이 배열이 아님:', folder, files);
       return [];
     }
-    return files
+    const mapped = files
       .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
       .map(f=>({
         name: f.name,
@@ -4373,6 +4452,9 @@ async function pupFetchGithubFiles(){
         url: f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folder}/${f.name}`,
         sha: f.sha||''
       }));
+    _pupGithubCache[folder] = mapped;
+    _pupLoadedFolders.add(folder);
+    return mapped;
   }catch(e){
     console.warn('폴더 스캔 실패', e);
     return [];
@@ -4380,7 +4462,7 @@ async function pupFetchGithubFiles(){
 }
 
 // ── 리로드: 깨진 카드 제거 + 중복 제거 + 미등록 목록 재구성. 등록 위치 이동 금지.
-async function pupReload(){
+async function pupReload(forceFetch=false){
   const listEl = document.getElementById('pup-list');
   const folderEl = document.getElementById('pup-folder-label');
   if(!listEl) return;
@@ -4389,7 +4471,9 @@ async function pupReload(){
   if(!folder){ listEl.innerHTML='<div class="pup-empty">폴더 매핑 없음</div>'; return; }
 
   listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
-  const githubFiles = await pupFetchGithubFiles();
+  delete _pupGithubCache[folder];
+  _pupLoadedFolders.delete(folder);
+  const githubFiles = await pupFetchGithubFiles(true);
   const githubPathSet = new Set(githubFiles.map(f=>f.sourcePath));
 
   await pupCleanBrokenAndDuplicateCards(githubPathSet);
@@ -4532,7 +4616,7 @@ function pupToggleSelect(){
   selectionModeGrid = '';
   if(_pupSelectMode){
     document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.generated-card, #port-sub-'+_pupCurrentTab+' .card[data-source-path], #port-sub-'+_pupCurrentTab+' .card[data-doc-id], .pup-item')
-      .forEach(el=>el.classList.add('select-mode'));
+      .forEach(el=>{ if(!el.classList.contains('card') || isRealPortfolioCard(el)) el.classList.add('select-mode'); });
   }
   pupUpdateCount();
 }
@@ -4552,7 +4636,11 @@ async function pupDeleteSelected(){
     const sourceKind = card.dataset.sourceKind||'';
     const gridId = card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
     try{
-      if(sourceKind==='github' && sp) await deleteGithubFileByPath(sp);
+      if(sourceKind==='github' && sp){
+        await deleteGithubFileByPath(sp);
+        const folder = sp.split('/').slice(0,-1).join('/');
+        if(folder){ delete _pupGithubCache[folder]; _pupLoadedFolders.delete(folder); }
+      }
       if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
       card.remove();
       if(gridId) await saveGridOrder(gridId);
@@ -4566,6 +4654,8 @@ async function pupDeleteSelected(){
       const sha = el.dataset.sha||'';
       try{
         await deleteGithubFileByPath(sp, sha);
+        const folder = sp.split('/').slice(0,-1).join('/');
+        if(folder){ delete _pupGithubCache[folder]; _pupLoadedFolders.delete(folder); }
         _pupItems = _pupItems.filter(f=>f.sourcePath !== sp);
         el.remove();
       }catch(err){ failed.push(`${sp}: ${err.message||'삭제 실패'}`); }
@@ -4581,6 +4671,8 @@ async function pupDeleteSelected(){
   if(btn) btn.classList.remove('active');
   document.querySelectorAll('#tab-work .card.select-mode,.pup-item.select-mode').forEach(el=>el.classList.remove('select-mode','selected'));
   pupRender();
+  updateEmptyGridPlaceholders();
+  setupDragSortable();
   if(failed.length) alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
 }
 
@@ -4628,7 +4720,9 @@ async function pupResetTab(){
     }
   }
 
-  const githubFiles = await pupFetchGithubFiles();
+  delete _pupGithubCache[folder];
+  _pupLoadedFolders.delete(folder);
+  const githubFiles = await pupFetchGithubFiles(true);
   githubFiles.forEach(file=>{
     if(!byPath.has(file.sourcePath)) byPath.set(file.sourcePath,file);
   });
@@ -4649,23 +4743,8 @@ async function pupResetTab(){
 
   await Promise.all([...subEl.querySelectorAll('.grid-3[id],.grid-2[id]')].map(g=>saveGridOrder(g.id)));
   pupRender();
+  updateEmptyGridPlaceholders();
   setupDragSortable();
-}
-
-
-
-// 현재 포트폴리오 탭 전체 선택 모드: 카드 클릭 선택 처리
-if(!window.__vonaPortfolioSelectionClickBound){
-  window.__vonaPortfolioSelectionClickBound=true;
-  document.addEventListener('click',function(e){
-    if(!_pupSelectMode)return;
-    const card=e.target.closest('#port-sub-'+_pupCurrentTab+' .card.generated-card, #port-sub-'+_pupCurrentTab+' .card[data-source-path], #port-sub-'+_pupCurrentTab+' .card[data-doc-id]');
-    if(card && !e.target.closest('.card-edit,.card-del')){
-      e.preventDefault();e.stopPropagation();
-      card.classList.toggle('selected');
-      pupUpdateCount();
-    }
-  },true);
 }
 
 /* ── updateEditorVisibility 연동은 기존 upShow/upHide 재사용 ── */
