@@ -352,9 +352,46 @@ color:var(--cyan);
 .admin-auth-btn{width:88px;padding:8px 10px;border-radius:999px;border:1px solid rgba(0,229,255,.35);background:rgba(0,229,255,.06);color:var(--cyan);font-size:11px;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.03em;cursor:pointer;transition:all .2s ease;}
 .admin-auth-btn:hover{border-color:var(--orange);color:var(--orange);background:rgba(255,107,43,.08);box-shadow:0 0 12px rgba(255,107,43,.12);}
 
+
+/* ── 관리자 미등록 이미지 패널 ── */
+#page-wrap{display:flex;align-items:flex-start;position:relative;}
+#main-area{flex:1;min-width:0;}
+#unregistered-panel{
+  width:260px;flex-shrink:0;margin-left:16px;
+  position:sticky;top:72px;max-height:calc(100vh - 90px);
+  display:none;flex-direction:column;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);overflow:hidden;z-index:40;
+}
+#unregistered-panel.visible{display:flex;}
+.up-header{padding:12px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.up-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-family:'Space Mono',monospace;margin-bottom:8px;}
+.up-actions{display:flex;gap:5px;flex-wrap:wrap;}
+.up-btn{font-size:10px;padding:5px 9px;border-radius:5px;border:1px solid var(--border2);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;}
+.up-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.up-btn.danger:hover{border-color:#e74c3c;color:#e74c3c;}
+.up-btn.active{background:rgba(0,229,255,.1);border-color:var(--cyan);color:var(--cyan);}
+.up-grid-filter{padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.up-grid-filter select{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:11px;padding:5px 8px;border-radius:5px;font-family:inherit;outline:none;}
+.up-list{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:4px;min-height:60px;}
+.up-empty{font-size:11px;color:var(--text-off);text-align:center;padding:20px 0;}
+.up-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s;}
+.up-item:hover{border-color:rgba(0,229,255,.3);background:var(--surface2);}
+.up-item.selected{border-color:var(--cyan);background:rgba(0,229,255,.06);}
+.up-item-thumb{width:40px;height:30px;object-fit:cover;border-radius:3px;flex-shrink:0;background:var(--bg3);}
+.up-item-info{flex:1;min-width:0;}
+.up-item-name{font-size:10px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.up-item-path{font-size:9px;color:var(--text-off);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.up-item-reg{font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.2);white-space:nowrap;flex-shrink:0;cursor:pointer;}
+.up-item-reg:hover{background:rgba(0,229,255,.25);}
+.up-status{padding:8px 14px;border-top:1px solid var(--border);font-size:10px;color:var(--text-off);flex-shrink:0;display:flex;justify-content:space-between;}
+.up-loading{padding:20px;text-align:center;font-size:11px;color:var(--text-dim);}
+@media(max-width:1100px){#unregistered-panel{display:none!important;}}
 </style>
 </head>
 <body>
+<div id="page-wrap">
+<div id="main-area">
 <header>
   <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
   <div class="avatar-wrap" onclick="openModal('profileModal')" title="프로필 편집"><span id="avatarInitial">BW</span><img id="avatarImg" src="" alt="" style="display:none"></div>
@@ -2219,6 +2256,32 @@ id="work-animation">
     <a href="mailto:agentdh@naver.com">이메일</a>
   </div>
 </footer>
+</div><!-- /main-area -->
+
+<!-- ── 관리자 미등록 이미지 패널 ── -->
+<div id="unregistered-panel">
+  <div class="up-header">
+    <div class="up-title">미등록 이미지</div>
+    <div class="up-actions">
+      <button class="up-btn" id="up-btn-select" onclick="upToggleSelectMode()">다중선택</button>
+      <button class="up-btn danger" id="up-btn-delete" onclick="upDeleteSelected()">선택삭제</button>
+      <button class="up-btn" onclick="upReload()">↺ 리로드</button>
+    </div>
+  </div>
+  <div class="up-grid-filter">
+    <select id="up-grid-filter" onchange="upFilterChange(this.value)">
+      <option value="">전체 폴더</option>
+    </select>
+  </div>
+  <div class="up-list" id="up-list"></div>
+  <div class="up-status">
+    <span id="up-count">0개</span>
+    <span id="up-select-count" style="display:none">0개 선택</span>
+  </div>
+</div>
+
+</div><!-- /page-wrap -->
+
 <!-- MODALS -->
 <input type="file" id="batchUploadInput" multiple accept="image/*,.gif,video/mp4,video/webm,video/quicktime" style="display:none">
 <div class="modal-backdrop" id="addModal" onclick="closeOnBg(event,'addModal')">
@@ -2622,6 +2685,7 @@ function updateEditorVisibility(){
   document.querySelectorAll('.card-add,.card-multi-upload,.section-admin-controls,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
     el.style.display=isAdmin ? '' : 'none';
   });
+  if(isAdmin) upShow(); else upHide();
   setupDragSortable();
 }
 
@@ -3483,9 +3547,7 @@ function setupSectionAdminControls(){
     if(title.querySelector('.section-admin-controls'))return;
     const box=document.createElement('span');
     box.className='section-admin-controls';
-    box.innerHTML=`<button type="button" class="admin-mini-btn" data-act="select">다중선택</button><button type="button" class="admin-mini-btn danger" data-act="delete">선택삭제</button><button type="button" class="admin-mini-btn" data-act="reload">리로드</button>`;
-    box.querySelector('[data-act="select"]').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setSelectionMode(gridId);});
-    box.querySelector('[data-act="delete"]').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();deleteSelectedCards();});
+    box.innerHTML=`<button type="button" class="admin-mini-btn" data-act="reload">리로드</button>`;
     box.querySelector('[data-act="reload"]').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();reloadPortfolioClean(gridId);});
     title.appendChild(box);
   });
@@ -3964,6 +4026,227 @@ function getBestColumns(count){
     }
 
     return best;
+}
+
+
+/* ════════════════════════════════════════
+   미등록 이미지 패널 (관리자 전용)
+   ════════════════════════════════════════ */
+let _upSelectMode = false;
+let _upCurrentFilter = '';
+let _upItems = []; // {sourcePath, url, folder, name}
+
+function upPanelVisible() {
+  return isAdmin;
+}
+
+function upShow() {
+  const panel = document.getElementById('unregistered-panel');
+  if (!panel) return;
+  if (isAdmin) {
+    panel.classList.add('visible');
+    upReload();
+  } else {
+    panel.classList.remove('visible');
+  }
+}
+
+function upHide() {
+  const panel = document.getElementById('unregistered-panel');
+  if (panel) panel.classList.remove('visible');
+}
+
+async function upReload() {
+  const listEl = document.getElementById('up-list');
+  if (!listEl) return;
+  listEl.innerHTML = '<div class="up-loading">스캔 중...</div>';
+
+  // 1. Firestore에 등록된 sourcePath 수집
+  const registeredPaths = new Set();
+  if (FIRESTORE_READY) {
+    try {
+      const snap = await getCardsCol().get();
+      snap.forEach(doc => {
+        const sp = doc.data().sourcePath;
+        if (sp) registeredPaths.add(sp);
+      });
+    } catch(e) { console.warn('Firestore 읽기 실패', e); }
+  }
+  // autoFolderItems에서도 수집
+  autoFolderItems.forEach(item => {
+    if (item.sourcePath) registeredPaths.add(item.sourcePath);
+  });
+
+  // 2. 모든 폴더 스캔
+  const folders = Object.entries(GITHUB_FOLDER_MAP); // [gridId, folderPath]
+  const seenFolders = new Set();
+  const allGithubFiles = [];
+
+  await Promise.all(
+    folders.map(async ([gridId, folderPath]) => {
+      if (seenFolders.has(folderPath)) return;
+      seenFolders.add(folderPath);
+      const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folderPath).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
+      try {
+        const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}});
+        if (!res.ok) return;
+        const files = await res.json();
+        if (!Array.isArray(files)) return;
+        files.filter(f => f.type === 'file' && getMediaTypeByName(f.name)).forEach(f => {
+          allGithubFiles.push({
+            sourcePath: `${folderPath}/${f.name}`,
+            url: f.download_url,
+            folder: folderPath,
+            name: f.name,
+            sha: f.sha || ''
+          });
+        });
+      } catch(e) { console.warn('폴더 스캔 실패', folderPath, e); }
+    })
+  );
+
+  // 3. 미등록 = GitHub에 있지만 Firestore/autoFolderItems 어디에도 없는 것
+  _upItems = allGithubFiles.filter(f => !registeredPaths.has(f.sourcePath));
+
+  // 4. 필터 select 업데이트
+  const filterEl = document.getElementById('up-grid-filter');
+  if (filterEl) {
+    const folders = [...new Set(_upItems.map(f => f.folder))].sort();
+    filterEl.innerHTML = '<option value="">전체 폴더</option>' +
+      folders.map(f => `<option value="${f}">${f}</option>`).join('');
+    _upCurrentFilter = '';
+  }
+
+  upRender();
+}
+
+function upRender() {
+  const listEl = document.getElementById('up-list');
+  if (!listEl) return;
+
+  const items = _upCurrentFilter
+    ? _upItems.filter(f => f.folder === _upCurrentFilter)
+    : _upItems;
+
+  document.getElementById('up-count').textContent = `${items.length}개`;
+
+  if (!items.length) {
+    listEl.innerHTML = '<div class="up-empty">미등록 파일 없음</div>';
+    return;
+  }
+
+  listEl.innerHTML = '';
+  items.forEach((item, idx) => {
+    const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(item.name);
+    const div = document.createElement('div');
+    div.className = 'up-item';
+    div.dataset.idx = idx;
+    div.innerHTML = `
+      ${isImg ? `<img class="up-item-thumb" src="${item.url}" loading="lazy" onerror="this.style.display='none'">` : '<div class="up-item-thumb"></div>'}
+      <div class="up-item-info">
+        <div class="up-item-name">${item.name}</div>
+        <div class="up-item-path">${item.folder}</div>
+      </div>
+      <span class="up-item-reg" onclick="upRegisterOne(${idx},event)">등록</span>
+    `;
+    div.addEventListener('click', e => {
+      if (e.target.classList.contains('up-item-reg')) return;
+      if (_upSelectMode) {
+        div.classList.toggle('selected');
+        upUpdateSelectCount();
+      }
+    });
+    listEl.appendChild(div);
+  });
+}
+
+function upFilterChange(val) {
+  _upCurrentFilter = val;
+  upRender();
+}
+
+function upToggleSelectMode() {
+  _upSelectMode = !_upSelectMode;
+  const btn = document.getElementById('up-btn-select');
+  if (btn) btn.classList.toggle('active', _upSelectMode);
+  if (!_upSelectMode) {
+    document.querySelectorAll('.up-item.selected').forEach(el => el.classList.remove('selected'));
+    upUpdateSelectCount();
+  }
+}
+
+function upUpdateSelectCount() {
+  const cnt = document.querySelectorAll('.up-item.selected').length;
+  const el = document.getElementById('up-select-count');
+  if (el) { el.textContent = `${cnt}개 선택`; el.style.display = cnt ? '' : 'none'; }
+}
+
+// 단일 등록 - 해당 폴더가 매핑된 grid에 카드 등록
+async function upRegisterOne(itemIdx, e) {
+  e && e.stopPropagation();
+  const items = _upCurrentFilter
+    ? _upItems.filter(f => f.folder === _upCurrentFilter)
+    : _upItems;
+  const item = items[itemIdx];
+  if (!item) return;
+
+  // 폴더에 해당하는 gridId 찾기
+  const gridId = Object.entries(GITHUB_FOLDER_MAP).find(([,v]) => v === item.folder)?.[0] || '';
+  const title = prompt(`"${item.name}" 을 등록합니다.
+표시 제목을 입력하세요:`, item.name.replace(/\.[^.]+$/, ''));
+  if (title === null) return;
+
+  try {
+    const newItem = {
+      grid: gridId,
+      type: getMediaTypeByName(item.name) || 'image',
+      title: title || item.name,
+      desc: '',
+      url: item.url,
+      sourcePath: item.sourcePath,
+      sourceKind: 'github',
+      sha: item.sha || '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    let docId = '';
+    if (FIRESTORE_READY) {
+      const ref = await getCardsCol().add(newItem);
+      docId = ref.id;
+    }
+    insertCardToGrid(newItem, docId || autoDocIdFromSource(item.sourcePath));
+    // 목록에서 제거
+    _upItems = _upItems.filter(f => f.sourcePath !== item.sourcePath);
+    upRender();
+  } catch(err) {
+    alert('등록 실패: ' + err.message);
+  }
+}
+
+// 선택 삭제
+async function upDeleteSelected() {
+  const selected = [...document.querySelectorAll('.up-item.selected')];
+  if (!selected.length) { alert('선택된 항목이 없습니다.'); return; }
+  if (!confirm(`선택된 ${selected.length}개 파일을 GitHub에서 삭제합니다.`)) return;
+
+  const items = _upCurrentFilter
+    ? _upItems.filter(f => f.folder === _upCurrentFilter)
+    : _upItems;
+
+  for (const el of selected) {
+    const idx = parseInt(el.dataset.idx);
+    const item = items[idx];
+    if (!item) continue;
+    try {
+      await deleteGithubFileByPath(item.sourcePath, item.sha);
+      _upItems = _upItems.filter(f => f.sourcePath !== item.sourcePath);
+    } catch(err) {
+      console.error('삭제 실패', item.sourcePath, err);
+    }
+  }
+  _upSelectMode = false;
+  const btn = document.getElementById('up-btn-select');
+  if (btn) btn.classList.remove('active');
+  upRender();
 }
 
 </script>
