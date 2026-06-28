@@ -2732,5 +2732,17 @@ window.addEventListener('DOMContentLoaded',async()=>{
   document.querySelectorAll('.fade-in').forEach(el=>el.classList.add('visible'));
 });
 </script>
+
+<script>
+window.addEventListener('load', () => {
+  document.querySelectorAll('.grid-3, .grid-2').forEach(el => {
+    el.classList.remove('collapsed');
+  });
+  document.querySelectorAll('.section-toggle-btn').forEach(btn => {
+    btn.textContent='닫기';
+  });
+});
+</script>
+
 </body>
 </html>
