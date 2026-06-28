@@ -3237,7 +3237,7 @@ async function persistCardGridMove(card,fromGridId,toGridId){
     alert('카드 이동은 화면에 반영됐지만 파일/DB 이동에 실패했습니다.\n' + (err.message||''));
   }
 }
-function setupDragSortable(){
+async function setupDragSortable(){
   let dragCard=null;
   let dragGridId='';
   let dragFromPanel=false;
@@ -4389,7 +4389,7 @@ function pupRegisteredPaths(){
 }
 
 // ── 현재 탭 GitHub 폴더 파일 스캔
-async async function pupFetchGithubFiles(force=false){
+async function pupFetchGithubFiles(force=false){
   const folder = pupCurrentFolder();
   if(!folder) return [];
 
