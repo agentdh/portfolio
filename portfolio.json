@@ -737,7 +737,14 @@
       "type": "video"
     }
   ],
-  "pixel-cursor": [],
+  "pixel-cursor": [
+    {
+      "title": "2400",
+      "desc": "",
+      "src": "./pixelart/1782645251194-2400.gif",
+      "type": "image"
+    }
+  ],
   "pixel-illust": [
     {
       "title": "enaga 480",
