@@ -3037,34 +3037,141 @@ function autoDocIdFromSource(sourcePath){
   }
   return 'auto_'+Math.abs(h);
 }
+// ── Worker 기반 GitHub 폴더 스캔 ──
+// 브라우저에서 api.github.com을 직접 호출하면 anonymous rate limit(403)에 쉽게 걸리므로
+// 모든 폴더 조회는 Cloudflare Worker를 우선 사용한다.
+const WORKER_FOLDER_CACHE = new Map();
+
+function workerBaseUrl(){
+  return String(WORKER_UPLOAD_URL || '').replace(/\/+$/,'');
+}
+
+async function workerFetchText(url, options){
+  const res = await fetch(url, options);
+  const raw = await res.text();
+  let data = null;
+  try{ data = JSON.parse(raw); }catch(_){}
+  if(!res.ok){
+    const msg = data?.message || data?.error || raw || `Worker ${res.status}`;
+    throw new Error(msg);
+  }
+  return data ?? raw;
+}
+
+function workerExtractFileList(data){
+  if(Array.isArray(data)) return data;
+  if(!data || typeof data !== 'object') return [];
+  if(Array.isArray(data.files)) return data.files;
+  if(Array.isArray(data.items)) return data.items;
+  if(Array.isArray(data.contents)) return data.contents;
+  if(Array.isArray(data.data)) return data.data;
+  if(data.result && Array.isArray(data.result.files)) return data.result.files;
+  if(data.result && Array.isArray(data.result.items)) return data.result.items;
+  if(data.result && Array.isArray(data.result.contents)) return data.result.contents;
+  return [];
+}
+
+function normalizeGithubFileItem(f, folder, gridId=''){
+  const path = f?.sourcePath || f?.path || f?.name && `${folder}/${f.name}` || '';
+  const name = f?.name || filenameFromPath(path);
+  if(!name || !path) return null;
+  const type = getMediaTypeByName(name);
+  if(!type) return null;
+  return {
+    grid: gridId || f?.grid || '',
+    type,
+    title: f?.title || titleFromFilename(name),
+    desc: f?.desc || '',
+    name,
+    sourcePath: path,
+    sourceKind: 'github',
+    sha: f?.sha || '',
+    url: f?.download_url || f?.downloadUrl || f?.url ||
+         `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${encodeURI(path).replace(/#/g,'%23')}`
+  };
+}
+
+async function fetchWorkerFolder(folderPath){
+  if(!folderPath) return [];
+  if(WORKER_FOLDER_CACHE.has(folderPath)) return WORKER_FOLDER_CACHE.get(folderPath);
+
+  const base = workerBaseUrl();
+  const q = encodeURIComponent(folderPath);
+  const body = {action:'list', folder:folderPath, path:folderPath, branch:GITHUB_BRANCH};
+
+  // Worker 구현이 정확히 어느 라우트를 쓰는지 달라도 최대한 맞도록 여러 형식을 순차 시도한다.
+  const attempts = [
+    () => workerFetchText(base, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    }),
+    () => workerFetchText(`${base}?action=list&folder=${q}&path=${q}&branch=${encodeURIComponent(GITHUB_BRANCH)}`, {
+      method:'GET'
+    }),
+    () => workerFetchText(`${base}/list?folder=${q}&path=${q}&branch=${encodeURIComponent(GITHUB_BRANCH)}`, {
+      method:'GET'
+    }),
+    () => workerFetchText(`${base}/files?folder=${q}&path=${q}&branch=${encodeURIComponent(GITHUB_BRANCH)}`, {
+      method:'GET'
+    }),
+    () => workerFetchText(`${base}/list`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    })
+  ];
+
+  let lastErr = null;
+  for(const run of attempts){
+    try{
+      const data = await run();
+      const files = workerExtractFileList(data);
+      const normalized = files.map(f=>normalizeGithubFileItem(f, folderPath)).filter(Boolean);
+      WORKER_FOLDER_CACHE.set(folderPath, normalized);
+      return normalized;
+    }catch(err){
+      lastErr = err;
+    }
+  }
+
+  throw new Error(lastErr?.message || 'Worker 폴더 목록 조회 실패');
+}
+
 async function fetchGithubFolder(gridId,folderPath){
-  const api=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folderPath).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
-    const res=await fetch(api,{headers:{'Accept':'application/vnd.github+json'}});
-    if(!res.ok)return [];
-    const files=await res.json();
-    if(!Array.isArray(files))return [];
-    return files
-      .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
-      .map(f=>({
-        grid:gridId,
-        type:getMediaTypeByName(f.name),
-        title:titleFromFilename(f.name),
-        desc:'',
-        url:f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folderPath}/${f.name}`,
-        sourcePath:`${folderPath}/${f.name}`,
-        sourceKind:'github'
-      }));
+    const items = await fetchWorkerFolder(folderPath);
+    return items.map(item=>({...item, grid:gridId}));
   }catch(err){
-    console.warn('GitHub 폴더 스캔 실패:',folderPath,err);
+    console.warn('Worker 폴더 스캔 실패:',folderPath,err);
     return [];
   }
 }
+
 async function loadGithubFolderItems(){
   autoFolderItems=[];
-  const entries=Object.entries(GITHUB_FOLDER_MAP);
-  const results=await Promise.all(entries.map(([gridId,folder])=>fetchGithubFolder(gridId,folder)));
-  autoFolderItems=results.flat();
+
+  // 같은 폴더를 여러 그리드가 공유하므로 폴더 단위로 1회만 조회한다.
+  const folderToGrids = {};
+  Object.entries(GITHUB_FOLDER_MAP).forEach(([gridId,folder])=>{
+    if(!folderToGrids[folder]) folderToGrids[folder]=[];
+    folderToGrids[folder].push(gridId);
+  });
+
+  const results = [];
+  for(const [folder, grids] of Object.entries(folderToGrids)){
+    const files = await fetchWorkerFolder(folder).catch(err=>{
+      console.warn('Worker 폴더 스캔 실패:',folder,err);
+      return [];
+    });
+
+    // 기존 렌더 구조 호환을 위해 같은 폴더 파일을 해당 폴더를 쓰는 모든 그리드 후보에 매핑한다.
+    grids.forEach(gridId=>{
+      files.forEach(item=>results.push({...item, grid:gridId}));
+    });
+  }
+
+  autoFolderItems=results;
   return autoFolderItems;
 }
 
@@ -3111,6 +3218,7 @@ async function uploadFileToGithubFolder(file,gridId){
     const msg=data?.message||data?.error||text||'GitHub 업로드 실패';
     throw new Error(msg);
   }
+  WORKER_FOLDER_CACHE.delete(folder);
   return {
     grid:gridId,
     type,
@@ -3136,6 +3244,8 @@ async function deleteGithubFileByPath(path){
     const msg=data?.message||data?.error||text||'GitHub 파일 삭제 실패';
     throw new Error(msg);
   }
+  const folder = String(path).split('/')[0];
+  if(folder) WORKER_FOLDER_CACHE.delete(folder);
   return data;
 }
 
@@ -3231,6 +3341,8 @@ async function moveGithubFileToGrid(card,toGridId){
     throw new Error(uploadData?.message||uploadData?.error||uploadText||'새 폴더 업로드 실패');
   }
   await deleteGithubFileByPath(fromPath);
+  WORKER_FOLDER_CACHE.delete(String(fromPath).split('/')[0]);
+  WORKER_FOLDER_CACHE.delete(String(toPath).split('/')[0]);
   return {
     sourcePath:toPath,
     url:uploadData?.content?.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${toPath}`
@@ -4471,60 +4583,16 @@ async function pupFetchGithubFiles(){
     return [];
   }
 
-  const normalizeItem = (f)=>{
-    const name = f?.name || filenameFromPath(f?.path || f?.sourcePath || '');
-    const sourcePath = f?.sourcePath || f?.path || (name ? `${folder}/${name}` : '');
-    if(!name || !sourcePath) return null;
-    if(!getMediaTypeByName(name)) return null;
-    return {
-      name,
-      sourcePath,
-      url: f?.download_url || f?.url || f?.downloadUrl ||
-           `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${encodeURI(sourcePath).replace(/#/g,'%23')}`,
-      sha: f?.sha || ''
-    };
-  };
-
-  const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
-    const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}, cache:'no-store'});
-    if(res.ok){
-      const files = await res.json();
-      if(Array.isArray(files)){
-        window.__pupLastGithubFetchOk = true;
-        return files.filter(f=>f.type==='file').map(normalizeItem).filter(Boolean);
-      }
-      window.__pupLastGithubFetchError = 'GitHub response is not array';
-    }else{
-      window.__pupLastGithubFetchError = `GitHub API ${res.status} ${res.statusText}`;
-      console.warn('GitHub 폴더 스캔 실패:', folder, res.status, res.statusText);
-    }
+    const files = await fetchWorkerFolder(folder);
+    window.__pupLastGithubFetchOk = true;
+    window.__pupLastGithubFetchError = '';
+    return files.map(f=>normalizeGithubFileItem(f, folder)).filter(Boolean);
   }catch(e){
     window.__pupLastGithubFetchError = e?.message || String(e);
-    console.warn('GitHub 폴더 스캔 실패:', e);
+    console.warn('Worker 폴더 스캔 실패:', folder, e);
+    return [];
   }
-
-  try{
-    const res = await fetch(WORKER_UPLOAD_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'list', folder, path:folder, branch:GITHUB_BRANCH})
-    });
-    const raw = await res.text();
-    let data = null;
-    try{ data = JSON.parse(raw); }catch(_){}
-    if(res.ok && data){
-      const list = Array.isArray(data) ? data : (data.files || data.items || data.contents || []);
-      if(Array.isArray(list)){
-        window.__pupLastGithubFetchOk = true;
-        return list.map(normalizeItem).filter(Boolean);
-      }
-    }
-  }catch(e){
-    console.warn('Worker 폴더 스캔 실패:', e);
-  }
-
-  return [];
 }
 
 // ── 리로드: 깨진 카드 제거 + 중복 제거 + 미등록 목록 재구성. 등록 위치 이동 금지.
