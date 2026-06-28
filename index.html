@@ -500,6 +500,39 @@ color:var(--cyan);
 .pup-path{font-size:10px!important;}
 @media(max-width:1380px){#port-unrg-panel{display:none!important;}}
 
+
+/* ── VONA empty section drop placeholder ── */
+.empty-drop-card{
+  min-height:160px;
+  border:1px dashed rgba(0,229,255,.28)!important;
+  background:rgba(0,229,255,.035)!important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:default!important;
+  transform:none!important;
+}
+.empty-drop-card:hover{
+  border-color:rgba(0,229,255,.52)!important;
+  transform:none!important;
+}
+.empty-drop-inner{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:12px;
+  line-height:1.8;
+}
+.empty-drop-inner strong{
+  display:block;
+  color:var(--cyan);
+  font-size:13px;
+  margin-bottom:3px;
+}
+.grid-3.pup-drop-target .empty-drop-card,.grid-2.pup-drop-target .empty-drop-card{
+  border-color:var(--cyan)!important;
+  background:rgba(0,229,255,.075)!important;
+}
+
 </style>
 </head>
 <body>
@@ -3233,6 +3266,39 @@ async function persistCardGridMove(card,fromGridId,toGridId){
     alert('카드 이동은 화면에 반영됐지만 파일/DB 이동에 실패했습니다.\n' + (err.message||''));
   }
 }
+
+function getRealGridCards(grid){
+  if(!grid)return [];
+  return [...grid.querySelectorAll(':scope > .card')].filter(card=>
+    !card.classList.contains('card-add') &&
+    !card.classList.contains('card-multi-upload') &&
+    !card.classList.contains('empty-drop-card')
+  );
+}
+function ensureEmptyDropZones(root=document){
+  root.querySelectorAll('#tab-work .grid-3[id],#tab-work .grid-2[id]').forEach(grid=>{
+    const realCards=getRealGridCards(grid);
+    let empty=grid.querySelector(':scope > .empty-drop-card');
+    if(realCards.length===0){
+      if(!empty){
+        empty=document.createElement('div');
+        empty.className='card empty-drop-card';
+        empty.draggable=false;
+        empty.setAttribute('aria-label','비어있음');
+        empty.innerHTML='<div class="empty-drop-inner"><strong>비어있음</strong>여기로 드래그해서 추가</div>';
+        empty.addEventListener('click',e=>e.stopPropagation());
+        grid.appendChild(empty);
+      }
+    }else if(empty){
+      empty.remove();
+    }
+  });
+}
+function clearPupSelectionState(){
+  document.querySelectorAll('#tab-work .card.selected,.pup-item.selected').forEach(el=>el.classList.remove('selected'));
+  pupUpdateCount?.();
+}
+
 function setupDragSortable(){
   let dragCard=null;
   let dragGridId='';
@@ -3240,10 +3306,12 @@ function setupDragSortable(){
   let lastDropGridId='';
   let selectedDragItems=[];
 
+  ensureEmptyDropZones();
   document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(grid=>{
     grid.querySelectorAll(':scope > .card').forEach(card=>{
-      card.draggable=!!isAdmin;
-      card.classList.toggle('drag-ready',!!isAdmin);
+      const movable=!card.classList.contains('empty-drop-card');
+      card.draggable=!!isAdmin && movable;
+      card.classList.toggle('drag-ready',!!isAdmin && movable);
     });
   });
   document.querySelectorAll('.pup-item').forEach(el=>{ el.draggable=!!isAdmin; });
@@ -3272,10 +3340,10 @@ function setupDragSortable(){
     setTimeout(()=>ghost.remove(),0);
   }
   function isPanelItem(el){ return el && el.classList.contains('pup-item'); }
-  function isCardItem(el){ return el && el.classList.contains('card'); }
+  function isCardItem(el){ return el && el.classList.contains('card') && !el.classList.contains('empty-drop-card'); }
   function getDragAfterElement(grid,x,y){
     const cards=[...grid.querySelectorAll(':scope > .card')]
-      .filter(card=>!selectedDragItems.includes(card) && !card.classList.contains('dragging') && !card.closest('.card-add,.card-multi-upload'));
+      .filter(card=>!selectedDragItems.includes(card) && !card.classList.contains('dragging') && !card.classList.contains('empty-drop-card') && !card.closest('.card-add,.card-multi-upload'));
     for(const child of cards){
       const box=child.getBoundingClientRect();
       const beforeRow = y < box.top + box.height * 0.5;
@@ -3300,6 +3368,7 @@ function setupDragSortable(){
     const panelItem=e.target.closest('.pup-item');
     const card=e.target.closest('#tab-work .card');
     if(!isAdmin || e.target.closest('.card-edit,.card-del')){e.preventDefault();return;}
+    if(card && card.classList.contains('empty-drop-card')){e.preventDefault();return;}
 
     if(panelItem){
       dragFromPanel=true;
@@ -3400,6 +3469,7 @@ function setupDragSortable(){
         }
       }
       await saveGridOrder(grid.id);
+      ensureEmptyDropZones();
       pupRender();
       setupDragSortable();
       return;
@@ -3417,6 +3487,7 @@ function setupDragSortable(){
         await saveGridOrder(fromId);
       }
       await saveGridOrder(grid.id);
+      ensureEmptyDropZones();
     }
   };
 
@@ -3424,6 +3495,7 @@ function setupDragSortable(){
     markSelectedClasses(selectedDragItems,false);
     document.querySelectorAll('.grid-3.pup-drop-target,.grid-2.pup-drop-target').forEach(g=>g.classList.remove('pup-drop-target'));
     dragCard=null;dragGridId='';dragFromPanel=false;lastDropGridId='';selectedDragItems=[];
+    ensureEmptyDropZones();
     if(_pupSelectMode)pupUpdateCount();
   };
 
@@ -3523,6 +3595,12 @@ function openCard(item){
   openMediaModal(item);
 }
 function openCardFromElement(card){
+  if(!card || card.classList.contains('empty-drop-card')) return;
+  if(_pupSelectMode && card.classList.contains('select-mode')){
+    card.classList.toggle('selected');
+    pupUpdateCount();
+    return;
+  }
   openMediaModal(getDisplayItemFromCard(card));
 }
 function closeVideoModal(e){
@@ -3662,7 +3740,7 @@ function makeCardEl(item,docId){
   card.innerHTML=`
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
-    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
+    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="미등록 카드로 이동">×</button>`:''}
     <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
     <span class="type-badge ${badgeClass}">${badge}</span>
     <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
@@ -3678,6 +3756,7 @@ function insertCardToGrid(item,docId){
   const card=makeCardEl(item,docId);
   if(addCard)grid.insertBefore(card,addCard);
   else grid.appendChild(card);
+  ensureEmptyDropZones();
   setupDragSortable();
 }
 
@@ -3810,7 +3889,7 @@ async function deleteSelectedCards(){
     const sourceKind=card.dataset.sourceKind||'';
     const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
     try{
-      if(sourceKind==='github' && sourcePath)await deleteGithubFileByPath(sourcePath);
+      if(sourcePath)await deleteGithubFileByPath(sourcePath);
       if(FIRESTORE_READY && docId)await getCardsCol().doc(docId).delete().catch(()=>{});
       card.remove();
       if(gridId)await saveGridOrder(gridId);
@@ -3902,6 +3981,7 @@ async function loadCards(){
   enhanceStaticPortfolioCards();
   setupMultiUploadButtons();
   setupSectionAdminControls();
+  ensureEmptyDropZones();
 }
 
 async function saveCard(item){
@@ -3916,40 +3996,51 @@ async function saveCard(item){
   });
   return ref.id;
 }
+function makeUnregisteredItemFromCard(card){
+  const sourcePath=card?.dataset?.sourcePath||'';
+  const url=card?.dataset?.url||'';
+  const title=card?.dataset?.title||card?.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
+  const sourceKind=card?.dataset?.sourceKind||'';
+  const name=sourcePath ? filenameFromPath(sourcePath) : title;
+  if(sourcePath && (sourceKind==='github' || sourcePath.includes('/'))){
+    return {kind:'github', item:{name,sourcePath,url,sha:card?.dataset?.sha||''}};
+  }
+  return {kind:'link', item:{title,url,sourcePath,docId:card?.dataset?.docId||''}};
+}
+async function moveCardElementToUnregistered(card){
+  if(!card || card.classList.contains('empty-drop-card'))return;
+  const docId=card.dataset.docId||'';
+  const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+  const converted=makeUnregisteredItemFromCard(card);
+
+  if(FIRESTORE_READY && docId){
+    await getCardsCol().doc(docId).delete().catch(err=>console.warn('Firestore 등록 해제 실패:',err));
+  }
+
+  if(converted.kind==='github'){
+    const sp=converted.item.sourcePath;
+    if(sp && !_pupItems.some(item=>item.sourcePath===sp)) _pupItems.push(converted.item);
+  }else{
+    const key=converted.item.sourcePath||converted.item.url||converted.item.title||'';
+    if(key && !_pupLinkItems.some(item=>(item.sourcePath||item.url||item.title||'')===key)) _pupLinkItems.push(converted.item);
+  }
+
+  card.remove();
+  if(gridId) await saveGridOrder(gridId);
+  pupRender();
+  ensureEmptyDropZones();
+  setupDragSortable();
+}
 async function deleteCard(e,docId){
   e.stopPropagation();
   if(!docId)return;
-
   const card=document.querySelector(`[data-doc-id="${docId}"]`);
-  const sourcePath=card?.dataset?.sourcePath||'';
-  const sourceKind=card?.dataset?.sourceKind||'';
-  const gridId=card?.dataset?.grid||card?.closest('.grid-3,.grid-2')?.id||'';
-
-  const msg=sourceKind==='github' && sourcePath
-    ? `이 카드를 삭제하면 GitHub 원본 파일도 삭제됩니다.\n\n원본 파일: ${filenameFromPath(sourcePath)}\n경로: ${sourcePath}\n\n삭제할까요?`
-    : '이 카드를 삭제할까요?';
-
-  if(!confirm(msg))return;
-
+  if(!card)return;
   try{
-    if(sourceKind==='github' && sourcePath){
-      await deleteGithubFileByPath(sourcePath);
-    }
-
-    if(FIRESTORE_READY){
-      await getCardsCol().doc(docId).delete().catch(err=>{
-        console.warn('Firestore 메타데이터 삭제 실패:',err);
-      });
-    }
-
-    card?.remove();
-
-    if(gridId){
-      await saveGridOrder(gridId);
-    }
+    await moveCardElementToUnregistered(card);
   }catch(err){
-    console.error('카드 삭제 실패:',err);
-    alert('카드 삭제에 실패했습니다. '+(err.message||''));
+    console.error('미등록 카드 이동 실패:',err);
+    alert('미등록 카드로 이동하지 못했습니다. '+(err.message||''));
   }
 }
 /* ── ADD MODAL ── */
@@ -4236,6 +4327,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   enhanceStaticPortfolioCards();
   setupMultiUploadButtons();
   setupSectionAdminControls();
+  ensureEmptyDropZones();
   setupDragSortable();
 });
 
@@ -4402,6 +4494,7 @@ async function pupReload(){
   });
 
   pupRender();
+  ensureEmptyDropZones();
   setupDragSortable();
 }
 
@@ -4539,20 +4632,20 @@ function pupToggleSelect(){
 
 // ── 선택삭제 (GitHub + UI)
 async function pupDeleteSelected(){
-  const selectedCards = [...document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.selected')];
+  const selectedCards = [...document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card.selected')]
+    .filter(card=>!card.classList.contains('empty-drop-card'));
   const selectedPup   = [...document.querySelectorAll('.pup-item.selected')];
   const total = selectedCards.length + selectedPup.length;
   if(!total){ alert('선택된 항목이 없습니다.'); return; }
-  if(!confirm(`선택된 ${total}개를 삭제합니다.\nGitHub 파일은 완전 삭제됩니다.`)) return;
+  if(!confirm(`선택된 ${total}개를 삭제합니다.\n연결된 GitHub 파일이 있으면 폴더에서도 완전 삭제됩니다.`)) return;
 
   const failed=[];
   for(const card of selectedCards){
     const docId = card.dataset.docId||'';
     const sp = card.dataset.sourcePath||'';
-    const sourceKind = card.dataset.sourceKind||'';
     const gridId = card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
     try{
-      if(sourceKind==='github' && sp) await deleteGithubFileByPath(sp);
+      if(sp) await deleteGithubFileByPath(sp);
       if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
       card.remove();
       if(gridId) await saveGridOrder(gridId);
@@ -4563,9 +4656,8 @@ async function pupDeleteSelected(){
     const kind = el.dataset.kind||'github';
     if(kind==='github'){
       const sp  = el.dataset.sourcePath||'';
-      const sha = el.dataset.sha||'';
       try{
-        await deleteGithubFileByPath(sp, sha);
+        if(sp) await deleteGithubFileByPath(sp);
         _pupItems = _pupItems.filter(f=>f.sourcePath !== sp);
         el.remove();
       }catch(err){ failed.push(`${sp}: ${err.message||'삭제 실패'}`); }
@@ -4580,7 +4672,11 @@ async function pupDeleteSelected(){
   const btn=document.getElementById('pup-btn-select');
   if(btn) btn.classList.remove('active');
   document.querySelectorAll('#tab-work .card.select-mode,.pup-item.select-mode').forEach(el=>el.classList.remove('select-mode','selected'));
+  selectedCardKeys.clear();
+  selectionModeGrid='';
   pupRender();
+  ensureEmptyDropZones();
+  setupDragSortable();
   if(failed.length) alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
 }
 
