@@ -38,9 +38,9 @@
 <!-- MAIN TAB NAV: 소개 / 포트폴리오 / 주의사항 / 가격표 -->
 <div class="tab-nav-wrap">
   <div class="tab-nav">
-    <button class="tab-btn" onclick="switchTab('about',this)">소개</button>
+    <button class="tab-btn active" onclick="switchTab('about',this)">소개</button>
     <button class="tab-btn" onclick="switchTab('notice',this)">주의사항</button>
-    <button class="tab-btn active" onclick="switchTab('work',this)">포트폴리오</button>
+    <button class="tab-btn" onclick="switchTab('work',this)">포트폴리오</button>
     <button class="tab-btn" onclick="switchTab('commission',this)">가격표</button>
   </div>
 </div>
@@ -49,7 +49,7 @@
 
 
 <!-- ══ 소개 탭 ══ -->
-<div class="tab-panel" id="tab-about">
+<div class="tab-panel active" id="tab-about">
 
 <div class="about-card about-top fade-in visible">
 <h4>학력</h4>
@@ -254,7 +254,7 @@
 
 
 <!-- ══ 포트폴리오 탭 ══ -->
-<div class="tab-panel active" id="tab-work">
+<div class="tab-panel" id="tab-work">
   <!-- 포트폴리오 레이아웃: 미등록 패널(좌) + 그리드(우) -->
   <div id="port-layout">
 
@@ -278,7 +278,7 @@
         <div class="portfolio-section-title" data-grid-id="thumbnail-ld" style="cursor: default;"><span class="section-title-label">LD 썸네일</span><button type="button" class="section-toggle-btn" data-grid="thumbnail-ld" aria-expanded="false">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="thumbnail-ld" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="thumbnail-ld" data-vona-collapse-ready="1">
           <div class="card generated-card drag-ready" data-doc-id="auto_210459359" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/thumbnail/2026-05-20.조자라.jpg" data-title="2026 05 20.조자라" data-desc="" data-grid="thumbnail-ld" data-source-path="thumbnail/2026-05-20.조자라.jpg" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1418418662">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_210459359')" title="수정">수정</button>
@@ -3070,10 +3070,10 @@
 
 
 <!-- ── 미등록 카드 패널 (관리자 전용) ── -->
-<div id="port-unrg-panel" class="admin-visible">
+<div id="port-unrg-panel">
   <div class="pup-header">
     <div class="pup-title">미등록 카드</div>
-    <div class="pup-folder" id="pup-folder-label">📁 thumbnail</div>
+    <div class="pup-folder" id="pup-folder-label"></div>
     <div class="pup-actions">
       <button class="pup-btn" id="pup-btn-select" onclick="pupToggleSelect()">다중선택</button>
       <button class="pup-btn danger" onclick="pupDeleteSelected()">선택삭제</button>
@@ -3088,7 +3088,9 @@
       </button>
     </div>
   </div>
-  <div class="pup-list" id="pup-list"><div class="pup-empty">미등록 카드 없음</div></div>
+  <div class="pup-list" id="pup-list">
+    <div class="pup-empty">탭을 선택하면 해당 폴더의 미등록 파일이 표시됩니다.</div>
+  </div>
   <div class="pup-status">
     <span id="pup-count">0개</span>
     <span id="pup-sel-count" style="display:none">0개 선택</span>
