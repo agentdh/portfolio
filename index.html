@@ -3914,49 +3914,5 @@ function toggleSection(gridId){
   ]
 }
 </script>
-
-<script>
-// === COLLAPSIBLE SYSTEM (OP STYLE MIRROR) ===
-function toggleSection(btn){
-  const targetId = btn.getAttribute('data-target');
-  const target = document.getElementById(targetId);
-  if(!target) return;
-  target.classList.toggle('collapsed');
-  btn.innerText = target.classList.contains('collapsed') ? '열기' : '닫기';
-}
-
-function initCollapsibleSections(){
-  const grids = document.querySelectorAll('.grid-3, .grid-2');
-
-  grids.forEach((grid, idx)=>{
-    grid.classList.remove('collapsed');
-
-    // find nearest title above
-    let prev = grid.previousElementSibling;
-    while(prev && !prev.classList.contains('portfolio-section-title') && !prev.classList.contains('sec-label')){
-      prev = prev.previousElementSibling;
-    }
-
-    if(prev){
-      let btn = prev.querySelector('.section-toggle-btn');
-      if(!btn){
-        const id = 'grid_'+idx;
-        grid.id = id;
-
-        btn = document.createElement('button');
-        btn.className = 'section-toggle-btn';
-        btn.innerText = '닫기';
-        btn.setAttribute('data-target', id);
-        btn.onclick = function(){ toggleSection(this); };
-
-        prev.appendChild(btn);
-      }
-    }
-  });
-}
-
-document.addEventListener('DOMContentLoaded', initCollapsibleSections);
-</script>
-
 </body>
 </html>
