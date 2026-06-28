@@ -3400,6 +3400,7 @@ function setupDragSortable(){
         }
       }
       await saveGridOrder(grid.id);
+      pupStoreCache();
       pupRender();
       setupDragSortable();
       return;
@@ -3748,6 +3749,7 @@ async function handleBatchUpload(input){
   }
 
   await saveGridOrder(gridId);
+  pupInvalidateCache(_pupCurrentTab);
   setupDragSortable();
 
   if(uploadBtn){
@@ -3866,6 +3868,7 @@ async function reloadPortfolioClean(gridId){
   // 섹션별 리로드는 더 이상 카드 재생성/재배치를 하지 않는다.
   // 실제 리로드 정리는 미등록 패널의 pupReload()에서 현재 탭 전체 기준으로만 수행한다.
   if(!isAdmin){alert('관리자 로그인 후 사용할 수 있습니다.');return;}
+  pupInvalidateCache(_pupCurrentTab);
   await pupReload();
 }
 
@@ -4302,6 +4305,30 @@ let _pupCurrentTab = 'thumbnail'; // 현재 선택 탭
 let _pupItems      = [];          // 미등록 GitHub 파일 목록
 let _pupLinkItems  = [];          // 미등록 링크/기타 카드 목록
 let _pupSelectMode = false;
+let _pupCache      = {};          // 탭별 GitHub 스캔 결과 캐시
+
+function pupCloneList(list){
+  return (Array.isArray(list) ? list : []).map(item=>({...item}));
+}
+function pupStoreCache(tabKey=_pupCurrentTab){
+  _pupCache[tabKey] = {
+    items: pupCloneList(_pupItems),
+    linkItems: pupCloneList(_pupLinkItems)
+  };
+}
+function pupLoadCache(tabKey=_pupCurrentTab){
+  const cached = _pupCache[tabKey];
+  if(!cached) return false;
+  _pupItems = pupCloneList(cached.items);
+  _pupLinkItems = pupCloneList(cached.linkItems);
+  pupRender();
+  setupDragSortable();
+  return true;
+}
+function pupInvalidateCache(tabKey=_pupCurrentTab){
+  if(tabKey) delete _pupCache[tabKey];
+  else _pupCache = {};
+}
 
 // ── 탭 전환 (포트폴리오 전용)
 function switchPortTab(tabKey, btn){
@@ -4313,8 +4340,8 @@ function switchPortTab(tabKey, btn){
   const panel = document.getElementById('port-sub-'+tabKey);
   if(panel) panel.classList.add('active');
   _pupCurrentTab = tabKey;
-  // 미등록 패널 갱신
-  if(isAdmin) pupReload();
+  // 파일 구조가 바뀌지 않는 탭 전환은 GitHub 재호출 없이 캐시만 렌더링한다.
+  if(isAdmin && !pupLoadCache(tabKey)) pupReload();
 }
 
 // ── 패널 표시/숨김: 포트폴리오 탭에서만 우측 공백에 overlay로 표시
@@ -4324,7 +4351,7 @@ function upShow(){
   const workActive = document.getElementById('tab-work')?.classList.contains('active');
   if(isAdmin && workActive){
     panel.classList.add('admin-visible');
-    pupReload();
+    if(!pupLoadCache(_pupCurrentTab)) pupReload();
   }else{
     panel.classList.remove('admin-visible');
   }
@@ -4401,6 +4428,7 @@ async function pupReload(){
     return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key)===idx;
   });
 
+  pupStoreCache();
   pupRender();
   setupDragSortable();
 }
@@ -4580,6 +4608,8 @@ async function pupDeleteSelected(){
   const btn=document.getElementById('pup-btn-select');
   if(btn) btn.classList.remove('active');
   document.querySelectorAll('#tab-work .card.select-mode,.pup-item.select-mode').forEach(el=>el.classList.remove('select-mode','selected'));
+  pupInvalidateCache(_pupCurrentTab);
+  pupStoreCache();
   pupRender();
   if(failed.length) alert(`일부 삭제 실패:\n\n${failed.join('\n')}`);
 }
@@ -4594,6 +4624,7 @@ async function pupResetTab(){
   const cards = [...subEl.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')];
   if(!confirm(`현재 탭을 초기화합니다.\n\n1) 등록 카드 ${cards.length}개를 미등록 카드로 회수\n2) ${folder} 폴더의 모든 파일을 스캔해 누락 카드 생성\n\n파일 자체는 삭제하지 않습니다.`)) return;
 
+  pupInvalidateCache(_pupCurrentTab);
   const byPath = new Map(_pupItems.map(item=>[item.sourcePath,item]));
   const linkKeys = new Set(_pupLinkItems.map(item=>item.sourcePath||item.url||item.title||''));
 
@@ -4648,6 +4679,7 @@ async function pupResetTab(){
   });
 
   await Promise.all([...subEl.querySelectorAll('.grid-3[id],.grid-2[id]')].map(g=>saveGridOrder(g.id)));
+  pupStoreCache();
   pupRender();
   setupDragSortable();
 }
