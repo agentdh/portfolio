@@ -1045,9 +1045,39 @@
       "desc": "",
       "src": "./animation-video/0애니메이션.gif",
       "type": "image"
+    },
+    {
+      "title": "포니-영상커버",
+      "desc": "",
+      "src": "https://www.youtube.com/watch?v=XFY8OVmBpUc",
+      "type": "video"
     }
   ],
   "animation2DGrid": [
+    {
+      "title": "입시포폴",
+      "desc": "",
+      "src": "https://www.youtube.com/watch?v=OZCg8ouXz1c",
+      "type": "video"
+    },
+    {
+      "title": "입시포폴",
+      "desc": "",
+      "src": "https://www.youtube.com/watch?v=jWH4ms7SBNc",
+      "type": "video"
+    },
+    {
+      "title": "명일방주-공모전",
+      "desc": "",
+      "src": "https://www.youtube.com/watch?v=DVIVV8J9Htg",
+      "type": "video"
+    },
+    {
+      "title": "애니메이션2",
+      "desc": "",
+      "src": "./animation-video/애니메이션2.gif",
+      "type": "image"
+    },
     {
       "title": "15",
       "desc": "",
@@ -1091,13 +1121,26 @@
       "type": "image"
     },
     {
-      "title": "애니메이션2",
+      "title": "연습영상",
       "desc": "",
-      "src": "./animation-video/애니메이션2.gif",
-      "type": "image"
+      "src": "https://www.youtube.com/shorts/EH7mO6PKzBs",
+      "type": "video"
     }
   ],
-  "animation3DGrid": [],
+  "animation3DGrid": [
+    {
+      "title": "과제1",
+      "desc": "",
+      "src": "https://www.youtube.com/watch?v=VPNFis0W6Fk",
+      "type": "video"
+    },
+    {
+      "title": "과제2",
+      "desc": "",
+      "src": "https://www.youtube.com/watch?v=wlTLXVMm4VA",
+      "type": "video"
+    }
+  ],
   "virtualPropGrid": [],
   "brand-wait": [
     {
