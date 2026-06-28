@@ -387,6 +387,51 @@ color:var(--cyan);
 .up-status{padding:8px 14px;border-top:1px solid var(--border);font-size:10px;color:var(--text-off);flex-shrink:0;display:flex;justify-content:space-between;}
 .up-loading{padding:20px;text-align:center;font-size:11px;color:var(--text-dim);}
 @media(max-width:1100px){#unregistered-panel{display:none!important;}}
+
+/* ══ 포트폴리오 탭 레이아웃 ══ */
+#port-layout{display:flex;gap:16px;align-items:flex-start;}
+#port-unrg-panel{
+  width:220px;flex-shrink:0;
+  position:sticky;top:72px;max-height:calc(100vh - 90px);
+  display:none;flex-direction:column;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);overflow:hidden;
+}
+#port-unrg-panel.admin-visible{display:flex;}
+#port-grids{flex:1;min-width:0;}
+.port-sub{display:none;}
+.port-sub.active{display:block;}
+
+/* ── 미등록 패널 내부 ── */
+.pup-header{padding:10px 12px 8px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.pup-title{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-family:'Space Mono',monospace;margin-bottom:4px;}
+.pup-folder{font-size:10px;color:var(--cyan);margin-bottom:6px;font-family:'Space Mono',monospace;}
+.pup-actions{display:flex;gap:4px;flex-wrap:wrap;}
+.pup-btn{font-size:9px;padding:4px 8px;border-radius:4px;border:1px solid var(--border2);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;}
+.pup-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.pup-btn.danger:hover{border-color:#e74c3c;color:#e74c3c;}
+.pup-btn.warn:hover{border-color:var(--orange);color:var(--orange);}
+.pup-btn.active{background:rgba(0,229,255,.1);border-color:var(--cyan);color:var(--cyan);}
+.pup-list{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:3px;min-height:80px;}
+.pup-empty{font-size:10px;color:var(--text-off);text-align:center;padding:16px 0;}
+.pup-item{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 7px;border-radius:5px;
+  border:1px solid var(--border);background:var(--surface);
+  cursor:grab;transition:all .15s;
+  user-select:none;
+}
+.pup-item:hover{border-color:rgba(0,229,255,.3);background:var(--surface2);}
+.pup-item.selected{border-color:var(--cyan);background:rgba(0,229,255,.06);}
+.pup-item.dragging-pup{opacity:.4;}
+.pup-thumb{width:36px;height:27px;object-fit:cover;border-radius:3px;flex-shrink:0;background:var(--bg3);}
+.pup-info{flex:1;min-width:0;}
+.pup-name{font-size:9px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pup-path{font-size:8px;color:var(--text-off);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pup-status{padding:6px 12px;border-top:1px solid var(--border);font-size:9px;color:var(--text-off);flex-shrink:0;display:flex;justify-content:space-between;}
+
+/* 드래그 타깃 강조 */
+.grid-3.pup-drop-target,.grid-2.pup-drop-target{outline:2px dashed var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.04);}
 </style>
 </head>
 <body>
@@ -638,188 +683,245 @@ color:var(--cyan);
 
 <!-- ══ 포트폴리오 탭 ══ -->
 <div class="tab-panel" id="tab-work">
-  <div class="sub-tab-wrap">
-    <button class="sub-tab active" onclick="switchSub('work','thumbnail',this)">썸네일</button>
-    <button class="sub-tab" onclick="switchSub('work','illust',this)">일러스트</button>
-    <button class="sub-tab" onclick="switchSub('work','3d',this)">3D</button>
-    <button class="sub-tab" onclick="switchSub('work','live2d',this)">Live2D</button>
-    <button class="sub-tab" onclick="switchSub('work','pixel',this)">픽셀아트</button>
-    <button class="sub-tab" onclick="switchSub('work','minecraft',this)">마인크래프트</button>
-    <button class="sub-tab" onclick="switchSub('work','animation',this)">애니메이션·영상</button>
-    <button class="sub-tab" onclick="switchSub('work','branding',this)">브랜딩·채널아트</button>
-  </div>
+  <!-- 포트폴리오 레이아웃: 미등록 패널(좌) + 그리드(우) -->
+  <div id="port-layout">
 
-  <div class="sub-panel active" 
-id="work-thumbnail">
-<div class="portfolio-section-title">LD 썸네일</div><div class="grid-3 fade-in" id="thumbnail-ld">
-      <div class="card-add" onclick="openAddModal('thumbnailGrid','썸네일')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>썸네일 추가
+    <!-- ── 미등록 이미지 패널 (관리자 전용, 좌측 고정) ── -->
+    <div id="port-unrg-panel">
+      <div class="pup-header">
+        <div class="pup-title">미등록 이미지</div>
+        <div class="pup-folder" id="pup-folder-label"></div>
+        <div class="pup-actions">
+          <button class="pup-btn" id="pup-btn-select" onclick="pupToggleSelect()">다중선택</button>
+          <button class="pup-btn danger" onclick="pupDeleteSelected()">선택삭제</button>
+          <button class="pup-btn" onclick="pupReload()">↺ 리로드</button>
+          <button class="pup-btn warn" onclick="pupResetTab()">초기화</button>
+        </div>
+      </div>
+      <div class="pup-list" id="pup-list">
+        <div class="pup-empty">탭을 선택하면 해당 폴더의 미등록 파일이 표시됩니다.</div>
+      </div>
+      <div class="pup-status">
+        <span id="pup-count">0개</span>
+        <span id="pup-sel-count" style="display:none">0개 선택</span>
+      </div>
     </div>
-    </div>
-<div class="portfolio-section-title">SD 썸네일</div><div class="grid-3 fade-in" id="thumbnail-sd">
-      <div class="card-add" onclick="openAddModal('thumbnailGrid','썸네일')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>썸네일 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">합성 썸네일</div><div class="grid-3 fade-in" id="thumbnail-composite">
-      <div class="card-add" onclick="openAddModal('thumbnailGrid','썸네일')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>썸네일 추가
-    </div>
-    </div>
-  </div>
 
-  <div class="sub-panel" 
-id="work-illust">
-<div class="portfolio-section-title">일러스트</div>
-  <div class="sec-label fade-in">심플</div><div class="grid-3 fade-in" id="illust-simple">
-      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
-    </div>
-    </div>
-  <div class="sec-label fade-in">얇은선</div><div class="grid-3 fade-in" id="illust-line">
-      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
-    </div>
-    </div>
-  <div class="sec-label fade-in">반무테</div><div class="grid-3 fade-in" id="illust-semi-painted">
-      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">커버일러스트</div><div class="grid-3 fade-in" id="illust-cover">
-      <div class="card-add" onclick="openAddModal('illustGrid','일러스트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>일러스트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">컨셉아트</div><div class="grid-3 fade-in" id="illust-conceptart">
-      <div class="card-add" onclick="openAddModal('illustGrid','컨셉아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>컨셉아트 추가
-    </div>
-    </div>
-  </div>
+    <!-- ── 메인 그리드 영역 ── -->
+    <div id="port-grids">
+      <div class="sub-tab-wrap">
+        <button class="sub-tab active" onclick="switchPortTab('thumbnail',this)">썸네일</button>
+        <button class="sub-tab" onclick="switchPortTab('illust',this)">일러스트</button>
+        <button class="sub-tab" onclick="switchPortTab('3d',this)">3D</button>
+        <button class="sub-tab" onclick="switchPortTab('live2d',this)">Live2D</button>
+        <button class="sub-tab" onclick="switchPortTab('pixel',this)">픽셀아트</button>
+        <button class="sub-tab" onclick="switchPortTab('minecraft',this)">마인크래프트</button>
+        <button class="sub-tab" onclick="switchPortTab('animation',this)">애니메이션·영상</button>
+        <button class="sub-tab" onclick="switchPortTab('branding',this)">브랜딩·채널아트</button>
+      </div>
 
-  <div class="sub-panel" 
-id="work-live2d">
-<div class="sec-label fade-in">Live2D</div><div class="grid-3 fade-in" id="live2d-work">
-      <div class="card-add" onclick="openAddModal('live2dGrid','Live2D')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Live2D 추가
-    </div>
-    </div>
-  </div>
+      <!-- 썸네일 -->
+      <div class="port-sub active" id="port-sub-thumbnail">
+        <div class="portfolio-section-title">LD 썸네일</div>
+        <div class="grid-3 fade-in" id="thumbnail-ld">
+          <div class="card-add" onclick="openAddModal('thumbnail-ld','LD 썸네일',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">SD 썸네일</div>
+        <div class="grid-3 fade-in" id="thumbnail-sd">
+          <div class="card-add" onclick="openAddModal('thumbnail-sd','SD 썸네일',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">합성 썸네일</div>
+        <div class="grid-3 fade-in" id="thumbnail-composite">
+          <div class="card-add" onclick="openAddModal('thumbnail-composite','합성 썸네일',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
 
-  <div class="sub-panel" 
-id="work-pixel">
-<div class="portfolio-section-title">마우스 커서</div><div class="grid-3 fade-in" id="pixel-cursor">
-      <div class="card-add" onclick="openAddModal('pixelWorkGrid','픽셀아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>픽셀아트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">픽셀아트 일러스트</div><div class="grid-3 fade-in" id="pixel-illust">
-      <div class="card-add" onclick="openAddModal('pixelWorkGrid','픽셀아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>픽셀아트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">게임소스</div><div class="grid-3 fade-in" id="pixel-game">
-      <div class="card-add" onclick="openAddModal('pixelWorkGrid','픽셀아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>픽셀아트 추가
-    </div>
-    </div>
-  </div>
+      <!-- 일러스트 -->
+      <div class="port-sub" id="port-sub-illust">
+        <div class="sec-label fade-in">심플</div>
+        <div class="grid-3 fade-in" id="illust-simple">
+          <div class="card-add" onclick="openAddModal('illust-simple','심플',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="sec-label fade-in">얇은선</div>
+        <div class="grid-3 fade-in" id="illust-line">
+          <div class="card-add" onclick="openAddModal('illust-line','얇은선',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="sec-label fade-in">반무테</div>
+        <div class="grid-3 fade-in" id="illust-semi-painted">
+          <div class="card-add" onclick="openAddModal('illust-semi-painted','반무테',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">커버일러스트</div>
+        <div class="grid-3 fade-in" id="illust-cover">
+          <div class="card-add" onclick="openAddModal('illust-cover','커버일러스트',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">컨셉아트</div>
+        <div class="grid-3 fade-in" id="illust-conceptart">
+          <div class="card-add" onclick="openAddModal('illust-conceptart','컨셉아트',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
 
-  <div class="sub-panel" 
-id="work-minecraft">
-<div class="portfolio-section-title">스킨</div><div class="grid-3 fade-in" id="mc-skin">
-      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">모델링</div><div class="grid-3 fade-in" id="mc-model">
-      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">애니메이션</div><div class="grid-3 fade-in" id="mc-animation">
-      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">리소스팩</div><div class="grid-3 fade-in" id="mc-resource">
-      <div class="card-add" onclick="openAddModal('minecraftGrid','마인크래프트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>마인크래프트 추가
-    </div>
-    </div>
-  </div>
+      <!-- 3D -->
+      <div class="port-sub" id="port-sub-3d">
+        <div class="portfolio-section-title">캐릭터</div>
+        <div class="grid-3 fade-in" id="work3d-character">
+          <div class="card-add" onclick="openAddModal('work3d-character','3D 캐릭터',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">아이템</div>
+        <div class="grid-3 fade-in" id="work3d-item">
+          <div class="card-add" onclick="openAddModal('work3d-item','3D 아이템',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">배경</div>
+        <div class="grid-3 fade-in" id="work3d-bg">
+          <div class="card-add" onclick="openAddModal('work3d-bg','3D 배경',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
 
-  <div class="sub-panel" 
-id="work-branding">
-<div class="portfolio-section-title">방송 대기화면</div><div class="grid-3 fade-in" id="brand-wait">
-      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">심볼 디자인</div><div class="grid-3 fade-in" id="brand-symbol">
-      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">이모티콘</div><div class="grid-3 fade-in" id="brand-emote">
-      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">포스터</div><div class="grid-3 fade-in" id="brand-poster">
-      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
-    </div>
-    </div>
-<div class="portfolio-section-title">기타</div><div class="grid-3 fade-in" id="brand-etc">
-      <div class="card-add" onclick="openAddModal('brandingGrid','브랜딩·채널아트')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>브랜딩·채널아트 추가
-    </div>
-    </div>
-  </div>
+      <!-- Live2D -->
+      <div class="port-sub" id="port-sub-live2d">
+        <div class="sec-label fade-in">Live2D</div>
+        <div class="grid-3 fade-in" id="live2d-work">
+          <div class="card-add" onclick="openAddModal('live2d-work','Live2D',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
 
-  <div class="sub-panel"
-id="work-animation">
-<div class="portfolio-section-title">MV</div><div class="grid-3 fade-in" id="mvAnimationGrid">
-      <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV')">
-	  <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>MV 추가
-	</div>
-	</div>
-<div class="portfolio-section-title">2D Animation</div><div class="grid-3 fade-in" id="animation2DGrid">
-      <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation')">
-	  <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>2D 애니메이션 추가
-  </div>
-  </div>
-<div class="portfolio-section-title">3D Animation</div><div class="grid-3 fade-in" id="animation3DGrid">
-      <div class="card-add" onclick="openAddModal('animation3DGrid','3D Animation')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>3D 애니메이션 추가
-	</div>
-	</div>
-<div class="portfolio-section-title">Virtual Props</div><div class="grid-3 fade-in" id="virtualPropGrid">
-      <div class="card-add" onclick="openAddModal('virtualPropGrid','Virtual Props')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>버추얼 소품 추가
-	</div>
-	</div>
-  </div>
-	
+      <!-- 픽셀아트 -->
+      <div class="port-sub" id="port-sub-pixel">
+        <div class="portfolio-section-title">마우스 커서</div>
+        <div class="grid-3 fade-in" id="pixel-cursor">
+          <div class="card-add" onclick="openAddModal('pixel-cursor','마우스 커서',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">픽셀아트 일러스트</div>
+        <div class="grid-3 fade-in" id="pixel-illust">
+          <div class="card-add" onclick="openAddModal('pixel-illust','픽셀아트 일러스트',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">게임소스</div>
+        <div class="grid-3 fade-in" id="pixel-game">
+          <div class="card-add" onclick="openAddModal('pixel-game','게임소스',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
 
-  
-<div class="sub-panel" id="work-3d">
-<div class="portfolio-section-title">캐릭터</div>
-<div class="grid-3 fade-in" id="work3d-character">
-<div class="card-add" onclick="openAddModal('work3d-character','3D 캐릭터')">3D 캐릭터 추가</div>
-</div>
-<div class="portfolio-section-title">아이템</div>
-<div class="grid-3 fade-in" id="work3d-item">
-<div class="card-add" onclick="openAddModal('work3d-item','3D 아이템')">3D 아이템 추가</div>
-</div>
-<div class="portfolio-section-title">배경</div>
-<div class="grid-3 fade-in" id="work3d-bg">
-<div class="card-add" onclick="openAddModal('work3d-bg','3D 배경')">3D 배경 추가</div>
-</div>
-</div>
+      <!-- 마인크래프트 -->
+      <div class="port-sub" id="port-sub-minecraft">
+        <div class="portfolio-section-title">스킨</div>
+        <div class="grid-3 fade-in" id="mc-skin">
+          <div class="card-add" onclick="openAddModal('mc-skin','스킨',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">모델링</div>
+        <div class="grid-3 fade-in" id="mc-model">
+          <div class="card-add" onclick="openAddModal('mc-model','모델링',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">애니메이션</div>
+        <div class="grid-3 fade-in" id="mc-animation">
+          <div class="card-add" onclick="openAddModal('mc-animation','MC 애니메이션',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">리소스팩</div>
+        <div class="grid-3 fade-in" id="mc-resource">
+          <div class="card-add" onclick="openAddModal('mc-resource','리소스팩',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
 
+      <!-- 애니메이션·영상 -->
+      <div class="port-sub" id="port-sub-animation">
+        <div class="portfolio-section-title">MV</div>
+        <div class="grid-3 fade-in" id="mvAnimationGrid">
+          <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">2D Animation</div>
+        <div class="grid-3 fade-in" id="animation2DGrid">
+          <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">3D Animation</div>
+        <div class="grid-3 fade-in" id="animation3DGrid">
+          <div class="card-add" onclick="openAddModal('animation3DGrid','3D Animation',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">Virtual Props</div>
+        <div class="grid-3 fade-in" id="virtualPropGrid">
+          <div class="card-add" onclick="openAddModal('virtualPropGrid','Virtual Props',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
+
+      <!-- 브랜딩·채널아트 -->
+      <div class="port-sub" id="port-sub-branding">
+        <div class="portfolio-section-title">방송 대기화면</div>
+        <div class="grid-3 fade-in" id="brand-wait">
+          <div class="card-add" onclick="openAddModal('brand-wait','방송 대기화면',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">심볼 디자인</div>
+        <div class="grid-3 fade-in" id="brand-symbol">
+          <div class="card-add" onclick="openAddModal('brand-symbol','심볼 디자인',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">이모티콘</div>
+        <div class="grid-3 fade-in" id="brand-emote">
+          <div class="card-add" onclick="openAddModal('brand-emote','이모티콘',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">포스터</div>
+        <div class="grid-3 fade-in" id="brand-poster">
+          <div class="card-add" onclick="openAddModal('brand-poster','포스터',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">기타</div>
+        <div class="grid-3 fade-in" id="brand-etc">
+          <div class="card-add" onclick="openAddModal('brand-etc','기타',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>추가
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /port-grids -->
+  </div><!-- /port-layout -->
 </div>
 
 <!-- ══ 주의사항 탭 ══ -->
@@ -2258,27 +2360,6 @@ id="work-animation">
 </footer>
 </div><!-- /main-area -->
 
-<!-- ── 관리자 미등록 이미지 패널 ── -->
-<div id="unregistered-panel">
-  <div class="up-header">
-    <div class="up-title">미등록 이미지</div>
-    <div class="up-actions">
-      <button class="up-btn" id="up-btn-select" onclick="upToggleSelectMode()">다중선택</button>
-      <button class="up-btn danger" id="up-btn-delete" onclick="upDeleteSelected()">선택삭제</button>
-      <button class="up-btn" onclick="upReload()">↺ 리로드</button>
-    </div>
-  </div>
-  <div class="up-grid-filter">
-    <select id="up-grid-filter" onchange="upFilterChange(this.value)">
-      <option value="">전체 폴더</option>
-    </select>
-  </div>
-  <div class="up-list" id="up-list"></div>
-  <div class="up-status">
-    <span id="up-count">0개</span>
-    <span id="up-select-count" style="display:none">0개 선택</span>
-  </div>
-</div>
 
 </div><!-- /page-wrap -->
 
@@ -2738,31 +2819,43 @@ const GITHUB_FOLDER_MAP={
   'thumbnail-ld':'thumbnail',
   'thumbnail-sd':'thumbnail',
   'thumbnail-composite':'thumbnail',
-  'illust-simple':'illustration/simple',
-  'illust-line':'illustration/line',
-  'illust-semi-painted':'illustration/semi-render',
-  'illust-cover':'illustration/cover',
-  'illust-conceptart':'illustration/conceptart',
-  'work3d-character':'3d/character',
-  'work3d-item':'3d/item',
-  'work3d-bg':'3d/background',
+  'illust-simple':'illustration',
+  'illust-line':'illustration',
+  'illust-semi-painted':'illustration',
+  'illust-cover':'illustration',
+  'illust-conceptart':'illustration',
+  'work3d-character':'3d',
+  'work3d-item':'3d',
+  'work3d-bg':'3d',
   'live2d-work':'live2d',
-  'pixel-cursor':'pixelart/cursor',
-  'pixel-illust':'pixelart/illustration',
-  'pixel-game':'pixelart/game-assets',
-  'mc-skin':'minecraft/skin',
-  'mc-model':'minecraft/modeling',
-  'mc-animation':'minecraft/animation',
-  'mc-resource':'minecraft/resourcepack',
-  'mvAnimationGrid':'animation-video/mv',
-  'animation2DGrid':'animation-video/animation-2d',
-  'animation3DGrid':'animation-video/animation-3d',
-  'virtualPropGrid':'animation-video/virtual-props',
-  'brand-wait':'branding/waiting-screen',
-  'brand-symbol':'branding/symbol',
-  'brand-emote':'branding/emote',
-  'brand-poster':'branding/poster',
-  'brand-etc':'branding/etc'
+  'pixel-cursor':'pixelart',
+  'pixel-illust':'pixelart',
+  'pixel-game':'pixelart',
+  'mc-skin':'minecraft',
+  'mc-model':'minecraft',
+  'mc-animation':'minecraft',
+  'mc-resource':'minecraft',
+  'mvAnimationGrid':'animation-video',
+  'animation2DGrid':'animation-video',
+  'animation3DGrid':'animation-video',
+  'virtualPropGrid':'animation-video',
+  'brand-wait':'branding',
+  'brand-symbol':'branding',
+  'brand-emote':'branding',
+  'brand-poster':'branding',
+  'brand-etc':'branding'
+};
+
+// 카테고리(서브탭) → GitHub 폴더 1:1 매핑
+const CATEGORY_FOLDER={
+  'thumbnail':     'thumbnail',
+  'illust':        'illustration',
+  '3d':            '3d',
+  'live2d':        'live2d',
+  'pixel':         'pixelart',
+  'minecraft':     'minecraft',
+  'animation':     'animation-video',
+  'branding':      'branding'
 };
 const IMAGE_EXTS=['jpg','jpeg','png','gif','webp','avif'];
 const VIDEO_EXTS=['mp4','webm','mov'];
@@ -2984,7 +3077,7 @@ async function saveGridOrder(gridId){
 }
 function getGridGroupId(gridId){
   const grid=document.getElementById(gridId);
-  return grid?.closest('#tab-work .sub-panel')?.id || '';
+  return grid?.closest('#port-grids .port-sub')?.id || grid?.closest('#tab-work .sub-panel')?.id || '';
 }
 function canMoveBetweenGrids(fromGridId,toGridId){
   if(!fromGridId||!toGridId)return false;
@@ -3064,22 +3157,56 @@ async function persistCardGridMove(card,fromGridId,toGridId){
 function setupDragSortable(){
   let dragCard=null;
   let dragGridId='';
+  let dragFromPanel=false;  // 미등록 패널에서 드래그 중
   let lastDropGridId='';
+  let selPupItems=[];       // 다중선택 시 함께 이동할 패널 아이템들
+
   document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(grid=>{
     grid.querySelectorAll(':scope > .card').forEach(card=>{
       card.draggable=!!isAdmin;
       card.classList.toggle('drag-ready',!!isAdmin);
     });
   });
+
   if(window.__portfolioDragStart)document.removeEventListener('dragstart',window.__portfolioDragStart,true);
   if(window.__portfolioDragOver)document.removeEventListener('dragover',window.__portfolioDragOver,true);
   if(window.__portfolioDrop)document.removeEventListener('drop',window.__portfolioDrop,true);
   if(window.__portfolioDragEnd)document.removeEventListener('dragend',window.__portfolioDragEnd,true);
 
+  // ── 미등록 패널 아이템 드래그 설정
+  function bindPupDrag(){
+    document.querySelectorAll('.pup-item').forEach((el,idx)=>{
+      el.draggable=!!isAdmin;
+      el.ondragstart=function(e){
+        if(!isAdmin){e.preventDefault();return;}
+        dragFromPanel=true;
+        dragCard=null;
+        dragGridId='';
+        // 다중선택 시 선택된 아이템 전부
+        const selected=document.querySelectorAll('.pup-item.selected');
+        selPupItems=selected.length>0 && el.classList.contains('selected')
+          ? [...selected]
+          : [el];
+        el.classList.add('dragging-pup');
+        if(e.dataTransfer) e.dataTransfer.effectAllowed='move';
+      };
+      el.ondragend=function(){
+        el.classList.remove('dragging-pup');
+        dragFromPanel=false;
+        selPupItems=[];
+        document.querySelectorAll('.grid-3.pup-drop-target,.grid-2.pup-drop-target')
+          .forEach(g=>g.classList.remove('pup-drop-target'));
+      };
+    });
+  }
+  bindPupDrag();
+  window.__bindPupDrag=bindPupDrag;
+
   window.__portfolioDragStart=function(e){
     const card=e.target.closest('#tab-work .card');
     if(!isAdmin||!card||e.target.closest('.card-edit,.card-del')||selectionModeGrid){e.preventDefault();return;}
     dragCard=card;
+    dragFromPanel=false;
     dragGridId=card.closest('.grid-3,.grid-2')?.id||'';
     lastDropGridId=dragGridId;
     card.classList.add('dragging');
@@ -3088,10 +3215,19 @@ function setupDragSortable(){
       e.dataTransfer.setData('text/plain',getCardOrderKey(card));
     }
   };
+
   window.__portfolioDragOver=function(e){
-    if(!dragCard)return;
     const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2');
-    if(!grid||!canMoveBetweenGrids(dragGridId,grid.id))return;
+    if(!grid)return;
+
+    if(dragFromPanel){
+      // 미등록 패널 → 그리드
+      e.preventDefault();
+      grid.classList.add('pup-drop-target');
+      return;
+    }
+    if(!dragCard)return;
+    if(!canMoveBetweenGrids(dragGridId,grid.id))return;
     e.preventDefault();
     lastDropGridId=grid.id;
     const target=e.target.closest('#tab-work .card');
@@ -3104,10 +3240,50 @@ function setupDragSortable(){
       grid.insertBefore(dragCard,addCard||null);
     }
   };
+
   window.__portfolioDrop=async function(e){
-    if(!dragCard)return;
     const grid=e.target.closest('#tab-work .grid-3,#tab-work .grid-2') || document.getElementById(lastDropGridId);
-    if(grid&&canMoveBetweenGrids(dragGridId,grid.id)){
+    if(!grid)return;
+
+    if(dragFromPanel && selPupItems.length>0){
+      e.preventDefault();
+      grid.classList.remove('pup-drop-target');
+      // 미등록 패널 아이템들을 해당 그리드에 등록
+      for(const el of selPupItems){
+        const sourcePath=el.dataset.sourcePath||'';
+        const url=el.dataset.url||'';
+        const name=el.dataset.name||'';
+        const sha=el.dataset.sha||'';
+        if(!sourcePath)continue;
+        const title=name.replace(/\.[^.]+$/,'');
+        const newItem={
+          grid:grid.id,
+          type:getMediaTypeByName(name)||'image',
+          title,desc:'',
+          url,sourcePath,sourceKind:'github',sha,
+        };
+        try{
+          let docId='';
+          if(FIRESTORE_READY){
+            newItem.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+            const ref=await getCardsCol().add(newItem);
+            docId=ref.id;
+          }
+          insertCardToGrid(newItem, docId||autoDocIdFromSource(sourcePath));
+          // 패널에서 제거
+          el.remove();
+        }catch(err){
+          console.error('미등록→그리드 등록 실패',err);
+          alert('등록 실패: '+err.message);
+        }
+      }
+      pupUpdateCount();
+      selPupItems=[];
+      dragFromPanel=false;
+      return;
+    }
+
+    if(dragCard && grid && canMoveBetweenGrids(dragGridId,grid.id)){
       e.preventDefault();
       lastDropGridId=grid.id;
       await persistCardGridMove(dragCard,dragGridId,lastDropGridId);
@@ -3116,15 +3292,20 @@ function setupDragSortable(){
       setupDragSortable();
     }
   };
+
   window.__portfolioDragEnd=function(){
     if(dragCard){
       dragCard.classList.remove('dragging');
       saveGridOrder(dragGridId);
       if(lastDropGridId&&lastDropGridId!==dragGridId)saveGridOrder(lastDropGridId);
     }
+    document.querySelectorAll('.grid-3.pup-drop-target,.grid-2.pup-drop-target')
+      .forEach(g=>g.classList.remove('pup-drop-target'));
     dragCard=null;
+    dragFromPanel=false;
     dragGridId='';
     lastDropGridId='';
+    selPupItems=[];
   };
 
   document.addEventListener('dragstart',window.__portfolioDragStart,true);
@@ -3587,6 +3768,8 @@ async function reloadPortfolioClean(gridId){
     applyAllGridOrders();
     setupSectionAdminControls();
     setupDragSortable();
+    // 미등록 패널도 갱신
+    if(isAdmin) await pupReload();
     alert('리로드 완료');
   }catch(err){
     console.error('리로드 실패:',err);
@@ -4029,225 +4212,220 @@ function getBestColumns(count){
 }
 
 
+
 /* ════════════════════════════════════════
-   미등록 이미지 패널 (관리자 전용)
+   포트폴리오 탭 전용 함수
    ════════════════════════════════════════ */
-let _upSelectMode = false;
-let _upCurrentFilter = '';
-let _upItems = []; // {sourcePath, url, folder, name}
+let _pupCurrentTab = 'thumbnail'; // 현재 선택 탭
+let _pupItems      = [];          // 미등록 파일 목록
+let _pupSelectMode = false;
 
-function upPanelVisible() {
-  return isAdmin;
+// ── 탭 전환 (포트폴리오 전용)
+function switchPortTab(tabKey, btn){
+  // 서브탭 버튼 active
+  document.querySelectorAll('#port-grids .sub-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  // 서브패널 active
+  document.querySelectorAll('#port-grids .port-sub').forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById('port-sub-'+tabKey);
+  if(panel) panel.classList.add('active');
+  _pupCurrentTab = tabKey;
+  // 미등록 패널 갱신
+  if(isAdmin) pupReload();
 }
 
-function upShow() {
-  const panel = document.getElementById('unregistered-panel');
-  if (!panel) return;
-  if (isAdmin) {
-    panel.classList.add('visible');
-    upReload();
-  } else {
-    panel.classList.remove('visible');
-  }
+// ── 패널 표시/숨김
+function upShow(){
+  const panel = document.getElementById('port-unrg-panel');
+  if(!panel) return;
+  if(isAdmin){ panel.classList.add('admin-visible'); pupReload(); }
+  else         panel.classList.remove('admin-visible');
+}
+function upHide(){
+  const panel = document.getElementById('port-unrg-panel');
+  if(panel) panel.classList.remove('admin-visible');
 }
 
-function upHide() {
-  const panel = document.getElementById('unregistered-panel');
-  if (panel) panel.classList.remove('visible');
+// ── 현재 탭의 GitHub 폴더
+function pupCurrentFolder(){
+  return CATEGORY_FOLDER[_pupCurrentTab] || '';
 }
 
-async function upReload() {
-  const listEl = document.getElementById('up-list');
-  if (!listEl) return;
-  listEl.innerHTML = '<div class="up-loading">스캔 중...</div>';
-
-  // 1. Firestore에 등록된 sourcePath 수집
-  const registeredPaths = new Set();
-  if (FIRESTORE_READY) {
-    try {
-      const snap = await getCardsCol().get();
-      snap.forEach(doc => {
-        const sp = doc.data().sourcePath;
-        if (sp) registeredPaths.add(sp);
-      });
-    } catch(e) { console.warn('Firestore 읽기 실패', e); }
-  }
-  // autoFolderItems에서도 수집
-  autoFolderItems.forEach(item => {
-    if (item.sourcePath) registeredPaths.add(item.sourcePath);
+// ── 현재 탭의 등록된 sourcePath Set 수집
+function pupRegisteredPaths(){
+  const paths = new Set();
+  document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card').forEach(card=>{
+    const sp = card.dataset.sourcePath;
+    if(sp) paths.add(sp);
   });
-
-  // 2. 모든 폴더 스캔
-  const folders = Object.entries(GITHUB_FOLDER_MAP); // [gridId, folderPath]
-  const seenFolders = new Set();
-  const allGithubFiles = [];
-
-  await Promise.all(
-    folders.map(async ([gridId, folderPath]) => {
-      if (seenFolders.has(folderPath)) return;
-      seenFolders.add(folderPath);
-      const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folderPath).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
-      try {
-        const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}});
-        if (!res.ok) return;
-        const files = await res.json();
-        if (!Array.isArray(files)) return;
-        files.filter(f => f.type === 'file' && getMediaTypeByName(f.name)).forEach(f => {
-          allGithubFiles.push({
-            sourcePath: `${folderPath}/${f.name}`,
-            url: f.download_url,
-            folder: folderPath,
-            name: f.name,
-            sha: f.sha || ''
-          });
-        });
-      } catch(e) { console.warn('폴더 스캔 실패', folderPath, e); }
-    })
-  );
-
-  // 3. 미등록 = GitHub에 있지만 Firestore/autoFolderItems 어디에도 없는 것
-  _upItems = allGithubFiles.filter(f => !registeredPaths.has(f.sourcePath));
-
-  // 4. 필터 select 업데이트
-  const filterEl = document.getElementById('up-grid-filter');
-  if (filterEl) {
-    const folders = [...new Set(_upItems.map(f => f.folder))].sort();
-    filterEl.innerHTML = '<option value="">전체 폴더</option>' +
-      folders.map(f => `<option value="${f}">${f}</option>`).join('');
-    _upCurrentFilter = '';
-  }
-
-  upRender();
+  return paths;
 }
 
-function upRender() {
-  const listEl = document.getElementById('up-list');
-  if (!listEl) return;
+// ── 리로드: GitHub 폴더 스캔 → 미등록만 표시 + 중복 카드 정리
+async function pupReload(){
+  const listEl = document.getElementById('pup-list');
+  const folderEl = document.getElementById('pup-folder-label');
+  if(!listEl) return;
+  const folder = pupCurrentFolder();
+  if(folderEl) folderEl.textContent = folder ? '📁 '+folder : '';
+  if(!folder){ listEl.innerHTML='<div class="pup-empty">폴더 매핑 없음</div>'; return; }
 
-  const items = _upCurrentFilter
-    ? _upItems.filter(f => f.folder === _upCurrentFilter)
-    : _upItems;
+  listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
 
-  document.getElementById('up-count').textContent = `${items.length}개`;
+  // 1. GitHub 폴더 스캔
+  const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
+  let githubFiles = [];
+  try{
+    const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}});
+    if(res.ok){
+      const files = await res.json();
+      if(Array.isArray(files)){
+        githubFiles = files
+          .filter(f=>f.type==='file' && getMediaTypeByName(f.name))
+          .map(f=>({
+            name: f.name,
+            sourcePath: `${folder}/${f.name}`,
+            url: f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${folder}/${f.name}`,
+            sha: f.sha||''
+          }));
+      }
+    }
+  }catch(e){ console.warn('폴더 스캔 실패', e); }
 
-  if (!items.length) {
-    listEl.innerHTML = '<div class="up-empty">미등록 파일 없음</div>';
+  // 2. 현재 탭에 이미 등록된 sourcePath
+  const registered = pupRegisteredPaths();
+
+  // 3. 현재 탭 그리드 중복 카드 제거
+  pupDeduplicateGrids();
+
+  // 4. 미등록 = GitHub에 있지만 등록 안 된 것
+  _pupItems = githubFiles.filter(f => !registered.has(f.sourcePath));
+
+  pupRender();
+}
+
+// ── 중복 카드 정리 (같은 sourcePath 여러 개 → 1개 유지)
+function pupDeduplicateGrids(){
+  const seen = new Map(); // sourcePath → first card
+  document.querySelectorAll('#port-sub-'+_pupCurrentTab+' .card').forEach(card=>{
+    const sp = card.dataset.sourcePath || card.dataset.docId || '';
+    if(!sp) return;
+    if(seen.has(sp)){
+      // 중복 제거
+      const keepCard = seen.get(sp);
+      // Firestore에서도 제거
+      const dupDocId = card.dataset.docId;
+      if(FIRESTORE_READY && dupDocId && dupDocId !== keepCard.dataset.docId){
+        getCardsCol().doc(dupDocId).delete().catch(()=>{});
+      }
+      card.remove();
+    } else {
+      seen.set(sp, card);
+    }
+  });
+}
+
+// ── 렌더링
+function pupRender(){
+  const listEl = document.getElementById('pup-list');
+  if(!listEl) return;
+  if(!_pupItems.length){
+    listEl.innerHTML='<div class="pup-empty">미등록 파일 없음</div>';
+    pupUpdateCount();
     return;
   }
-
-  listEl.innerHTML = '';
-  items.forEach((item, idx) => {
+  listEl.innerHTML='';
+  _pupItems.forEach((item, idx)=>{
     const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(item.name);
-    const div = document.createElement('div');
-    div.className = 'up-item';
-    div.dataset.idx = idx;
-    div.innerHTML = `
-      ${isImg ? `<img class="up-item-thumb" src="${item.url}" loading="lazy" onerror="this.style.display='none'">` : '<div class="up-item-thumb"></div>'}
-      <div class="up-item-info">
-        <div class="up-item-name">${item.name}</div>
-        <div class="up-item-path">${item.folder}</div>
-      </div>
-      <span class="up-item-reg" onclick="upRegisterOne(${idx},event)">등록</span>
-    `;
-    div.addEventListener('click', e => {
-      if (e.target.classList.contains('up-item-reg')) return;
-      if (_upSelectMode) {
-        div.classList.toggle('selected');
-        upUpdateSelectCount();
-      }
+    const el = document.createElement('div');
+    el.className='pup-item';
+    el.draggable = !!isAdmin;
+    el.dataset.sourcePath = item.sourcePath;
+    el.dataset.url        = item.url;
+    el.dataset.name       = item.name;
+    el.dataset.sha        = item.sha;
+    el.dataset.idx        = idx;
+    el.innerHTML = `
+      ${isImg
+        ? `<img class="pup-thumb" src="${item.url}" loading="lazy" onerror="this.style.display='none'">`
+        : '<div class="pup-thumb"></div>'}
+      <div class="pup-info">
+        <div class="pup-name">${item.name}</div>
+        <div class="pup-path">${item.sourcePath}</div>
+      </div>`;
+    el.addEventListener('click', ()=>{
+      if(_pupSelectMode){ el.classList.toggle('selected'); pupUpdateCount(); }
     });
-    listEl.appendChild(div);
+    listEl.appendChild(el);
   });
+  // 드래그 바인딩
+  if(window.__bindPupDrag) window.__bindPupDrag();
+  pupUpdateCount();
 }
 
-function upFilterChange(val) {
-  _upCurrentFilter = val;
-  upRender();
+function pupUpdateCount(){
+  const cnt  = document.querySelectorAll('.pup-item').length;
+  const sel  = document.querySelectorAll('.pup-item.selected').length;
+  const cntEl = document.getElementById('pup-count');
+  const selEl = document.getElementById('pup-sel-count');
+  if(cntEl) cntEl.textContent = cnt+'개';
+  if(selEl){ selEl.textContent=sel+'개 선택'; selEl.style.display=sel?'':'none'; }
 }
 
-function upToggleSelectMode() {
-  _upSelectMode = !_upSelectMode;
-  const btn = document.getElementById('up-btn-select');
-  if (btn) btn.classList.toggle('active', _upSelectMode);
-  if (!_upSelectMode) {
-    document.querySelectorAll('.up-item.selected').forEach(el => el.classList.remove('selected'));
-    upUpdateSelectCount();
+// ── 다중선택 토글
+function pupToggleSelect(){
+  _pupSelectMode = !_pupSelectMode;
+  const btn = document.getElementById('pup-btn-select');
+  if(btn) btn.classList.toggle('active', _pupSelectMode);
+  if(!_pupSelectMode){
+    document.querySelectorAll('.pup-item.selected').forEach(el=>el.classList.remove('selected'));
+    pupUpdateCount();
   }
 }
 
-function upUpdateSelectCount() {
-  const cnt = document.querySelectorAll('.up-item.selected').length;
-  const el = document.getElementById('up-select-count');
-  if (el) { el.textContent = `${cnt}개 선택`; el.style.display = cnt ? '' : 'none'; }
-}
-
-// 단일 등록 - 해당 폴더가 매핑된 grid에 카드 등록
-async function upRegisterOne(itemIdx, e) {
-  e && e.stopPropagation();
-  const items = _upCurrentFilter
-    ? _upItems.filter(f => f.folder === _upCurrentFilter)
-    : _upItems;
-  const item = items[itemIdx];
-  if (!item) return;
-
-  // 폴더에 해당하는 gridId 찾기
-  const gridId = Object.entries(GITHUB_FOLDER_MAP).find(([,v]) => v === item.folder)?.[0] || '';
-  const title = prompt(`"${item.name}" 을 등록합니다.
-표시 제목을 입력하세요:`, item.name.replace(/\.[^.]+$/, ''));
-  if (title === null) return;
-
-  try {
-    const newItem = {
-      grid: gridId,
-      type: getMediaTypeByName(item.name) || 'image',
-      title: title || item.name,
-      desc: '',
-      url: item.url,
-      sourcePath: item.sourcePath,
-      sourceKind: 'github',
-      sha: item.sha || '',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    let docId = '';
-    if (FIRESTORE_READY) {
-      const ref = await getCardsCol().add(newItem);
-      docId = ref.id;
-    }
-    insertCardToGrid(newItem, docId || autoDocIdFromSource(item.sourcePath));
-    // 목록에서 제거
-    _upItems = _upItems.filter(f => f.sourcePath !== item.sourcePath);
-    upRender();
-  } catch(err) {
-    alert('등록 실패: ' + err.message);
+// ── 선택삭제 (GitHub + UI)
+async function pupDeleteSelected(){
+  const selected = [...document.querySelectorAll('.pup-item.selected')];
+  if(!selected.length){ alert('선택된 항목이 없습니다.'); return; }
+  if(!confirm(`선택된 ${selected.length}개 파일을 GitHub에서 완전 삭제합니다.`)) return;
+  for(const el of selected){
+    const sp  = el.dataset.sourcePath||'';
+    const sha = el.dataset.sha||'';
+    try{
+      await deleteGithubFileByPath(sp, sha);
+      _pupItems = _pupItems.filter(f=>f.sourcePath !== sp);
+      el.remove();
+    }catch(err){ console.error('삭제 실패', sp, err); }
   }
+  _pupSelectMode=false;
+  const btn=document.getElementById('pup-btn-select');
+  if(btn) btn.classList.remove('active');
+  pupUpdateCount();
 }
 
-// 선택 삭제
-async function upDeleteSelected() {
-  const selected = [...document.querySelectorAll('.up-item.selected')];
-  if (!selected.length) { alert('선택된 항목이 없습니다.'); return; }
-  if (!confirm(`선택된 ${selected.length}개 파일을 GitHub에서 삭제합니다.`)) return;
-
-  const items = _upCurrentFilter
-    ? _upItems.filter(f => f.folder === _upCurrentFilter)
-    : _upItems;
-
-  for (const el of selected) {
-    const idx = parseInt(el.dataset.idx);
-    const item = items[idx];
-    if (!item) continue;
-    try {
-      await deleteGithubFileByPath(item.sourcePath, item.sha);
-      _upItems = _upItems.filter(f => f.sourcePath !== item.sourcePath);
-    } catch(err) {
-      console.error('삭제 실패', item.sourcePath, err);
-    }
+// ── 초기화: 현재 탭 등록 카드 → 모두 미등록 패널로
+async function pupResetTab(){
+  const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
+  if(!subEl){ alert('탭을 찾을 수 없습니다.'); return; }
+  const cards = [...subEl.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')];
+  if(!cards.length){ alert('초기화할 카드가 없습니다.'); return; }
+  if(!confirm(`${cards.length}개 카드를 초기화합니다.
+파일은 삭제되지 않으며 등록 상태만 해제됩니다.`)) return;
+  for(const card of cards){
+    const docId = card.dataset.docId||'';
+    try{
+      if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete();
+      card.remove();
+    }catch(e){ console.error('초기화 실패', e); }
   }
-  _upSelectMode = false;
-  const btn = document.getElementById('up-btn-select');
-  if (btn) btn.classList.remove('active');
-  upRender();
+  // autoFolderItems에서 해당 탭 항목 제거 후 미등록 패널 갱신
+  const folder = pupCurrentFolder();
+  autoFolderItems = autoFolderItems.filter(f => !f.sourcePath?.startsWith(folder+'/') ||
+    !Object.keys(GITHUB_FOLDER_MAP).filter(k=>GITHUB_FOLDER_MAP[k]===folder).includes(f.grid));
+  await pupReload();
 }
+
+/* ── updateEditorVisibility 연동은 기존 upShow/upHide 재사용 ── */
 
 </script>
 </body>
