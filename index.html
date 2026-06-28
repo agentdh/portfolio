@@ -514,6 +514,24 @@ color:var(--cyan);
 
 .card.selected{outline:2px solid var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.06);}
 
+
+
+/* ── PUBLIC VIEWER MODE ── */
+.admin-auth-btn,
+.section-admin-controls,
+.card-add,
+.card-multi-upload,
+.card-del,
+.card-edit,
+.card-select-mark,
+#unregistered-panel,
+#port-unrg-panel,
+.pup-upload-area,
+.pup-actions,
+.up-actions{display:none!important;}
+.card{cursor:pointer;}
+.card.drag-ready{cursor:pointer;}
+
 </style>
 
 </head>
@@ -523,7 +541,6 @@ color:var(--cyan);
 <header>
   <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
   <div class="avatar-wrap" onclick="openModal('profileModal')" title="프로필 편집"><span id="avatarInitial">BW</span><img id="avatarImg" src="" alt="" style="display:none"></div>
-  <button id="authBtn" class="admin-auth-btn">관리자 로그인</button>
 </div>
   <div class="profile-info">
     <div class="profile-brand">Multimedia Artist · Commission Open</div>
@@ -2494,10 +2511,8 @@ color:var(--cyan);
   </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 
+<script>window.PUBLIC_VIEWER_MODE=true;</script>
 <!-- 포트폴리오 매니저 (JSON 기반) -->
 <script src="./portfolio-manager.js"></script>
 <script>
@@ -4237,9 +4252,6 @@ function switchPortTab(tabKey, btn){
   document.querySelectorAll('#port-grids .port-sub').forEach(p=>p.classList.remove('active'));
   const panel = document.getElementById('port-sub-'+tabKey);
   if(panel) panel.classList.add('active');
-  _pupCurrentTab = tabKey;
-  // JSON 캐시 기반 렌더 - API 호출 없음
-  if(isAdmin) pupRenderFromData();
 }
 
 // ── 패널 표시/숨김: 포트폴리오 탭에서만 우측 공백에 overlay로 표시

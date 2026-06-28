@@ -3,7 +3,7 @@
     {
       "title": "샘플 LD 썸네일",
       "desc": "예시 항목 - 실제 이미지로 교체하세요",
-      "src": "./images/thumbnail/ld/sample.png",
+      "src": "./thumbnail/sample.png",
       "type": "image"
     }
   ],
