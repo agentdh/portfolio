@@ -2515,9 +2515,9 @@ function switchTab(id,btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
-  if(id==='work' && isAdmin) upShow();
-  else upHide();
   window.scrollTo({top:0,behavior:'smooth'});
+  // 포트폴리오 탭 진입/이탈 시 패널 명시적 토글
+  if(id==='work') upShow(); else upHide();
 }
 
 /* ── SUB TAB ── */
@@ -2869,8 +2869,7 @@ function updateEditorVisibility(){
   document.querySelectorAll('.card-add,.card-multi-upload,.section-admin-controls,[onclick*="editProfile"],.card-del,.card-edit').forEach(el=>{
     el.style.display=isAdmin ? '' : 'none';
   });
-  const workActive = document.getElementById('tab-work')?.classList.contains('active');
-  if(isAdmin && workActive) upShow(); else upHide();
+  // upShow/upHide는 탭 전환 시에만 호출 (여기서 호출하면 setupDragSortable 연쇄로 API 폭발)
   setupDragSortable();
 }
 
@@ -2904,6 +2903,9 @@ window.addEventListener('DOMContentLoaded',()=>{
       btn.textContent=isAdmin?'로그아웃':'관리자 로그인';
       btn.onclick=isAdmin?logoutGoogle:loginWithGoogle;
       updateEditorVisibility();
+      // 로그인 상태 변경 시 패널 반영
+      const _workNow = document.getElementById('tab-work')?.classList.contains('active');
+      if(_workNow){ if(isAdmin) upShow(); else upHide(); }
     });
   }else{
     btn.textContent='관리자 로그인';
@@ -4418,15 +4420,18 @@ function pupRegisteredPaths(){
 async function pupFetchGithubFiles(force=false){
   const folder = pupCurrentFolder();
   if(!folder) return [];
-  // 캐시 HIT → 즉시 반환 (API 호출 없음)
-  if(!force && _pupGithubCache[folder]) return _pupGithubCache[folder];
+  // 캐시 HIT (배열 or null 마커) → API 호출 없음
+  if(!force && folder in _pupGithubCache){
+    return _pupGithubCache[folder] || [];
+  }
 
   const api = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder).replace(/%2F/g,'/')}?ref=${GITHUB_BRANCH}`;
   try{
     const res = await fetch(api, {headers:{'Accept':'application/vnd.github+json'}});
     if(!res.ok){
-      // 403(rate limit) or 4xx: 기존 캐시 유지, 카드 절대 건드리지 않음
-      console.warn(`GitHub API ${res.status}: ${folder} - 기존 캐시 유지`);
+      // 403/4xx: null 마커 저장 → 이후 재호출 차단
+      console.warn(`GitHub API ${res.status}: ${folder} - 캐시 마커 저장, 재호출 차단`);
+      if(!(folder in _pupGithubCache)) _pupGithubCache[folder] = null;
       return _pupGithubCache[folder] || [];
     }
     const files = await res.json();
@@ -4453,32 +4458,40 @@ async function pupFetchGithubFiles(force=false){
 
 // ── 리로드: 깨진 카드 제거 + 중복 제거 + 미등록 목록 재구성. 등록 위치 이동 금지.
 async function pupReload(force=false){
-  const listEl  = document.getElementById('pup-list');
+  const listEl   = document.getElementById('pup-list');
   const folderEl = document.getElementById('pup-folder-label');
   if(!listEl) return;
   const folder = pupCurrentFolder();
   if(folderEl) folderEl.textContent = folder ? '📁 '+folder : '';
   if(!folder){ listEl.innerHTML='<div class="pup-empty">폴더 매핑 없음</div>'; return; }
 
-  // force=true 일 때만 캐시 무효화 (버튼 클릭 / 업로드 완료 / 삭제 완료 / 초기화)
+  // force=true: 캐시 완전 삭제 후 API 재호출 (버튼 클릭 / 업로드 완료 / 삭제 / 초기화)
   if(force){
     delete _pupGithubCache[folder];
     _pupLoadedFolders.delete(folder);
+    listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
+  }
+
+  // force=false + 캐시 있음 → API 호출 없이 렌더만
+  if(!force && folder in _pupGithubCache){
+    const registered = pupRegisteredPaths();
+    _pupItems = (_pupGithubCache[folder] || []).filter(f => !registered.has(f.sourcePath));
+    pupRender();
+    return;
   }
 
   // 캐시 없을 때만 로딩 표시
-  const hasCached = !!_pupGithubCache[folder];
-  if(!hasCached) listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
+  if(!(folder in _pupGithubCache)){
+    listEl.innerHTML = '<div class="pup-empty">스캔 중...</div>';
+  }
 
-  // force=true 이거나 캐시 없을 때만 API 호출
-  const githubFiles = await pupFetchGithubFiles(force && !hasCached ? true : false);
+  const githubFiles = await pupFetchGithubFiles(false); // 내부에서 캐시 관리
 
-  // API 실패로 빈 배열 + 기존 카드 있으면 렌더 스킵 (카드 보호)
+  // API 실패(null 마커) + 기존 카드 있으면 렌더 스킵
   const subEl = document.getElementById('port-sub-'+_pupCurrentTab);
-  const existingCards = subEl ? subEl.querySelectorAll('.card.generated-card, .card[data-source-path]').length : 0;
-  if(!githubFiles.length && existingCards > 0 && !_pupGithubCache[folder]){
-    console.warn('API 실패 + 기존 카드 있음 → 렌더 스킵');
-    listEl.innerHTML = '<div class="pup-empty">GitHub 스캔 실패 (기존 카드 유지)</div>';
+  const existingCards = subEl ? subEl.querySelectorAll('.card.generated-card,.card[data-source-path]').length : 0;
+  if(!githubFiles.length && existingCards > 0){
+    listEl.innerHTML = '<div class="pup-empty">GitHub 스캔 불가 (기존 카드 유지)</div>';
     return;
   }
 
@@ -4490,15 +4503,12 @@ async function pupReload(force=false){
 
   const registered = pupRegisteredPaths();
   _pupItems = githubFiles.filter(f => !registered.has(f.sourcePath));
-
-  // 링크 아이템 중복 제거
   _pupLinkItems = _pupLinkItems.filter((item, idx, arr)=>{
-    const key=item.sourcePath||item.url||item.title||String(idx);
+    const key = item.sourcePath||item.url||item.title||String(idx);
     return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key)===idx;
   });
 
   pupRender();
-  // setupDragSortable 은 여기서 호출하지 않음 - 초기화 시 1회만 호출
 }
 
 // ── 중복 카드 정리 (같은 sourcePath 여러 개 → 1개 유지)
