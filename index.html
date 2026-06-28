@@ -500,6 +500,26 @@ color:var(--cyan);
 .pup-path{font-size:10px!important;}
 @media(max-width:1380px){#port-unrg-panel{display:none!important;}}
 
+/* ── VONA requested patch: empty drop placeholder ── */
+.card-empty{
+  border:1px dashed rgba(255,255,255,.16);
+  border-radius:var(--radius);
+  min-height:148px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  color:var(--text-off);
+  background:rgba(255,255,255,.025);
+  font-size:12px;
+  text-align:center;
+  pointer-events:auto;
+}
+.card-empty strong{font-size:12px;color:var(--text-dim);font-weight:500;}
+.card-empty span{font-size:10px;color:var(--text-off);}
+.grid-3.pup-drop-target .card-empty,.grid-2.pup-drop-target .card-empty{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.055);}
+
 </style>
 </head>
 <body>
@@ -3604,7 +3624,7 @@ document.addEventListener('click',e=>{
   if(!card)return;
   if(e.target.closest('.card-edit,.card-del,.card-add,.card-multi-upload,.section-admin-controls'))return;
   const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  if(selectionModeGrid && gridId===selectionModeGrid){
+  if(_pupSelectMode && card.closest('#port-sub-'+_pupCurrentTab)){
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
@@ -3662,7 +3682,7 @@ function makeCardEl(item,docId){
   card.innerHTML=`
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'${escapeAttr(docId||'')}')" title="수정">수정</button>
-    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="삭제">×</button>`:''}
+    ${docId?`<button class="card-del" onclick="deleteCard(event,'${docId}')" title="미등록 카드로 이동">×</button>`:''}
     <div class="card-thumb${(!url&&type==='image')?' ph':''}">${thumb}</div>
     <span class="type-badge ${badgeClass}">${badge}</span>
     <div class="card-body"><div class="card-title">${title}</div>${desc?`<div class="card-desc">${desc}</div>`:''}</div>`;
@@ -3921,35 +3941,43 @@ async function deleteCard(e,docId){
   if(!docId)return;
 
   const card=document.querySelector(`[data-doc-id="${docId}"]`);
-  const sourcePath=card?.dataset?.sourcePath||'';
-  const sourceKind=card?.dataset?.sourceKind||'';
-  const gridId=card?.dataset?.grid||card?.closest('.grid-3,.grid-2')?.id||'';
+  if(!card)return;
 
-  const msg=sourceKind==='github' && sourcePath
-    ? `이 카드를 삭제하면 GitHub 원본 파일도 삭제됩니다.\n\n원본 파일: ${filenameFromPath(sourcePath)}\n경로: ${sourcePath}\n\n삭제할까요?`
-    : '이 카드를 삭제할까요?';
-
-  if(!confirm(msg))return;
+  const sourcePath=card.dataset.sourcePath||'';
+  const sourceKind=card.dataset.sourceKind||'';
+  const url=card.dataset.url||'';
+  const title=card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
+  const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
+  const folder=pupCurrentFolder ? pupCurrentFolder() : '';
 
   try{
-    if(sourceKind==='github' && sourcePath){
-      await deleteGithubFileByPath(sourcePath);
-    }
-
+    // 탭의 X는 삭제가 아니라 등록 해제다. 원본 파일은 유지하고 Firestore 등록 정보만 제거한다.
     if(FIRESTORE_READY){
       await getCardsCol().doc(docId).delete().catch(err=>{
-        console.warn('Firestore 메타데이터 삭제 실패:',err);
+        console.warn('Firestore 등록 해제 실패:',err);
       });
     }
 
-    card?.remove();
-
-    if(gridId){
-      await saveGridOrder(gridId);
+    if(sourcePath && (!folder || sourcePath.startsWith(folder+'/') || sourceKind==='github')){
+      const name=filenameFromPath(sourcePath)||title;
+      if(!_pupItems.some(item=>item.sourcePath===sourcePath)){
+        _pupItems.push({name,sourcePath,url,sha:card.dataset.sha||''});
+      }
+    }else{
+      const key=sourcePath||url||title;
+      if(key && !_pupLinkItems.some(item=>(item.sourcePath||item.url||item.title)===key)){
+        _pupLinkItems.push({title,url,docId:'',sourcePath});
+      }
     }
+
+    card.remove();
+    if(gridId)await saveGridOrder(gridId);
+    pupRender();
+    setupDragSortable();
+    if(typeof updateEmptyGridPlaceholders==='function')updateEmptyGridPlaceholders();
   }catch(err){
-    console.error('카드 삭제 실패:',err);
-    alert('카드 삭제에 실패했습니다. '+(err.message||''));
+    console.error('카드 미등록 이동 실패:',err);
+    alert('미등록 카드로 이동하지 못했습니다. '+(err.message||''));
   }
 }
 /* ── ADD MODAL ── */
@@ -4661,7 +4689,7 @@ if(!window.__vonaPortfolioSelectionClickBound){
     if(!_pupSelectMode)return;
     const card=e.target.closest('#port-sub-'+_pupCurrentTab+' .card.generated-card, #port-sub-'+_pupCurrentTab+' .card[data-source-path], #port-sub-'+_pupCurrentTab+' .card[data-doc-id]');
     if(card && !e.target.closest('.card-edit,.card-del')){
-      e.preventDefault();e.stopPropagation();
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
       card.classList.toggle('selected');
       pupUpdateCount();
     }
@@ -4681,6 +4709,84 @@ function pupOpenBatchUpload(){
   const firstGrid = subEl.querySelector('.grid-3[id], .grid-2[id]');
   if(!firstGrid){ alert('업로드 대상 그리드를 찾을 수 없습니다.'); return; }
   openBatchUpload(firstGrid.id);
+}
+
+
+/* ── VONA requested patch: empty grid placeholder + selection/drop sync ── */
+function updateEmptyGridPlaceholders(){
+  document.querySelectorAll('#tab-work .grid-3[id],#tab-work .grid-2[id]').forEach(grid=>{
+    grid.querySelectorAll(':scope > .card-empty').forEach(el=>el.remove());
+    const realCards=[...grid.querySelectorAll(':scope > .card')]
+      .filter(card=>!card.classList.contains('card-add')&&!card.classList.contains('card-multi-upload'));
+    if(realCards.length)return;
+    const empty=document.createElement('div');
+    empty.className='card-empty';
+    empty.innerHTML='<strong>비어있음</strong><span>미등록 카드를 이곳으로 드래그</span>';
+    grid.insertBefore(empty,grid.querySelector(':scope > .card-add')||null);
+  });
+}
+
+function unregisterSelectedCardsToPanel(cards){
+  const folder=pupCurrentFolder ? pupCurrentFolder() : '';
+  cards.forEach(card=>{
+    const sourcePath=card.dataset.sourcePath||'';
+    const url=card.dataset.url||'';
+    const title=card.dataset.title||card.querySelector('.card-title')?.textContent?.trim()||'제목 없음';
+    const sourceKind=card.dataset.sourceKind||'';
+    if(sourcePath && (!folder || sourcePath.startsWith(folder+'/') || sourceKind==='github')){
+      const name=filenameFromPath(sourcePath)||title;
+      if(!_pupItems.some(item=>item.sourcePath===sourcePath)){
+        _pupItems.push({name,sourcePath,url,sha:card.dataset.sha||''});
+      }
+    }else{
+      const key=sourcePath||url||title;
+      if(key && !_pupLinkItems.some(item=>(item.sourcePath||item.url||item.title)===key)){
+        _pupLinkItems.push({title,url,docId:'',sourcePath});
+      }
+    }
+  });
+}
+
+if(!window.__vonaRequestedPatchBound){
+  window.__vonaRequestedPatchBound=true;
+
+  const _origInsertCardToGrid=window.insertCardToGrid || insertCardToGrid;
+  insertCardToGrid=function(item,docId){
+    const result=_origInsertCardToGrid(item,docId);
+    updateEmptyGridPlaceholders();
+    return result;
+  };
+
+  const _origLoadCards=window.loadCards || loadCards;
+  loadCards=async function(){
+    const result=await _origLoadCards.apply(this,arguments);
+    updateEmptyGridPlaceholders();
+    return result;
+  };
+
+  const _origPupRender=window.pupRender || pupRender;
+  pupRender=function(){
+    const result=_origPupRender.apply(this,arguments);
+    updateEmptyGridPlaceholders();
+    return result;
+  };
+
+  const _origSetupDragSortable=window.setupDragSortable || setupDragSortable;
+  setupDragSortable=function(){
+    const result=_origSetupDragSortable.apply(this,arguments);
+    updateEmptyGridPlaceholders();
+    return result;
+  };
+
+  const _origPupDeleteSelected=window.pupDeleteSelected || pupDeleteSelected;
+  pupDeleteSelected=async function(){
+    await _origPupDeleteSelected.apply(this,arguments);
+    updateEmptyGridPlaceholders();
+  };
+
+  document.addEventListener('drop',()=>setTimeout(updateEmptyGridPlaceholders,0),true);
+  document.addEventListener('dragend',()=>setTimeout(updateEmptyGridPlaceholders,0),true);
+  document.addEventListener('DOMContentLoaded',updateEmptyGridPlaceholders);
 }
 
 </script>
