@@ -558,7 +558,7 @@ color:var(--cyan);
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-06-29T11:54:03.846Z"
+    "updatedAt": "2026-06-29T12:01:41.236Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -1904,9 +1904,9 @@ color:var(--cyan);
 <!-- MAIN TAB NAV: 소개 / 포트폴리오 / 주의사항 / 가격표 -->
 <div class="tab-nav-wrap">
   <div class="tab-nav">
-    <button class="tab-btn" onclick="switchTab('about',this)">소개</button>
+    <button class="tab-btn active" onclick="switchTab('about',this)">소개</button>
     <button class="tab-btn" onclick="switchTab('notice',this)">주의사항</button>
-    <button class="tab-btn active" onclick="switchTab('work',this)">포트폴리오</button>
+    <button class="tab-btn" onclick="switchTab('work',this)">포트폴리오</button>
     <button class="tab-btn" onclick="switchTab('commission',this)">가격표</button>
   </div>
 </div>
@@ -1915,7 +1915,7 @@ color:var(--cyan);
 
 
 <!-- ══ 소개 탭 ══ -->
-<div class="tab-panel" id="tab-about">
+<div class="tab-panel active" id="tab-about">
 
 <div class="about-card about-top fade-in visible">
 <h4>학력</h4>
@@ -2120,7 +2120,7 @@ color:var(--cyan);
 
 
 <!-- ══ 포트폴리오 탭 ══ -->
-<div class="tab-panel active" id="tab-work">
+<div class="tab-panel" id="tab-work">
   <!-- 포트폴리오 레이아웃: 미등록 패널(좌) + 그리드(우) -->
   <div id="port-layout">
 
