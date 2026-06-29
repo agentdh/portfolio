@@ -2,6 +2,13 @@
 <html lang="ko"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BOWONE — Portfolio &amp; Commission">
+<meta property="og:description" content="일러스트, 애니메이션, 3D 모델링 멀티미디어 아티스트 보원">
+<meta property="og:url" content="https://agentdh.github.io/portfolio/">
+<meta property="og:image" id="ogImageMeta" content="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" id="twitterImageMeta" content="">
 <title>BOWONE — Portfolio &amp; Commission</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Space+Mono:wght@400;700&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
@@ -110,8 +117,7 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card.drag-over{border-color:var(--cyan)}
 .upload-help{font-size:10px;color:var(--text-off);margin-top:5px;line-height:1.6}
 
-.portfolio-section-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap;cursor:pointer}
-.grid-3.collapsed,.grid-2.collapsed{display:none!important}
+.portfolio-section-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .section-admin-controls{display:inline-flex;gap:6px;align-items:center;margin-left:8px}
 .admin-mini-btn{border:1px solid rgba(0,229,255,.24);background:rgba(0,229,255,.055);color:var(--cyan);border-radius:6px;padding:4px 8px;font-size:10px;font-family:'Noto Sans KR',sans-serif;font-weight:400;cursor:pointer;transition:all .16s}
 .admin-mini-btn:hover{border-color:var(--cyan);background:rgba(0,229,255,.12);color:#fff}
@@ -447,7 +453,7 @@ color:var(--cyan);
 }
 .pup-upload-btn:hover{background:rgba(0,229,255,.12);border-color:rgba(0,229,255,.5);}
 .pup-upload-btn svg{width:14px;height:14px;fill:currentColor;flex-shrink:0;}
-.pup-upload-btn small{font-size:9px;color:var(--text-dim);margin-left:6px;}
+.pup-upload-btn small{font-size:9px;color:var(--text-dim);margin-left:auto;}
 
 .pup-item-link{cursor:default;}
 .pup-item-link.pup-item{cursor:pointer;}
@@ -502,35 +508,10 @@ color:var(--cyan);
 
 
 .pup-empty-grid-card{
-  background:var(--surface);
-  border:1px dashed rgba(255,255,255,.18);
-  border-radius:var(--radius);
-  overflow:hidden;
-  transition:transform .2s,border-color .2s;
-  position:relative;
-  min-height:0;
-  width:100%;
-  pointer-events:none;
-  display:flex;
-  flex-direction:column;
-}
-.pup-empty-grid-card::before{
-  content:'';
-  display:block;
-  width:100%;
-  aspect-ratio:16/10;
-  background:var(--bg3);
-  border-bottom:1px solid var(--border);
-}
-.pup-empty-grid-card::after{
-  content:'비어있음';
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:52px;
-  padding:11px 13px 13px;
-  color:var(--text-off);
-  font-size:12px;
+  border:1px dashed rgba(255,255,255,.13);border-radius:var(--radius);
+  min-height:100px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-off);font-size:12px;pointer-events:none;
+  grid-column:1/-1;
 }
 .grid-3.pup-drop-target,.grid-2.pup-drop-target{
   outline:2px dashed var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.04);
@@ -538,53 +519,28 @@ color:var(--cyan);
 
 .card.selected{outline:2px solid var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.06);}
 
+.btn-secondary{
+  padding:7px 14px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);
+  color:var(--text);font-size:13px;cursor:pointer;
+  font-family:inherit;transition:all .15s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.12);}
 
-/* ── VONA section collapse + image reload patch ── */
-.portfolio-section-title,
-.sec-label{
-  position:relative;
+#opImagePickerList img{
+  width:100%;aspect-ratio:1;object-fit:cover;
+  border-radius:6px;border:2px solid transparent;
+  cursor:pointer;transition:border-color .15s;
 }
-.portfolio-section-title .section-title-label,
-.sec-label .section-title-label{
-  display:inline-flex;
-  align-items:center;
-  min-width:0;
-}
-.section-toggle-btn{
-  margin-left:6px;
-  border:1px solid rgba(0,229,255,.24);
-  background:rgba(0,229,255,.055);
-  color:var(--cyan);
-  border-radius:6px;
-  padding:4px 9px;
-  font-size:10px;
-  line-height:1.2;
-  font-family:'Noto Sans KR',sans-serif;
-  font-weight:500;
-  cursor:pointer;
-  transition:all .16s;
-}
-.section-toggle-btn:hover{
-  border-color:var(--cyan);
-  background:rgba(0,229,255,.12);
-  color:#fff;
-}
-.portfolio-section-title .section-admin-controls,
-.sec-label .section-admin-controls{
-  margin-left:8px;
-  margin-right:8px;
-}
-.grid-3.collapsed,
-.grid-2.collapsed{
-  display:none!important;
-}
+#opImagePickerList img:hover{border-color:var(--cyan);}
+#opImagePickerList img.selected{border-color:var(--cyan);}
 
+#opImageManagerList > div:hover img{ border-color:rgba(0,229,255,.5); }
 </style>
-<style>
-    .section-toggle-btn{margin-left:6px!important;margin-right:0!important;}
-    .portfolio-section-title,.sec-label{justify-content:flex-start!important;}
-    .portfolio-section-title .section-title-label,.sec-label .section-title-label{flex:0 0 auto!important;}
-  </style><style wxt-shadow-root-document-styles="q6buxsll5l">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><style>
+<script src="./config.js"></script>
+<script src="./github-sync.js"></script>
+<style wxt-shadow-root-document-styles="urur5jyyzcc">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><meta property="twitter:image" content="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg"><style>
 /* 공개 뷰어: 관리자 전용 요소 숨김 */
 #authBtn,#savePortfolioBtn,.admin-auth-btn,
 #port-unrg-panel,#unregistered-panel,
@@ -1811,9 +1767,8 @@ color:var(--cyan);
 <div id="main-area">
 <header>
   <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-  <div class="avatar-wrap" onclick="openModal('profileModal')" title="프로필 편집"><span id="avatarInitial">BW</span><img id="avatarImg" src="" alt="" style="display:none"></div>
+  <div class="avatar-wrap" onclick="openModal('profileModal')" title="프로필 편집"><span id="avatarInitial" style="display: none;">BW</span><img id="avatarImg" src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689916265-무제416_20250627204430.png?token=B3BD6ROQBR4E7PPV7NU2GITKIG4GBAA" alt="" style="display: block;"></div>
   
-
 
 </div>
   <div class="profile-info">
@@ -1822,7 +1777,7 @@ color:var(--cyan);
     <div class="profile-role" id="profileRole">Illustrator · Animator · 3D Modeler</div>
     <p class="profile-bio" id="profileBio">일러스트, 애니메이션, 3D 모델링을 중심으로<br>다양한 디지털 콘텐츠를 제작하고 있는<br>멀티미디어 아티스트 보원입니다.<br><br>캐릭터 디자인부터 MV 제작,<br>게임용 픽셀아트 및 마인크래프트 리소스 제작까지<br>폭넓은 작업을 진행하고 있습니다.<br><br>E-mail : agentdh@naver.com</p>
     <div class="profile-tags">
-      <span class="p-tag hl">일러스트</span><span class="p-tag hl">MV 제작</span><span class="p-tag hl">3D 렌더링</span>
+      <span class="p-tag hl">일러스트</span><span class="p-tag hl">MV 제작</span><span class="p-tag hl">3D 모델링</span>
       <span class="p-tag">Live2D</span><span class="p-tag">픽셀아트</span><span class="p-tag">마인크래프트</span><span class="p-tag">브랜딩</span>
     </div>
   </div>
@@ -1840,9 +1795,9 @@ color:var(--cyan);
 <!-- MAIN TAB NAV: 소개 / 포트폴리오 / 주의사항 / 가격표 -->
 <div class="tab-nav-wrap">
   <div class="tab-nav">
-    <button class="tab-btn" onclick="switchTab('about',this)">소개</button>
+    <button class="tab-btn active" onclick="switchTab('about',this)">소개</button>
     <button class="tab-btn" onclick="switchTab('notice',this)">주의사항</button>
-    <button class="tab-btn active" onclick="switchTab('work',this)">포트폴리오</button>
+    <button class="tab-btn" onclick="switchTab('work',this)">포트폴리오</button>
     <button class="tab-btn" onclick="switchTab('commission',this)">가격표</button>
   </div>
 </div>
@@ -1851,7 +1806,7 @@ color:var(--cyan);
 
 
 <!-- ══ 소개 탭 ══ -->
-<div class="tab-panel" id="tab-about">
+<div class="tab-panel active" id="tab-about">
 
 <div class="about-card about-top fade-in visible">
 <h4>학력</h4>
@@ -1884,7 +1839,7 @@ color:var(--cyan);
 <div class="tl-item">
   <div class="tl-date">3D</div>
   <div>
-    <div class="tl-name">렌더링</div>
+    <div class="tl-name">모델링</div>
     <div class="tl-role">캐릭터 · 배경 소품 · 방송 배경</div>
   </div>
 </div>
@@ -2013,7 +1968,7 @@ color:var(--cyan);
   <div class="tl-date">2020.09.04 ~ 2020.10.10</div>
   <div>
     <div class="tl-name">샌드박스네트워크</div>
-    <div class="tl-role">마인크래프트 렌더링 및 애니메이션</div>
+    <div class="tl-role">마인크래프트 모델링 및 애니메이션</div>
   </div>
 </div>
 
@@ -2056,7 +2011,7 @@ color:var(--cyan);
 
 
 <!-- ══ 포트폴리오 탭 ══ -->
-<div class="tab-panel active" id="tab-work">
+<div class="tab-panel" id="tab-work">
   <!-- 포트폴리오 레이아웃: 미등록 패널(좌) + 그리드(우) -->
   <div id="port-layout">
 
@@ -2072,15 +2027,14 @@ color:var(--cyan);
         <button class="sub-tab" onclick="switchPortTab('minecraft',this)">마인크래프트</button>
         <button class="sub-tab" onclick="switchPortTab('animation',this)">애니메이션·영상</button>
         <button class="sub-tab" onclick="switchPortTab('branding',this)">브랜딩·채널아트</button>
-      
       </div>
 
       <!-- 썸네일 -->
       <div class="port-sub active" id="port-sub-thumbnail">
-        <div class="portfolio-section-title" data-grid-id="thumbnail-ld" style="cursor: default;"><span class="section-title-label">LD 썸네일</span><button type="button" class="section-toggle-btn" data-grid="thumbnail-ld" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">LD 썸네일<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="thumbnail-ld" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="thumbnail-ld">
           <div class="card generated-card drag-ready" data-doc-id="auto_210459359" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/thumbnail/2026-05-20.조자라.jpg" data-title="2026 05 20.조자라" data-desc="" data-grid="thumbnail-ld" data-source-path="thumbnail/2026-05-20.조자라.jpg" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1418418662">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_210459359')" title="수정">수정</button>
@@ -2247,10 +2201,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="thumbnail-sd" style="cursor: default;"><span class="section-title-label">SD 썸네일</span><button type="button" class="section-toggle-btn" data-grid="thumbnail-sd" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">SD 썸네일<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-sd">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-sd">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="thumbnail-sd" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="thumbnail-sd">
           <div class="card generated-card drag-ready" data-doc-id="auto_1330932031" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/thumbnail/47.png" data-title="47" data-desc="" data-grid="thumbnail-sd" data-source-path="thumbnail/47.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1572907771">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1330932031')" title="수정">수정</button>
@@ -2267,10 +2221,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="thumbnail-composite" style="cursor: default;"><span class="section-title-label">합성 썸네일</span><button type="button" class="section-toggle-btn" data-grid="thumbnail-composite" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">합성 썸네일<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-composite">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-composite">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="thumbnail-composite" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="thumbnail-composite">
           <div class="card generated-card drag-ready" data-doc-id="auto_943375809" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/thumbnail/1782610418349-25.11.14.png" data-title="1782610418349 25.11.14" data-desc="" data-grid="thumbnail-composite" data-source-path="thumbnail/1782610418349-25.11.14.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_867870884">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_943375809')" title="수정">수정</button>
@@ -2291,10 +2245,10 @@ color:var(--cyan);
 
       <!-- 일러스트 -->
       <div class="port-sub" id="port-sub-illust">
-        <div class="sec-label fade-in" data-grid-id="illust-simple" style="cursor: default;"><span class="section-title-label">심플</span><button type="button" class="section-toggle-btn" data-grid="illust-simple" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="sec-label fade-in">심플<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-simple">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-simple">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-simple" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="illust-simple">
           <div class="card generated-card drag-ready" data-doc-id="auto_315717174" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/illustration/레미.png" data-title="레미" data-desc="" data-grid="illust-simple" data-source-path="illustration/레미.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1593362171">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_315717174')" title="수정">수정</button>
@@ -2365,10 +2319,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="sec-label fade-in" data-grid-id="illust-line" style="cursor: default;"><span class="section-title-label">얇은선</span><button type="button" class="section-toggle-btn" data-grid="illust-line" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="sec-label fade-in">얇은선<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-line">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-line">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-line" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="illust-line">
           <div class="card generated-card drag-ready" data-doc-id="auto_1760109236" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/illustration/배비꼬_새해 (2).png" data-title="배비꼬 새해 (2)" data-desc="" data-grid="illust-line" data-source-path="illustration/배비꼬_새해 (2).png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1914433794">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1760109236')" title="수정">수정</button>
@@ -2421,10 +2375,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="sec-label fade-in" data-grid-id="illust-semi-painted" style="cursor: default;"><span class="section-title-label">반무테</span><button type="button" class="section-toggle-btn" data-grid="illust-semi-painted" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="sec-label fade-in">반무테<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-semi-painted">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-semi-painted">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-semi-painted" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="illust-semi-painted">
           <div class="card generated-card drag-ready" data-doc-id="auto_651655007" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/illustration/PARALLAX_일러스트1.png" data-title="PARALLAX 일러스트1" data-desc="" data-grid="illust-semi-painted" data-source-path="illustration/PARALLAX_일러스트1.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_820062886">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_651655007')" title="수정">수정</button>
@@ -2543,10 +2497,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="illust-cover" style="cursor: default;"><span class="section-title-label">커버일러스트</span><button type="button" class="section-toggle-btn" data-grid="illust-cover" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">커버일러스트<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-cover">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-cover">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-cover" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="illust-cover">
           <div class="card generated-card drag-ready" data-doc-id="auto_761172025" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/illustration/무제662_20251012154636.png" data-title="무제662 20251012154636" data-desc="" data-grid="illust-cover" data-source-path="illustration/무제662_20251012154636.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1292600609">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_761172025')" title="수정">수정</button>
@@ -2683,10 +2637,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="illust-conceptart" style="cursor: default;"><span class="section-title-label">컨셉아트</span><button type="button" class="section-toggle-btn" data-grid="illust-conceptart" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">컨셉아트<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-conceptart">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-conceptart">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-conceptart" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="illust-conceptart">
           <div class="card generated-card drag-ready" data-doc-id="auto_1259068537" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/illustration/PARALLAX_컨셉아트.png" data-title="PARALLAX 컨셉아트" data-desc="" data-grid="illust-conceptart" data-source-path="illustration/PARALLAX_컨셉아트.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1119786013">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1259068537')" title="수정">수정</button>
@@ -2761,10 +2715,10 @@ color:var(--cyan);
 
       <!-- 3D -->
       <div class="port-sub" id="port-sub-3d">
-        <div class="portfolio-section-title" data-grid-id="work3d-character" style="cursor: default;"><span class="section-title-label">캐릭터</span><button type="button" class="section-toggle-btn" data-grid="work3d-character" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">캐릭터<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="work3d-character">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="work3d-character">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="work3d-character" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="work3d-character">
           <div class="card generated-card drag-ready" data-doc-id="auto_822206531" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/3d/Maya스크린샷 (8).png" data-title="Maya스크린샷 (8)" data-desc="" data-grid="work3d-character" data-source-path="3d/Maya스크린샷 (8).png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1242213192">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_822206531')" title="수정">수정</button>
@@ -2781,10 +2735,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="work3d-item" style="cursor: default;"><span class="section-title-label">아이템</span><button type="button" class="section-toggle-btn" data-grid="work3d-item" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">아이템<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="work3d-item">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="work3d-item">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="work3d-item" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="work3d-item">
           <div class="card generated-card drag-ready" data-doc-id="auto_962873580" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/3d/2024_03_26_13_10_22_159.png" data-title="2024 03 26 13 10 22 159" data-desc="" data-grid="work3d-item" data-source-path="3d/2024_03_26_13_10_22_159.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_618392788">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_962873580')" title="수정">수정</button>
@@ -2825,10 +2779,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="work3d-bg" style="cursor: default;"><span class="section-title-label">배경</span><button type="button" class="section-toggle-btn" data-grid="work3d-bg" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">배경<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="work3d-bg">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="work3d-bg">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="work3d-bg" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="work3d-bg">
           <div class="card generated-card drag-ready" data-doc-id="auto_1922718144" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/3d/캡처_2024_02_13_22_07_56_324.png" data-title="캡처 2024 02 13 22 07 56 324" data-desc="" data-grid="work3d-bg" data-source-path="3d/캡처_2024_02_13_22_07_56_324.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1549128761">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1922718144')" title="수정">수정</button>
@@ -2849,10 +2803,10 @@ color:var(--cyan);
 
       <!-- Live2D -->
       <div class="port-sub" id="port-sub-live2d">
-        <div class="sec-label fade-in" data-grid-id="live2d-work" style="cursor: default;"><span class="section-title-label">Live2D</span><button type="button" class="section-toggle-btn" data-grid="live2d-work" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="sec-label fade-in">Live2D<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="live2d-work">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="live2d-work">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="live2d-work" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="live2d-work">
           <div class="card generated-card drag-ready" data-doc-id="auto_455569022" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/live2d/Um1sdEl3LpV5AI6NuBfHxEMuP9FN96ss.gif" data-title="Um1sdEl3LpV5AI6NuBfHxEMuP9FN96ss" data-desc="" data-grid="live2d-work" data-source-path="live2d/Um1sdEl3LpV5AI6NuBfHxEMuP9FN96ss.gif" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_690195428">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_455569022')" title="수정">수정</button>
@@ -2903,10 +2857,24 @@ color:var(--cyan);
 
       <!-- 픽셀아트 -->
       <div class="port-sub" id="port-sub-pixel">
-        <div class="portfolio-section-title" data-grid-id="pixel-illust" style="cursor: default;"><span class="section-title-label">픽셀아트 일러스트</span><button type="button" class="section-toggle-btn" data-grid="pixel-illust" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">마우스 커서<span class="section-admin-controls">
+      <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="pixel-cursor">여러 파일 업로드</button>
+      <button type="button" class="admin-mini-btn" data-act="add" data-grid="pixel-cursor">카드 추가</button></span></div>
+        <div class="grid-3 fade-in" id="pixel-cursor">
+          <div class="card generated-card drag-ready" data-doc-id="auto_701831102" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/pixelart/1782645251194-2400.gif" data-title="2400" data-desc="" data-grid="pixel-cursor" data-source-path="pixelart/1782645251194-2400.gif" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1957560544">
+    <span class="card-select-mark">✓</span>
+    <button class="card-edit" onclick="editCard(event,'auto_701831102')" title="수정">수정</button>
+    <button class="card-del" onclick="deleteCard(event,'auto_701831102')" title="삭제">×</button>
+    <div class="card-thumb"><img src="https://raw.githubusercontent.com/agentdh/portfolio/main/pixelart/1782645251194-2400.gif" alt="2400"></div>
+    <span class="type-badge image">IMAGE</span>
+    <div class="card-body"><div class="card-title">2400</div></div></div><div class="card-add" onclick="openAddModal('pixel-cursor','마우스 커서',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
+          </div>
+        </div>
+        <div class="portfolio-section-title">픽셀아트 일러스트<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="pixel-illust">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="pixel-illust">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="pixel-illust" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="pixel-illust">
           <div class="card generated-card drag-ready" data-doc-id="auto_719601405" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/pixelart/enaga_480.gif" data-title="enaga 480" data-desc="" data-grid="pixel-illust" data-source-path="pixelart/enaga_480.gif" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1219906080">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_719601405')" title="수정">수정</button>
@@ -2971,10 +2939,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="pixel-game" style="cursor: default;"><span class="section-title-label">게임소스</span><button type="button" class="section-toggle-btn" data-grid="pixel-game" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">게임소스<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="pixel-game">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="pixel-game">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="pixel-game" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="pixel-game">
           <div class="card generated-card drag-ready" data-doc-id="auto_619458450" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/pixelart/인게임_3완성.jpg" data-title="인게임 3완성" data-desc="" data-grid="pixel-game" data-source-path="pixelart/인게임_3완성.jpg" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1508992122">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_619458450')" title="수정">수정</button>
@@ -2997,28 +2965,14 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-		<div class="portfolio-section-title" data-grid-id="pixel-cursor" style="cursor: default;"><span class="section-title-label">마우스 커서</span><button type="button" class="section-toggle-btn" data-grid="pixel-cursor" aria-expanded="false">닫기</button><span class="section-admin-controls">
-      <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="pixel-cursor">여러 파일 업로드</button>
-      <button type="button" class="admin-mini-btn" data-act="add" data-grid="pixel-cursor">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="pixel-cursor" data-vona-collapse-ready="1">
-          <div class="card generated-card drag-ready" data-doc-id="auto_701831102" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/pixelart/1782645251194-2400.gif" data-title="2400" data-desc="" data-grid="pixel-cursor" data-source-path="pixelart/1782645251194-2400.gif" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1957560544">
-    <span class="card-select-mark">✓</span>
-    <button class="card-edit" onclick="editCard(event,'auto_701831102')" title="수정">수정</button>
-    <button class="card-del" onclick="deleteCard(event,'auto_701831102')" title="삭제">×</button>
-    <div class="card-thumb"><img src="https://raw.githubusercontent.com/agentdh/portfolio/main/pixelart/1782645251194-2400.gif" alt="2400"></div>
-    <span class="type-badge image">IMAGE</span>
-    <div class="card-body"><div class="card-title">2400</div></div></div><div class="card-add" onclick="openAddModal('pixel-cursor','마우스 커서',this)">
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
-          </div>
-        </div>
       </div>
 
       <!-- 마인크래프트 -->
       <div class="port-sub" id="port-sub-minecraft">
-        <div class="portfolio-section-title" data-grid-id="mc-skin" style="cursor: default;"><span class="section-title-label">스킨</span><button type="button" class="section-toggle-btn" data-grid="mc-skin" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">스킨<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-skin">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-skin">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-skin" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="mc-skin">
           <div class="card generated-card drag-ready" data-doc-id="auto_1756738687" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/minecraft/스킨 (1).png" data-title="스킨 (1)" data-desc="" data-grid="mc-skin" data-source-path="minecraft/스킨 (1).png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_846951772">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1756738687')" title="수정">수정</button>
@@ -3053,10 +3007,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="mc-model" style="cursor: default;"><span class="section-title-label">렌더링</span><button type="button" class="section-toggle-btn" data-grid="mc-model" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">모델링<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-model">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-model">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-model" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="mc-model">
           <div class="card generated-card drag-ready" data-doc-id="auto_1618622049" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/minecraft/스킨.png" data-title="스킨" data-desc="" data-grid="mc-model" data-source-path="minecraft/스킨.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_62964742">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1618622049')" title="수정">수정</button>
@@ -3111,14 +3065,14 @@ color:var(--cyan);
     <button class="card-del" onclick="deleteCard(event,'auto_365538512')" title="삭제">×</button>
     <div class="card-thumb"><img src="https://raw.githubusercontent.com/agentdh/portfolio/main/minecraft/!nidalee.png" alt="!nidalee"></div>
     <span class="type-badge image">IMAGE</span>
-    <div class="card-body"><div class="card-title">!nidalee</div></div></div><div class="card-add" onclick="openAddModal('mc-model','렌더링',this)">
+    <div class="card-body"><div class="card-title">!nidalee</div></div></div><div class="card-add" onclick="openAddModal('mc-model','모델링',this)">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="mc-animation" style="cursor: default;"><span class="section-title-label">애니메이션</span><button type="button" class="section-toggle-btn" data-grid="mc-animation" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">애니메이션<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-animation">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-animation">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-animation" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="mc-animation">
           <div class="card generated-card drag-ready" data-doc-id="auto_864292352" data-type="video" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/minecraft/1782610229507-testef1235dfsa.mp4" data-title="1782610229507 testef1235dfsa" data-desc="" data-grid="mc-animation" data-source-path="minecraft/1782610229507-testef1235dfsa.mp4" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_279177878">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_864292352')" title="수정">수정</button>
@@ -3165,10 +3119,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="mc-resource" style="cursor: default;"><span class="section-title-label">리소스팩</span><button type="button" class="section-toggle-btn" data-grid="mc-resource" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">리소스팩<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-resource">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-resource">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-resource" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="mc-resource">
           <div class="card generated-card drag-ready" data-doc-id="auto_1556219780" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/minecraft/낫.png" data-title="낫" data-desc="" data-grid="mc-resource" data-source-path="minecraft/낫.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_305100263">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1556219780')" title="수정">수정</button>
@@ -3225,10 +3179,10 @@ color:var(--cyan);
 
       <!-- 애니메이션·영상 -->
       <div class="port-sub" id="port-sub-animation">
-        <div class="portfolio-section-title" data-grid-id="mvAnimationGrid" style="cursor: default;"><span class="section-title-label">MV</span><button type="button" class="section-toggle-btn" data-grid="mvAnimationGrid" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">MV<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mvAnimationGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mvAnimationGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mvAnimationGrid" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="mvAnimationGrid">
           <div class="card generated-card drag-ready" data-doc-id="C7LpPiG2PZzF8eYEVHAB" data-type="link" data-url="https://youtu.be/UoKUdXDwonM" data-title="SKY HIGH.배비꼬" data-desc="" data-grid="mvAnimationGrid" data-source-path="" data-source-kind="" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_620034328">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'C7LpPiG2PZzF8eYEVHAB')" title="수정">수정</button>
@@ -3275,10 +3229,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="animation2DGrid" style="cursor: default;"><span class="section-title-label">2D Animation</span><button type="button" class="section-toggle-btn" data-grid="animation2DGrid" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">2D Animation<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="animation2DGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="animation2DGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="animation2DGrid" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="animation2DGrid">
           <div class="card generated-card drag-ready" data-doc-id="smmyFKzG6e1DXbxTWA0u" data-type="video" data-url="https://www.youtube.com/watch?v=OZCg8ouXz1c" data-title="입시포폴" data-desc="" data-grid="animation2DGrid" data-source-path="" data-source-kind="" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1559519918">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'smmyFKzG6e1DXbxTWA0u')" title="수정">수정</button>
@@ -3355,10 +3309,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="animation3DGrid" style="cursor: default;"><span class="section-title-label">3D Animation</span><button type="button" class="section-toggle-btn" data-grid="animation3DGrid" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">3D Animation<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="animation3DGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="animation3DGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="animation3DGrid" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="animation3DGrid">
           <div class="card generated-card drag-ready" data-doc-id="ozO7vD7OwIDQ97Is06YR" data-type="video" data-url="https://www.youtube.com/watch?v=VPNFis0W6Fk" data-title="과제1" data-desc="" data-grid="animation3DGrid" data-source-path="" data-source-kind="" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1763506090">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'ozO7vD7OwIDQ97Is06YR')" title="수정">수정</button>
@@ -3375,14 +3329,22 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
+        <div class="portfolio-section-title">Virtual Props<span class="section-admin-controls">
+      <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="virtualPropGrid">여러 파일 업로드</button>
+      <button type="button" class="admin-mini-btn" data-act="add" data-grid="virtualPropGrid">카드 추가</button></span></div>
+        <div class="grid-3 fade-in" id="virtualPropGrid">
+          <div class="pup-empty-grid-card">비어있음</div><div class="card-add" onclick="openAddModal('virtualPropGrid','Virtual Props',this)">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
+          </div>
+        </div>
       </div>
 
       <!-- 브랜딩·채널아트 -->
       <div class="port-sub" id="port-sub-branding">
-        <div class="portfolio-section-title" data-grid-id="brand-wait" style="cursor: default;"><span class="section-title-label">방송 대기화면</span><button type="button" class="section-toggle-btn" data-grid="brand-wait" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">방송 대기화면<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-wait">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-wait">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-wait" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="brand-wait">
           <div class="card generated-card drag-ready" data-doc-id="auto_833271564" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/branding/ezgif-69d93ad54b884649.gif" data-title="ezgif 69d93ad54b884649" data-desc="" data-grid="brand-wait" data-source-path="branding/ezgif-69d93ad54b884649.gif" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1205676263">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_833271564')" title="수정">수정</button>
@@ -3393,10 +3355,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="brand-symbol" style="cursor: default;"><span class="section-title-label">심볼 디자인</span><button type="button" class="section-toggle-btn" data-grid="brand-symbol" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">심볼 디자인<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-symbol">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-symbol">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-symbol" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="brand-symbol">
           <div class="card generated-card drag-ready" data-doc-id="auto_459680149" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/branding/타이틀.jpg" data-title="타이틀" data-desc="" data-grid="brand-symbol" data-source-path="branding/타이틀.jpg" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1793307072">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_459680149')" title="수정">수정</button>
@@ -3419,18 +3381,18 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="brand-emote" style="cursor: default;"><span class="section-title-label">이모티콘</span><button type="button" class="section-toggle-btn" data-grid="brand-emote" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">이모티콘<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-emote">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-emote">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-emote" data-vona-collapse-ready="1">
-          <div class="pup-empty-grid-card" aria-label="비어있음"></div><div class="card-add" onclick="openAddModal('brand-emote','이모티콘',this)">
+        <div class="grid-3 fade-in" id="brand-emote">
+          <div class="pup-empty-grid-card">비어있음</div><div class="card-add" onclick="openAddModal('brand-emote','이모티콘',this)">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="brand-poster" style="cursor: default;"><span class="section-title-label">포스터</span><button type="button" class="section-toggle-btn" data-grid="brand-poster" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">포스터<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-poster">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-poster">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-poster" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="brand-poster">
           <div class="card generated-card drag-ready" data-doc-id="auto_1154821925" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/branding/스케줄표2.png" data-title="스케줄표2" data-desc="" data-grid="brand-poster" data-source-path="branding/스케줄표2.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_988970913">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1154821925')" title="수정">수정</button>
@@ -3447,10 +3409,10 @@ color:var(--cyan);
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
         </div>
-        <div class="portfolio-section-title" data-grid-id="brand-etc" style="cursor: default;"><span class="section-title-label">기타</span><button type="button" class="section-toggle-btn" data-grid="brand-etc" aria-expanded="false">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">기타<span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-etc">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-etc">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-etc" data-vona-collapse-ready="1">
+        <div class="grid-3 fade-in" id="brand-etc">
           <div class="card generated-card drag-ready" data-doc-id="auto_1975561078" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/branding/배비꼬_샘플.png" data-title="배비꼬 샘플" data-desc="" data-grid="brand-etc" data-source-path="branding/배비꼬_샘플.png" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1346709155">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_1975561078')" title="수정">수정</button>
@@ -4455,7 +4417,7 @@ color:var(--cyan);
       <div class="option-row"><div class="opt-name">기본금 (1분 이하)</div><div class="opt-price">20,000</div></div>
       <div class="option-row"><div class="opt-name">1분 초과 시 30초당</div><div class="opt-price add">+40,000</div></div>
       <div class="option-row"><div class="opt-name">라이팅 + 렌더링</div><div class="opt-price add">+30,000</div></div>
-      <div class="option-row"><div class="opt-name">렌더링 추가</div><div class="opt-price add">+25,000</div></div>
+      <div class="option-row"><div class="opt-name">모델링 추가</div><div class="opt-price add">+25,000</div></div>
       <div class="option-row"><div class="opt-name">편집 추가</div><div class="opt-price add">+30,000~50,000</div></div>
     </div>
 
@@ -4512,7 +4474,7 @@ color:var(--cyan);
           </div>
         </div>
         <div class="calc-select-group" data-calc="mc">
-          <label>렌더링</label>
+          <label>모델링</label>
           <div class="calc-select-row">
             <select onchange="handleOptionChange(this,\'mc\')">
               <option value="0">없음</option>
@@ -4935,7 +4897,7 @@ color:var(--cyan);
     <h3 id="addModalTitle">작업물 추가</h3>
     <div class="type-tabs">
       <button class="type-tab active" data-type="image" onclick="selType(this)">🖼 이미지</button>
-      <button class="type-tab" data-type="video" onclick="selType(this)">영상</button>
+      <button class="type-tab" data-type="video" onclick="selType(this)">▶ 영상</button>
       <button class="type-tab" data-type="link" onclick="selType(this)">🔗 링크</button>
     </div>
     <div class="source-file-info" id="sourceFileInfo">
@@ -4953,11 +4915,67 @@ color:var(--cyan);
   <div class="modal">
     <button class="modal-close" onclick="closeModal('profileModal')">×</button>
     <h3>프로필 편집</h3>
+
+    <!-- opimage 관리 버튼 -->
+    <div class="form-group">
+      <label>이미지 관리</label>
+      <button class="btn-secondary" style="font-size:12px;" onclick="openOpImageManager()">🗂 이미지 관리 열기</button>
+    </div>
+
+    <div class="form-group">
+      <label>프로필 이미지</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <img id="profileImgPreview" src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689916265-무제416_20250627204430.png?token=B3BD6ROQBR4E7PPV7NU2GITKIG4GBAA" alt="" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.15); display: block;">
+        <button class="btn-secondary" style="font-size:12px;" onclick="openOpImagePicker('profile')">🖼 이미지 선택</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>링크 공유 썸네일 (OG 이미지)</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <img id="ogImgPreview" src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg?token=B3BD6RJGILQMXUGQ3OQG57DKIG4GBAA" alt="" style="width: 80px; height: 45px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.15); display: block;">
+        <button class="btn-secondary" style="font-size:12px;" onclick="openOpImagePicker('og')">🖼 이미지 선택</button>
+      </div>
+    </div>
+
     <div class="form-group"><label>닉네임</label><input type="text" id="pName" placeholder="BOWONE"></div>
     <div class="form-group"><label>역할</label><input type="text" id="pRole" placeholder="Illustrator · Animator"></div>
     <div class="form-group"><label>한줄 소개</label><textarea id="pBio" rows="3"></textarea></div>
     <div class="form-group"><label>이메일</label><input type="email" id="pEmail" placeholder="your@email.com"></div>
-    <button class="btn-primary" onclick="saveProfile()">저장</button>
+  </div>
+</div>
+
+<!-- opimage 선택 모달 -->
+
+<!-- opimage 관리 모달 -->
+<div class="modal-backdrop" id="opImageManagerModal" onclick="closeOnBg(event,'opImageManagerModal')">
+  <div class="modal" style="max-width:640px;">
+    <button class="modal-close" onclick="closeModal('opImageManagerModal')">×</button>
+    <h3>이미지 관리 (opimage)</h3>
+
+    <!-- 등록/삭제 버튼 -->
+    <div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;align-items:center;">
+      <label class="btn-secondary" style="cursor:pointer;font-size:12px;padding:7px 14px;">
+        📤 등록하기 (여러 장)
+        <input type="file" id="opImgBatchUpload" accept="image/*" multiple="" style="display:none" onchange="uploadOpImagesFromManager(this)">
+      </label>
+      <button class="btn-secondary" id="opMgrDeleteBtn" style="font-size:12px;opacity:.4;pointer-events:none;" onclick="deleteSelectedOpImages()">🗑 선택 삭제</button>
+      <button class="btn-secondary" style="font-size:12px;" onclick="reloadOpImageManager()">↺ 리로드</button>
+      <span id="opMgrSelCount" style="font-size:11px;color:var(--cyan);"></span>
+    </div>
+    <p id="opMgrStatus" style="font-size:11px;color:var(--cyan);min-height:16px;margin-bottom:8px;"></p>
+
+    <!-- 이미지 그리드 -->
+    <div id="opImageManagerList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:380px;overflow-y:auto;"></div>
+    <p id="opImageManagerEmpty" style="color:var(--text-dim);font-size:13px;display:none;margin-top:8px;">등록된 이미지가 없습니다.</p>
+  </div>
+</div>
+<div class="modal-backdrop" id="opImagePickerModal" onclick="closeOnBg(event,'opImagePickerModal')" data-picker-kind="og">
+  <div class="modal" style="max-width:600px;">
+    <button class="modal-close" onclick="closeModal('opImagePickerModal')">×</button>
+    <h3 id="opImagePickerTitle">OG 썸네일 선택</h3>
+    <div id="opImagePickerList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-height:400px;overflow-y:auto;margin-top:12px;"><div style="cursor: pointer; aspect-ratio: 1 / 1; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.18); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; color: var(--text-dim); font-size: 11px; background: rgba(255, 255, 255, 0.04); transition: border-color 0.15s;"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentcolor; opacity: 0.4;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><span>선택안함</span></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689876253-Shoka_20241018182309.png?token=B3BD6RIJDY2NV26FKX466B3KIG4GBAA" alt="1782689876253-Shoka_20241018182309.png" title="1782689876253-Shoka_20241018182309.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689880140-무제20_20241013192114.png?token=B3BD6RIJPX3KXLZ2TGNEXD3KIG4GBAA" alt="1782689880140-무제20_20241013192114.png" title="1782689880140-무제20_20241013192114.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689883234-무제22_20241013202118.png?token=B3BD6RP5YHVMTTGRR57RCEDKIG4GBAA" alt="1782689883234-무제22_20241013202118.png" title="1782689883234-무제22_20241013202118.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689886210-무제23_20241014200105.png?token=B3BD6ROCFB3UHFMBG4SLYRTKIG4GBAA" alt="1782689886210-무제23_20241014200105.png" title="1782689886210-무제23_20241014200105.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689890371-무제24_20241014201951.png?token=B3BD6RIV4OCJLVHPWEP3ZZ3KIG4GBAA" alt="1782689890371-무제24_20241014201951.png" title="1782689890371-무제24_20241014201951.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689893728-무제68_20241113152449.jpg?token=B3BD6RNT22D3TYGAKY6C25DKIG4GBAA" alt="1782689893728-무제68_20241113152449.jpg" title="1782689893728-무제68_20241113152449.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689895710-무제78_20241117142549.jpg?token=B3BD6RP7SGR5TZT2FEEPSZ3KIG4GBAA" alt="1782689895710-무제78_20241117142549.jpg" title="1782689895710-무제78_20241117142549.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689898259-무제83_20241123144935.jpg?token=B3BD6RLOC5GADCKAUHITTULKIG4GBAA" alt="1782689898259-무제83_20241123144935.jpg" title="1782689898259-무제83_20241123144935.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689900754-무제94_20241124193943.jpg?token=B3BD6RNTVDQFBEV7F243RELKIG4GBAA" alt="1782689900754-무제94_20241124193943.jpg" title="1782689900754-무제94_20241124193943.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689902532-무제106_20241129201840.jpg?token=B3BD6RPYJCH2LTZTYWRHPETKIG4GBAA" alt="1782689902532-무제106_20241129201840.jpg" title="1782689902532-무제106_20241129201840.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689905058-무제107_20241130121901.jpg?token=B3BD6RPJXJMX6C4ZK52X6BTKIG4GBAA" alt="1782689905058-무제107_20241130121901.jpg" title="1782689905058-무제107_20241130121901.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689907068-무제137_20241204204812.jpg?token=B3BD6RKXAVGSRALHDS44RSTKIG4GBAA" alt="1782689907068-무제137_20241204204812.jpg" title="1782689907068-무제137_20241204204812.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689910431-무제140_20241205202650.jpg?token=B3BD6RNO5DRGXC2OIEFPEQLKIG4GBAA" alt="1782689910431-무제140_20241205202650.jpg" title="1782689910431-무제140_20241205202650.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689913446-무제221_20250201161329.jpg?token=B3BD6RPHXKII365C4TREPUTKIG4GBAA" alt="1782689913446-무제221_20250201161329.jpg" title="1782689913446-무제221_20250201161329.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689916265-무제416_20250627204430.png?token=B3BD6ROQBR4E7PPV7NU2GITKIG4GBAA" alt="1782689916265-무제416_20250627204430.png" title="1782689916265-무제416_20250627204430.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689920139-_20241117204917.jpg?token=B3BD6RIL3NSWXVZDTG7APSLKIG4GBAA" alt="1782689920139-_20241117204917.jpg" title="1782689920139-_20241117204917.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689922341-일러스트1_2.png?token=B3BD6RNG27YOEB36IB2GEXTKIG4GBAA" alt="1782689922341-일러스트1_2.png" title="1782689922341-일러스트1_2.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689926341-일러스트2.png?token=B3BD6RM4IH6TK6SIA6QQY73KIG4GBAA" alt="1782689926341-일러스트2.png" title="1782689926341-일러스트2.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg?token=B3BD6RJGILQMXUGQ3OQG57DKIG4GBAA" alt="1782689930050-잠드는-거리_20241122204406.jpg" title="1782689930050-잠드는-거리_20241122204406.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border-width: 2px; border-style: solid; border-color: var(--cyan); border-image: initial; transition: border-color 0.15s; display: block;"></div></div>
+    <p id="opImagePickerEmpty" style="color:var(--text-dim);font-size:13px;display:none;">opimage 폴더에 이미지가 없습니다. 먼저 업로드해주세요.</p>
   </div>
 </div>
 <div class="video-modal-backdrop" id="videoModal" onclick="closeVideoModal(event)">
@@ -6099,14 +6117,6 @@ document.addEventListener('click',e=>{
   if(!card)return;
   if(e.target.closest('.card-edit,.card-del,.card-add,.card-multi-upload,.section-admin-controls'))return;
   const gridId=card.dataset.grid||card.closest('.grid-3,.grid-2')?.id||'';
-  if(typeof _pupSelectMode !== 'undefined' && _pupSelectMode && card.closest('#port-sub-'+_pupCurrentTab)){
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    card.classList.toggle('selected');
-    if(typeof pupUpdateCount === 'function') pupUpdateCount();
-    return;
-  }
   if(selectionModeGrid && gridId===selectionModeGrid){
     e.preventDefault();
     e.stopPropagation();
@@ -6175,25 +6185,14 @@ function makeCardEl(item,docId){
 
 function insertCardToGrid(item,docId){
   const grid=document.getElementById(item.grid);
-  if(!grid){
-    console.warn('[insertCardToGrid] grid not found:', item.grid, item);
-    return;
-  }
-
-  // 같은 카드가 이미 있으면 조용히 무시하지 않고 최신 데이터로 교체한다.
-  const existing = docId ? grid.querySelector(`[data-doc-id="${CSS.escape(String(docId))}"]`) : null;
-  if(existing) existing.remove();
-
-  // 카드가 들어가는 순간 placeholder는 즉시 제거한다.
+  if(!grid)return;
+  if(docId&&grid.querySelector(`[data-doc-id="${docId}"]`))return;
+  // 빈 placeholder 제거
   grid.querySelectorAll(':scope > .pup-empty-grid-card').forEach(el=>el.remove());
-
   const addCard=grid.querySelector('.card-add');
   const card=makeCardEl(item,docId);
-  card.classList.add('generated-card');
-
   if(addCard)grid.insertBefore(card,addCard);
   else grid.appendChild(card);
-
   updateEmptyGrids();
   setupDragSortable();
 }
@@ -6281,6 +6280,9 @@ async function handleBatchUpload(input){
 
 
 let selectionModeGrid='';
+let _selectedProfileImgPath = ''; // opimage/ 경로
+let _selectedOgImgPath = '';      // opimage/ 경로 (OG 썸네일)
+
 let _pupGithubCache={};  // 폴더별 캐시 {folder:[...] | null}
 let _pupFetching={};     // 중복 fetch 방지
 const selectedCardKeys=new Set();
@@ -6726,15 +6728,6 @@ function fillProfileModal(){
   const emailTxt=(document.getElementById('profileBio').textContent||'').match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
   document.getElementById('pEmail').value=emailTxt?emailTxt[0]:'agentdh@naver.com';
 }
-function applyProfile(p){
-  if(!p)return;
-  if(p.name)document.getElementById('profileName').innerHTML=escapeHTML(p.name);
-  if(p.role)document.getElementById('profileRole').textContent=p.role;
-  if(p.bio)document.getElementById('profileBio').innerHTML=escapeHTML(p.bio).replace(/\n/g,'<br>');
-  if(p.email){
-    document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.href='mailto:'+p.email);
-  }
-}
 async function loadProfile(){
   if(!FIRESTORE_READY)return;
   try{
@@ -6743,19 +6736,6 @@ async function loadProfile(){
   }catch(err){
     console.error('프로필 불러오기 실패:',err);
   }
-}
-async function saveProfile(){
-  const n=document.getElementById('pName').value.trim();
-  const r=document.getElementById('pRole').value.trim();
-  const b=document.getElementById('pBio').value.trim();
-  const email=document.getElementById('pEmail').value.trim();
-  const profile={name:n,role:r,bio:b,email,updatedAt:window.firebase?.firestore?.FieldValue?.serverTimestamp?.()||new Date().toISOString()};
-  applyProfile(profile);
-  if(ensureFirestore()){
-    try{await getProfileDoc().set(profile,{merge:true});}
-    catch(err){console.error('프로필 저장 실패:',err);alert('프로필 저장에 실패했습니다.');return;}
-  }
-  closeModal('profileModal');
 }
 
 window.addEventListener('DOMContentLoaded',async()=>{
@@ -6848,22 +6828,15 @@ let _pupLinkItems  = [];          // 미등록 링크/기타 카드 목록
 let _pupSelectMode = false;
 
 // ── 탭 전환 (포트폴리오 전용)
-function clearMultiSelect(){document.querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));}
-function toggleSection(id){const el=document.getElementById(id); if(!el)return; clearMultiSelect(); el.classList.toggle('collapsed');}
-function switchPortTab(tabKey, btn){ clearMultiSelect();
+function switchPortTab(tabKey, btn){
   // 서브탭 버튼 active
   document.querySelectorAll('#port-grids .sub-tab').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-
   // 서브패널 active
   document.querySelectorAll('#port-grids .port-sub').forEach(p=>p.classList.remove('active'));
   const panel = document.getElementById('port-sub-'+tabKey);
   if(panel) panel.classList.add('active');
-
   _pupCurrentTab = tabKey;
-
-  updateEmptyGrids();
-
   // 미등록 패널 갱신
   if(isAdmin) pupReload(false);
 }
@@ -7256,320 +7229,17 @@ function pupOpenBatchUpload(){
 }
 
 
-
-/* ─────────────────────────────────────────────
-   VONA PATCH: section collapse / reset rebuild / image reload
-   ───────────────────────────────────────────── */
-
-function vonaGetCurrentSubPanel(){
-  return document.getElementById('port-sub-' + _pupCurrentTab);
-}
-
-function vonaIsPortfolioGrid(grid){
-  return !!(grid && grid.id && grid.closest('#tab-work') && (grid.classList.contains('grid-3') || grid.classList.contains('grid-2')));
-}
-
-function vonaGetCurrentTabGrids(){
-  const sub = vonaGetCurrentSubPanel();
-  return sub ? [...sub.querySelectorAll('.grid-3[id], .grid-2[id]')] : [];
-}
-
-function vonaGetDefaultGridForCurrentTab(){
-  const grids = vonaGetCurrentTabGrids();
-  return grids[0] || null;
-}
-
-function vonaCleanSectionTitleText(titleEl){
-  const controls = titleEl.querySelector('.section-admin-controls');
-  const toggle = titleEl.querySelector('.section-toggle-btn');
-  const raw = [...titleEl.childNodes]
-    .filter(node => node !== controls && node !== toggle)
-    .map(node => node.textContent || '')
-    .join(' ')
-    .replace(/[▶▼]/g,'')
-    .replace(/\s+/g,' ')
-    .trim();
-
-  let label = titleEl.querySelector(':scope > .section-title-label');
-  if(!label){
-    label = document.createElement('span');
-    label.className = 'section-title-label';
-    titleEl.insertBefore(label, titleEl.firstChild);
-  }
-  if(raw) label.textContent = raw;
-  [...titleEl.childNodes].forEach(node=>{
-    if(node.nodeType === Node.TEXT_NODE && node.textContent.trim()) node.textContent = '';
-  });
-}
-
-function updateSectionToggleButton(gridId){
-  const grid = document.getElementById(gridId);
-  if(!grid) return;
-  const title = grid.previousElementSibling;
-  const btn = title?.querySelector('.section-toggle-btn');
-  if(!btn) return;
-  btn.textContent = grid.classList.contains('collapsed') ? '열기' : '닫기';
-  btn.setAttribute('aria-expanded', grid.classList.contains('collapsed') ? 'false' : 'true');
-}
-
-function clearSectionSelection(grid){
-  if(!grid) return;
-  grid.querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-}
-
-function toggleSection(gridId){
-  const grid = document.getElementById(gridId);
-  if(!grid) return;
-
-  const willClose = !grid.classList.contains('collapsed');
-  if(willClose) clearSectionSelection(grid);
-
-  grid.classList.toggle('collapsed');
-  updateSectionToggleButton(gridId);
-  if(typeof updateEmptyGrids === 'function') updateEmptyGrids();
-}
-
-function initCollapsibleSections(){
+function updateEmptyGrids(){
   document.querySelectorAll('#tab-work .grid-3[id], #tab-work .grid-2[id]').forEach(grid=>{
-    const title = grid.previousElementSibling;
-    if(!title || !(title.classList.contains('portfolio-section-title') || title.classList.contains('sec-label'))) return;
-
-    title.removeAttribute('onclick');
-    title.style.cursor = 'default';
-    title.dataset.gridId = grid.id;
-    vonaCleanSectionTitleText(title);
-
-    if(!title.querySelector('.section-toggle-btn')){
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'section-toggle-btn';
-      btn.dataset.grid = grid.id;
-      btn.addEventListener('click', e=>{
-        e.preventDefault();
-        e.stopPropagation();
-        toggleSection(grid.id);
-      });
-      const controls = title.querySelector('.section-admin-controls');
-      if(controls) title.insertBefore(btn, controls);
-      else title.appendChild(btn);
-    }
-
-    if(!grid.dataset.vonaCollapseReady){
-      grid.classList.add('collapsed');
-      grid.dataset.vonaCollapseReady = '1';
-    }
-    updateSectionToggleButton(grid.id);
-  });
-}
-
-function clearMultiSelect(){
-  _pupSelectMode = false;
-  const btn = document.getElementById('pup-btn-select');
-  if(btn) btn.classList.remove('active');
-  document.querySelectorAll('#tab-work .selected, #port-unrg-panel .selected').forEach(el=>el.classList.remove('selected'));
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-}
-
-function vonaCurrentTabSelectableCards(){
-  const sub = vonaGetCurrentSubPanel();
-  const cards = sub
-    ? [...sub.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')]
-        .filter(card => !card.classList.contains('pup-empty-grid-card') && !card.classList.contains('card-add') && !card.classList.contains('card-multi-upload'))
-        .filter(card => !card.closest('.collapsed'))
-    : [];
-  const pupItems = [...document.querySelectorAll('#port-unrg-panel .pup-item')];
-  return [...cards, ...pupItems];
-}
-
-function pupUpdateCount(){
-  const panelItems = document.querySelectorAll('#port-unrg-panel .pup-item').length;
-  const panelSel   = document.querySelectorAll('#port-unrg-panel .pup-item.selected').length;
-  const sub = vonaGetCurrentSubPanel();
-  const cardSel = sub ? sub.querySelectorAll('.card.selected').length : 0;
-  const totalSel = panelSel + cardSel;
-  const cntEl = document.getElementById('pup-count');
-  const selEl = document.getElementById('pup-sel-count');
-  if(cntEl) cntEl.textContent = panelItems + '개';
-  if(selEl){
-    selEl.textContent = totalSel + '개 선택';
-    selEl.style.display = totalSel ? '' : 'none';
-  }
-}
-
-function pupToggleSelect(){
-  _pupSelectMode = !_pupSelectMode;
-  const btn = document.getElementById('pup-btn-select');
-  if(btn) btn.classList.toggle('active', _pupSelectMode);
-
-  document.querySelectorAll('#tab-work .selected, #port-unrg-panel .selected').forEach(el=>el.classList.remove('selected'));
-
-  if(_pupSelectMode){
-    vonaCurrentTabSelectableCards().forEach(el=>el.classList.add('selected'));
-  }
-  pupUpdateCount();
-}
-
-function vonaReloadImages(scope){
-  const root = scope || document;
-  const stamp = Date.now();
-  root.querySelectorAll('#tab-work .card-thumb img, #port-unrg-panel img.pup-thumb').forEach(img=>{
-    const current = img.getAttribute('src') || '';
-    if(!current) return;
-    const base = current.replace(/([?&])vonaReload=\d+(&?)/, (m, p1, p2)=> p2 ? p1 : '');
-    const join = base.includes('?') ? '&' : '?';
-    img.style.display = '';
-    img.loading = 'eager';
-    img.src = base + join + 'vonaReload=' + stamp;
-  });
-}
-
-function vonaItemFromGithubFile(file, gridId){
-  const name = file.name || filenameFromPath(file.sourcePath) || 'file';
-  return {
-    grid: gridId,
-    type: getMediaTypeByName(name) || 'image',
-    title: titleFromFilename(name),
-    desc: '',
-    url: file.url || '',
-    sourcePath: file.sourcePath || '',
-    sourceKind: 'github',
-    sha: file.sha || ''
-  };
-}
-
-async function vonaWriteGithubFileCardMeta(item, docId){
-  if(!FIRESTORE_READY || !docId || !item.sourcePath) return;
-  await getCardsCol().doc(docId).set({
-    grid:item.grid,
-    type:item.type,
-    title:item.title,
-    desc:item.desc||'',
-    url:item.url||'',
-    sourcePath:item.sourcePath,
-    sourceKind:'github',
-    createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-  },{merge:true});
-}
-
-async function pupResetTab(){
-  const subEl = vonaGetCurrentSubPanel();
-  if(!subEl){ alert('탭을 찾을 수 없습니다.'); return; }
-  const folder = pupCurrentFolder();
-  if(!folder){ alert('현재 탭과 연결된 GitHub 폴더가 없습니다.'); return; }
-
-  const targetGrid = vonaGetDefaultGridForCurrentTab();
-  if(!targetGrid){ alert('복구할 그리드를 찾을 수 없습니다.'); return; }
-
-  const cards = [...subEl.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id]')]
-    .filter(card=>!card.classList.contains('pup-empty-grid-card') && !card.classList.contains('card-add') && !card.classList.contains('card-multi-upload'));
-
-  if(!confirm(`현재 탭을 초기화합니다.\n\n1) 등록 카드 ${cards.length}개를 제거\n2) ${folder} 폴더의 파일을 다시 스캔\n3) 누락된 파일을 ${getGridTitle(targetGrid.id)} 카드로 재생성\n\n파일 자체는 삭제하지 않습니다.`)) return;
-
-  clearMultiSelect();
-
-  for(const card of cards){
-    const docId = card.dataset.docId || '';
-    if(FIRESTORE_READY && docId) await getCardsCol().doc(docId).delete().catch(()=>{});
-    card.remove();
-  }
-
-  delete _pupGithubCache[folder];
-  delete _pupFetching[folder];
-
-  const githubFiles = await pupFetchGithubFiles(true);
-  const seen = new Set();
-
-  for(const file of githubFiles){
-    if(!file.sourcePath || seen.has(file.sourcePath)) continue;
-    seen.add(file.sourcePath);
-
-    const item = vonaItemFromGithubFile(file, targetGrid.id);
-    const docId = autoDocIdFromSource(file.sourcePath);
-
-    await vonaWriteGithubFileCardMeta(item, docId).catch(err=>console.warn('초기화 카드 메타 저장 실패:', file.sourcePath, err));
-    insertCardToGrid(item, docId);
-  }
-
-  _pupItems = [];
-  _pupLinkItems = _pupLinkItems.filter((item, idx, arr)=>{
-    const key = item.sourcePath || item.url || item.title || String(idx);
-    return arr.findIndex(v=>(v.sourcePath||v.url||v.title||'')===key) === idx;
-  });
-
-  await Promise.all(vonaGetCurrentTabGrids().map(g=>saveGridOrder(g.id)));
-  updateEmptyGrids();
-  initCollapsibleSections();
-  vonaReloadImages(subEl);
-  if(typeof pupRender === 'function') pupRender();
-  setupDragSortable();
-
-  alert(`초기화 완료: ${githubFiles.length}개 파일을 카드로 재생성했습니다.`);
-}
-
-
-async function vonaPatchedReload(force=false){
-  if(typeof window.__originalPupReload === 'function'){
-    await window.__originalPupReload(force);
-  }
-
-  if(force){
-    const sub = typeof vonaGetCurrentSubPanel === 'function' ? vonaGetCurrentSubPanel() : null;
-    if(sub){
-      sub.querySelectorAll('.pup-empty-grid-card').forEach((el, idx)=>{
-        const grid = el.closest('.grid-3,.grid-2');
-        if(grid && grid.querySelectorAll(':scope > .pup-empty-grid-card').length > 1 && idx > 0){
-          el.remove();
-        }
-      });
-      if(typeof vonaReloadImages === 'function') vonaReloadImages(sub);
-    }
-  }
-
-  if(typeof updateEmptyGrids === 'function') updateEmptyGrids();
-  if(typeof initCollapsibleSections === 'function') initCollapsibleSections();
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-}
-
-const __vonaOriginalSwitchPortTab = (typeof switchPortTab === 'function') ? switchPortTab : null;
-function switchPortTab(tabKey, btn){
-  clearMultiSelect();
-  if(__vonaOriginalSwitchPortTab) __vonaOriginalSwitchPortTab(tabKey, btn);
-  initCollapsibleSections();
-  updateEmptyGrids();
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  window.__originalPupReload = typeof pupReload === 'function' ? pupReload : null;
-  setTimeout(()=>{
-    initCollapsibleSections();
-    updateEmptyGrids();
-  }, 0);
-});
-setTimeout(()=>{
-  initCollapsibleSections();
-  updateEmptyGrids();
-}, 0);
-
-
-function updateEmptyGrids(
-){
-  document.querySelectorAll('#tab-work .grid-3[id], #tab-work .grid-2[id]').forEach(grid=>{
-    const realCards = [...grid.querySelectorAll(':scope > .card.generated-card, :scope > .card[data-doc-id], :scope > .card[data-source-path], :scope > .card[data-static-key]')]
-      .filter(card=>!card.classList.contains('pup-empty-grid-card') && !card.classList.contains('card-add') && !card.classList.contains('card-multi-upload'));
+    const hasCard = !!grid.querySelector(':scope > .card:not(.pup-empty-grid-card)');
     const existing = grid.querySelector(':scope > .pup-empty-grid-card');
-
-    if(realCards.length===0){
-      if(!existing){
-        const ph = document.createElement('div');
-        ph.className = 'pup-empty-grid-card';
-        ph.setAttribute('aria-label','비어있음');
-        const addCard = grid.querySelector('.card-add');
-        grid.insertBefore(ph, addCard||null);
-      }
-    }else if(existing){
+    if(!hasCard && !existing){
+      const ph = document.createElement('div');
+      ph.className = 'pup-empty-grid-card';
+      ph.textContent = '비어있음';
+      const addCard = grid.querySelector('.card-add');
+      grid.insertBefore(ph, addCard||null);
+    } else if(hasCard && existing){
       existing.remove();
     }
   });
@@ -7590,211 +7260,462 @@ function handleCardClick(e, card){
 }
 
 
-/* ─────────────────────────────────────────────
-   VONA FINAL FIX: tab / reset / multi-select / section button
-   ───────────────────────────────────────────── */
-function clearMultiSelect(keepMode=false){
-  if(!keepMode) _pupSelectMode = false;
-  const btn = document.getElementById('pup-btn-select');
-  if(btn) btn.classList.toggle('active', !!_pupSelectMode);
-  document.querySelectorAll('#tab-work .selected, #port-unrg-panel .selected').forEach(el=>el.classList.remove('selected'));
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-}
+// ── opimage 폴더 관련 함수 ──────────────────────────
 
-function pupToggleSelect(){
-  _pupSelectMode = !_pupSelectMode;
-  const btn = document.getElementById('pup-btn-select');
-  if(btn) btn.classList.toggle('active', _pupSelectMode);
-  // 다중선택 ON은 선택 모드 진입만 한다. 자동 전체 선택 금지.
-  document.querySelectorAll('#tab-work .selected, #port-unrg-panel .selected').forEach(el=>el.classList.remove('selected'));
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-}
+const OPIMAGE_FOLDER = 'opimage';
+const OPIMAGE_REPO = 'portfolio_op'; // opimage는 portfolio_op repo에 저장
+let _opImageCache = null; // [{name, url, path}]
 
-function switchPortTab(tabKey, btn){
-  clearMultiSelect(false);
-  _pupCurrentTab = tabKey;
-
-  document.querySelectorAll('#port-grids .sub-tab').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-
-  document.querySelectorAll('#port-grids .port-sub').forEach(panel=>panel.classList.remove('active'));
-  const panel = document.getElementById('port-sub-' + tabKey);
-  if(panel) panel.classList.add('active');
-  else console.warn('[switchPortTab] panel not found:', tabKey);
-
-  const folderEl = document.getElementById('pup-folder-label');
-  const folder = (typeof pupCurrentFolder === 'function') ? pupCurrentFolder() : '';
-  if(folderEl) folderEl.textContent = folder ? '📁 ' + folder : '';
-
-  if(typeof initCollapsibleSections === 'function') initCollapsibleSections();
-  if(typeof updateEmptyGrids === 'function') updateEmptyGrids();
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-  if(typeof isAdmin !== 'undefined' && isAdmin && typeof pupReload === 'function') pupReload(false);
-}
-
-function vonaCardToUnregisteredItem(card){
-  const sourcePath = card.dataset.sourcePath || '';
-  const url = card.dataset.url || '';
-  const title = card.dataset.title || card.querySelector('.card-title')?.textContent?.trim() || filenameFromPath(sourcePath || url) || '제목 없음';
-  const desc = card.dataset.desc || card.querySelector('.card-desc')?.textContent?.trim() || '';
-  const sourceKind = card.dataset.sourceKind || '';
-  const name = filenameFromPath(sourcePath || url) || title;
-
-  if(sourcePath && sourceKind !== 'link'){
-    return {
-      kind:'github',
-      name,
-      sourcePath,
-      url: url || sourcePath,
-      sha: card.dataset.sha || ''
-    };
+// opimage 폴더 스캔 (op repo: agentdh/portfolio_op)
+async function fetchOpImages(){
+  if(_opImageCache) return _opImageCache;
+  const api = `https://api.github.com/repos/${GITHUB_OWNER}/${OPIMAGE_REPO}/contents/${OPIMAGE_FOLDER}?ref=main`;
+  try{
+    // Token 있으면 인증 헤더 추가 (rate limit 60→5000 /hr)
+    const ghToken = (typeof GITHUB_CONFIG!=='undefined'&&GITHUB_CONFIG?.token) || window.GITHUB_TOKEN || '';
+    const ghHeaders = {'Accept':'application/vnd.github+json'};
+    if(ghToken) ghHeaders['Authorization'] = `Bearer ${ghToken}`;
+    const res = await fetch(api, {headers: ghHeaders});
+    if(!res.ok){ _opImageCache=[]; return []; }
+    const files = await res.json();
+    _opImageCache = (Array.isArray(files)?files:[])
+      .filter(f=>f.type==='file' && /\.(png|jpg|jpeg|gif|webp)$/i.test(f.name))
+      .map(f=>({
+        name: f.name,
+        path: f.path,
+        url: f.download_url || `https://raw.githubusercontent.com/${GITHUB_OWNER}/${OPIMAGE_REPO}/main/${f.path}`
+      }));
+    return _opImageCache;
+  }catch(e){
+    console.error('opimage 스캔 실패',e);
+    _opImageCache=[];
+    return [];
   }
+}
 
-  return {
-    kind:'link',
-    title,
-    desc,
-    type: card.dataset.type || getMediaTypeByName(url) || 'link',
-    url,
-    sourcePath
+// opimage 폴더에 이미지 업로드 (Worker 사용)
+async function uploadOpImages(input){
+  const files = [...(input.files||[])];
+  if(!files.length) return;
+  const statusEl = document.getElementById('opUploadStatus');
+  if(statusEl) statusEl.textContent = `업로드 중... 0/${files.length}`;
+
+  let done=0, failed=0;
+  for(const file of files){
+    const filename = sanitizeUploadFilename(file.name);
+    const path = `${OPIMAGE_FOLDER}/${filename}`;
+    try{
+      const content = await readFileAsBase64Content(file);
+      const res = await fetch(WORKER_UPLOAD_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'upload', repo:OPIMAGE_REPO, path, content})
+      });
+      if(!res.ok) throw new Error(await res.text());
+      done++;
+      if(statusEl) statusEl.textContent = `업로드 중... ${done}/${files.length}`;
+    }catch(e){
+      console.error('업로드 실패:', file.name, e);
+      failed++;
+    }
+  }
+  _opImageCache = null; // 캐시 무효화
+  if(statusEl){
+    statusEl.textContent = failed
+      ? `완료: ${done}개 성공, ${failed}개 실패`
+      : `${done}개 등록 완료`;
+    setTimeout(()=>{ statusEl.textContent=''; }, 3000);
+  }
+  input.value='';
+}
+
+// opimage 선택 피커 열기
+async function openOpImagePicker(kind){
+  const modal = document.getElementById('opImagePickerModal');
+  const list  = document.getElementById('opImagePickerList');
+  const empty = document.getElementById('opImagePickerEmpty');
+  const title = document.getElementById('opImagePickerTitle');
+
+  modal.dataset.pickerKind = kind;
+  title.textContent = kind==='profile' ? '프로필 이미지 선택' : 'OG 썸네일 선택';
+  list.innerHTML = '<p style="color:var(--text-dim);font-size:13px;">불러오는 중...</p>';
+  empty.style.display = 'none';
+  modal.classList.add('open');
+
+  const images = await fetchOpImages();
+  list.innerHTML = '';
+
+  const currentKind = modal.dataset.pickerKind;
+  const currentPath = currentKind==='profile' ? _selectedProfileImgPath : _selectedOgImgPath;
+
+  // 첫 번째: 선택안함
+  const noneWrap = document.createElement('div');
+  noneWrap.style.cssText = 'cursor:pointer;aspect-ratio:1;border-radius:6px;border:2px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:var(--text-dim);font-size:11px;background:rgba(255,255,255,.04);transition:border-color .15s;';
+  const noneIcon = document.createElement('svg');
+  noneIcon.setAttribute('viewBox','0 0 24 24');
+  noneIcon.style.cssText='width:24px;height:24px;fill:currentColor;opacity:.4;';
+  noneIcon.innerHTML='<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>';
+  const noneLabel = document.createElement('span');
+  noneLabel.textContent = '선택안함';
+  noneWrap.appendChild(noneIcon);
+  noneWrap.appendChild(noneLabel);
+  if(!currentPath) noneWrap.style.borderColor='var(--cyan)';
+  noneWrap.onclick = function(){
+    clearOpImageSelection(modal.dataset.pickerKind);
+    closeModal('opImagePickerModal');
   };
+  list.appendChild(noneWrap);
+
+  if(!images.length){ empty.style.display=''; return; }
+
+  images.forEach(function(img){
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;cursor:pointer;';
+    const el = document.createElement('img');
+    el.src = img.url;
+    el.alt = img.name;
+    el.title = img.name;
+    el.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;border:2px solid transparent;transition:border-color .15s;display:block;';
+    if(currentPath===img.path) el.style.borderColor='var(--cyan)';
+    wrap.appendChild(el);
+    wrap.onclick = function(){
+      const k = modal.dataset.pickerKind;
+      list.querySelectorAll('img').forEach(function(i){ i.style.borderColor='transparent'; });
+      noneWrap.style.borderColor='rgba(255,255,255,.18)';
+      el.style.borderColor='var(--cyan)';
+      applyOpImageSelection(k, img.url, img.path);
+      setTimeout(function(){ closeModal('opImagePickerModal'); }, 300);
+    };
+    list.appendChild(wrap);
+  });
 }
 
-async function pupResetTab(){
-  const subEl = (typeof vonaGetCurrentSubPanel === 'function') ? vonaGetCurrentSubPanel() : document.getElementById('port-sub-' + _pupCurrentTab);
-  if(!subEl){ alert('현재 탭을 찾을 수 없습니다.'); return; }
-  const folder = (typeof pupCurrentFolder === 'function') ? pupCurrentFolder() : '';
-  if(!folder){ alert('현재 탭과 연결된 GitHub 폴더가 없습니다.'); return; }
-
-  const cards = [...subEl.querySelectorAll('.card.generated-card, .card[data-source-path], .card[data-doc-id], .card[data-static-key]')]
-    .filter(card=>!card.classList.contains('pup-empty-grid-card') && !card.classList.contains('card-add') && !card.classList.contains('card-multi-upload'));
-
-  if(!confirm(`현재 탭을 초기화합니다.\n\n1) 현재 탭에 등록된 카드 ${cards.length}개를 미등록 패널로 이동\n2) ${folder} 폴더를 다시 스캔\n3) 카드로 만들어지지 않은 파일을 미등록 카드로 추가\n\n파일 자체는 삭제하지 않습니다.`)) return;
-
-  clearMultiSelect(false);
-
-  const byPath = new Map((_pupItems || []).filter(v=>v && v.sourcePath).map(v=>[v.sourcePath, v]));
-  const linkItems = Array.isArray(_pupLinkItems) ? [..._pupLinkItems] : [];
-  const deleteJobs = [];
-
-  for(const card of cards){
-    const moved = vonaCardToUnregisteredItem(card);
-    if(moved.kind === 'github' && moved.sourcePath){
-      byPath.set(moved.sourcePath, moved);
-    }else{
-      linkItems.push(moved);
+// 선택된 이미지 적용
+function applyOpImageSelection(kind, url, path){
+  if(kind==='profile'){
+    _selectedProfileImgPath = path;
+    // 아바타 이미지 변경
+    const avatarImg = document.getElementById('avatarImg');
+    const avatarInitial = document.getElementById('avatarInitial');
+    if(avatarImg){
+      avatarImg.src = url;
+      avatarImg.style.display = 'block';
+      if(avatarInitial) avatarInitial.style.display='none';
     }
-
-    const docId = card.dataset.docId || '';
-    if(typeof FIRESTORE_READY !== 'undefined' && FIRESTORE_READY && docId){
-      deleteJobs.push(getCardsCol().doc(docId).delete().catch(err=>console.warn('초기화 메타 삭제 실패:', docId, err)));
-    }
-    card.remove();
+    // 미리보기
+    const preview = document.getElementById('profileImgPreview');
+    if(preview){ preview.src=url; preview.style.display='block'; }
+  } else {
+    _selectedOgImgPath = path;
+    // OG 미리보기
+    const preview = document.getElementById('ogImgPreview');
+    if(preview){ preview.src=url; preview.style.display='block'; }
   }
-
-  if(deleteJobs.length) await Promise.allSettled(deleteJobs);
-
-  delete _pupGithubCache[folder];
-  delete _pupFetching[folder];
-  const githubFiles = await pupFetchGithubFiles(true);
-  githubFiles.forEach(file=>{
-    if(file && file.sourcePath && !byPath.has(file.sourcePath)) byPath.set(file.sourcePath, file);
-  });
-
-  _pupItems = [...byPath.values()];
-  _pupLinkItems = linkItems.filter((item, idx, arr)=>{
-    const key = item.sourcePath || item.url || item.title || String(idx);
-    return arr.findIndex(v=>(v.sourcePath || v.url || v.title || '') === key) === idx;
-  });
-
-  await Promise.allSettled([...subEl.querySelectorAll('.grid-3[id], .grid-2[id]')].map(g=>{
-    return (typeof saveGridOrder === 'function') ? saveGridOrder(g.id) : Promise.resolve();
-  }));
-
-  if(typeof pupRender === 'function') pupRender();
-  if(typeof updateEmptyGrids === 'function') updateEmptyGrids();
-  if(typeof initCollapsibleSections === 'function') initCollapsibleSections();
-  if(typeof setupDragSortable === 'function') setupDragSortable();
-  if(typeof pupUpdateCount === 'function') pupUpdateCount();
-
-  alert(`초기화 완료: 등록 카드 ${cards.length}개 이동, 폴더 파일 ${githubFiles.length}개 기준으로 미등록 패널을 재구성했습니다.`);
 }
 
-// section 버튼은 글씨 바로 옆에 붙는다.
-(function vonaFixSectionButtonPosition(){
-  const style = document.createElement('style');
-  style.textContent = `
-    .section-toggle-btn{margin-left:6px!important;margin-right:0!important;}
-    .portfolio-section-title,.sec-label{justify-content:flex-start!important;}
-    .portfolio-section-title .section-title-label,.sec-label .section-title-label{flex:0 0 auto!important;}
-  `;
-  document.head.appendChild(style);
-})();
+// ── saveProfile 교체 (이미지 경로 포함 저장) ──────────────
 
-</script>
-<script src="./config.js"></script>
-<script src="./github-sync.js"></script>
+async function saveProfile(){
+  const n     = document.getElementById('pName').value.trim();
+  const r     = document.getElementById('pRole').value.trim();
+  const b     = document.getElementById('pBio').value.trim();
+  const email = document.getElementById('pEmail').value.trim();
+  const profileImgUrl = _selectedProfileImgPath
+    ? `https://raw.githubusercontent.com/${GITHUB_OWNER}/${OPIMAGE_REPO}/main/${_selectedProfileImgPath}`
+    : '';
+  const ogImgUrl = _selectedOgImgPath
+    ? `https://raw.githubusercontent.com/${GITHUB_OWNER}/${OPIMAGE_REPO}/main/${_selectedOgImgPath}`
+    : '';
 
-<script>
-window.addEventListener('load', function(){
-  document.querySelectorAll('.grid-3,.grid-2').forEach(el=>el.classList.remove('collapsed'));
-  document.querySelectorAll('.section-toggle-btn').forEach(btn=>btn.textContent='닫기');
-});
-</script>
-
-
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-  const auth=document.getElementById('authBtn');
-  const save=document.getElementById('savePortfolioBtn');
-  if(auth && save){
-    auth.insertAdjacentElement('afterend', save);
+  const profile = {
+    name:n, role:r, bio:b, email,
+    // 이미지 경로는 항상 현재 선택값으로 저장 (선택안함 = 빈 문자열)
+    profileImgPath: _selectedProfileImgPath,
+    profileImgUrl,
+    ogImgPath: _selectedOgImgPath,
+    ogImgUrl,
+    updatedAt: new Date().toISOString()
+  };
+  applyProfile(profile);
+  if(ensureFirestore()){
+    try{ await getProfileDoc().set(profile,{merge:true}); }
+    catch(err){ console.error('프로필 저장 실패:',err); alert('프로필 저장 실패'); return; }
   }
-});
-</script>
+  closeModal('profileModal');
+}
+
+// ── applyProfile 교체 (이미지 + og 반영) ─────────────────
+
+function applyProfile(p){
+  if(!p) return;
+  if(p.name) document.getElementById('profileName').innerHTML=escapeHTML(p.name);
+  if(p.role) document.getElementById('profileRole').textContent=p.role;
+  if(p.bio)  document.getElementById('profileBio').innerHTML=escapeHTML(p.bio).replace(/\n/g,'<br>');
+  if(p.email) document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.href='mailto:'+p.email);
+
+  // 프로필 이미지
+  {
+    const url  = p.profileImgUrl  || '';
+    const path = p.profileImgPath || '';
+    const avatarImg     = document.getElementById('avatarImg');
+    const avatarInitial = document.getElementById('avatarInitial');
+    const preview       = document.getElementById('profileImgPreview');
+    if(url){
+      if(avatarImg){ avatarImg.src=url; avatarImg.style.display='block'; }
+      if(avatarInitial) avatarInitial.style.display='none';
+      if(preview){ preview.src=url; preview.style.display='block'; }
+    } else {
+      if(avatarImg){ avatarImg.src=''; avatarImg.style.display='none'; }
+      if(avatarInitial) avatarInitial.style.display='';
+      if(preview){ preview.src=''; preview.style.display='none'; }
+    }
+    // Firestore에서 불러온 경우에도 변수 동기화
+    _selectedProfileImgPath = path;
+  }
+
+  // OG 이미지
+  {
+    const url  = p.ogImgUrl  || '';
+    const path = p.ogImgPath || '';
+    const preview = document.getElementById('ogImgPreview');
+    if(url){
+      if(preview){ preview.src=url; preview.style.display='block'; }
+    } else {
+      if(preview){ preview.src=''; preview.style.display='none'; }
+    }
+    _selectedOgImgPath = path;
+  }
+}
 
 
-<script>
-// FIXED SAVE + PROGRESS
-document.addEventListener('click',(e)=>{
-  const btn = e.target.closest('#savePortfolioBtn');
-  if(!btn) return;
+// ── opimage 관리 모달 ─────────────────────────────
 
-  if(typeof saveToGithub !== 'function'){
-    console.error('saveToGithub missing');
+let _opMgrSelected = new Set(); // 선택된 이미지 path Set
+
+async function openOpImageManager(){
+  _opMgrSelected.clear();
+  document.getElementById('opImageManagerModal').classList.add('open');
+  await renderOpImageManager();
+}
+
+async function renderOpImageManager(){
+  const list   = document.getElementById('opImageManagerList');
+  const empty  = document.getElementById('opImageManagerEmpty');
+  if(list) list.innerHTML = '<p style="color:var(--text-dim);font-size:12px;">불러오는 중...</p>';
+
+  const images = await fetchOpImages();
+  if(list) list.innerHTML = '';
+  _opMgrSelected.clear();
+  updateOpMgrDeleteBtn();
+
+  if(!images.length){
+    if(empty) empty.style.display = '';
     return;
   }
+  if(empty) empty.style.display = 'none';
+  images.forEach(img => appendOpImageItem(img));
+}
 
-  // progress hook (safe fallback)
-  try{
-    const original = window.saveToGithub;
-    if(!original) return saveToGithub();
+function updateOpMgrDeleteBtn(){
+  const btn = document.getElementById('opMgrDeleteBtn');
+  const sel = document.getElementById('opMgrSelCount');
+  const count = _opMgrSelected.size;
+  if(btn){
+    btn.style.opacity = count ? '1' : '.4';
+    btn.style.pointerEvents = count ? 'auto' : 'none';
+  }
+  if(sel) sel.textContent = count ? `${count}개 선택됨` : '';
+}
 
-    const result = original();
-    if(result && typeof result.then === 'function'){
-      console.log('saving...');
-      result.then(()=>console.log('done'));
+async function uploadOpImagesFromManager(input){
+  const files = [...(input.files||[])];
+  if(!files.length) return;
+  const statusEl = document.getElementById('opMgrStatus');
+  if(statusEl) statusEl.textContent = `업로드 중... 0/${files.length}`;
+
+  let done=0, failed=0;
+  for(const file of files){
+    const filename = sanitizeUploadFilename(file.name);
+    const path = `${OPIMAGE_FOLDER}/${filename}`;
+    try{
+      const content = await readFileAsBase64Content(file);
+      const res = await fetch(WORKER_UPLOAD_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'upload', repo:OPIMAGE_REPO, path, content})
+      });
+      if(!res.ok) throw new Error(await res.text());
+      done++;
+      if(statusEl) statusEl.textContent = `업로드 중... ${done}/${files.length}`;
+    }catch(e){
+      console.error('업로드 실패:', file.name, e);
+      failed++;
     }
-  }catch(err){
-    console.error(err);
   }
-});
-</script>
-
-<script>
-// PUBLIC CONSISTENCY PATCH
-document.addEventListener('DOMContentLoaded',()=>{
-  const auth=document.getElementById('authBtn');
-  const save=document.getElementById('savePortfolioBtn');
-
-  // shared rule: only show save under auth, hide tab duplicates already removed
-  if(auth && save){
-    auth.insertAdjacentElement('afterend', save);
+  _opImageCache = null;
+  if(statusEl){
+    statusEl.textContent = failed ? `${done}개 성공, ${failed}개 실패` : `${done}개 등록 완료`;
+    setTimeout(()=>{ statusEl.textContent=''; }, 3000);
   }
-});
+  input.value = '';
+  // 리로드로 새 이미지 반영 (GitHub 재스캔)
+  await reloadOpImageManager();
+}
+
+async function deleteSelectedOpImages(){
+  if(!_opMgrSelected.size) return;
+  if(!confirm(`선택된 ${_opMgrSelected.size}개를 삭제합니다.`)) return;
+  const statusEl = document.getElementById('opMgrStatus');
+  if(statusEl) statusEl.textContent = '삭제 중...';
+
+  let done=0, failed=0;
+  for(const path of _opMgrSelected){
+    try{
+      // Worker가 내부에서 SHA 조회 후 삭제 처리
+      const delRes = await fetch(WORKER_UPLOAD_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'delete', repo:OPIMAGE_REPO, path})
+      });
+      if(!delRes.ok) throw new Error(await delRes.text());
+      done++;
+    }catch(e){
+      console.error('삭제 실패:', path, e);
+      failed++;
+    }
+  }
+  // 삭제 성공한 항목만 화면에서 제거 (실패한 건 유지)
+  const list = document.getElementById('opImageManagerList');
+  if(list){
+    [...list.querySelectorAll('[data-img-path]')].forEach(wrap=>{
+      if(_opMgrSelected.has(wrap.dataset.imgPath) && done > 0){
+        // 삭제된 항목 제거 (성공한 것만 - 실패 판단 어려우므로 캐시 재검증으로 처리)
+        wrap.remove();
+      }
+    });
+  }
+  _opImageCache = null;
+  _opMgrSelected.clear();
+  updateOpMgrDeleteBtn();
+
+  const empty = document.getElementById('opImageManagerEmpty');
+  const remaining = list ? list.querySelectorAll('[data-img-path]').length : 0;
+  if(empty) empty.style.display = remaining ? 'none' : '';
+
+  if(statusEl){
+    statusEl.textContent = failed ? `${done}개 삭제, ${failed}개 실패` : `${done}개 삭제 완료`;
+    setTimeout(()=>{ statusEl.textContent=''; }, 3000);
+  }
+}
+
+
+// opimage 리로드: GitHub 기준으로 목록 동기화
+// - GitHub에 없는데 화면에 있으면 제거
+// - GitHub에 있는데 화면에 없으면 재등록(표시)
+async function reloadOpImageManager(){
+  const statusEl = document.getElementById('opMgrStatus');
+  if(statusEl) statusEl.textContent = 'GitHub에서 동기화 중...';
+
+  // 캐시 무효화 후 GitHub 재스캔
+  _opImageCache = null;
+  const githubImages = await fetchOpImages();
+  const githubPaths = new Set(githubImages.map(f => f.path));
+
+  // 현재 화면에 렌더된 아이템 경로
+  const list = document.getElementById('opImageManagerList');
+  const renderedWraps = list ? [...list.querySelectorAll('[data-img-path]')] : [];
+  const renderedPaths = new Set(renderedWraps.map(el => el.dataset.imgPath));
+
+  // GitHub에 없는데 화면에 있는 것 → 제거
+  let removed = 0;
+  renderedWraps.forEach(wrap => {
+    if(!githubPaths.has(wrap.dataset.imgPath)){
+      _opMgrSelected.delete(wrap.dataset.imgPath);
+      wrap.remove();
+      removed++;
+    }
+  });
+
+  // GitHub에 있는데 화면에 없는 것 → 추가
+  let added = 0;
+  githubImages.forEach(img => {
+    if(!renderedPaths.has(img.path)){
+      appendOpImageItem(img);
+      added++;
+    }
+  });
+
+  updateOpMgrDeleteBtn();
+
+  const empty = document.getElementById('opImageManagerEmpty');
+  const total = list ? list.querySelectorAll('[data-img-path]').length : 0;
+  if(empty) empty.style.display = total ? 'none' : '';
+
+  if(statusEl){
+    const parts = [];
+    if(added)   parts.push(`${added}개 추가`);
+    if(removed) parts.push(`${removed}개 제거`);
+    statusEl.textContent = parts.length ? `동기화 완료: ${parts.join(', ')}` : '이미 최신 상태';
+    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+  }
+}
+
+// 아이템 1개를 관리 목록에 추가 (renderOpImageManager와 공유)
+function appendOpImageItem(img){
+  const list = document.getElementById('opImageManagerList');
+  if(!list) return;
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:relative;cursor:pointer;';
+  wrap.dataset.imgPath = img.path;
+
+  const el = document.createElement('img');
+  el.src = img.url;
+  el.alt = img.name;
+  el.title = img.name;
+  el.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;border:2px solid transparent;transition:border-color .15s;display:block;';
+
+  const check = document.createElement('div');
+  check.style.cssText = 'position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(0,229,255,.9);color:#000;font-size:12px;font-weight:700;display:none;align-items:center;justify-content:center;';
+  check.textContent = '✓';
+
+  wrap.appendChild(el);
+  wrap.appendChild(check);
+
+  wrap.onclick = () => {
+    if(_opMgrSelected.has(img.path)){
+      _opMgrSelected.delete(img.path);
+      el.style.borderColor = 'transparent';
+      check.style.display = 'none';
+    }else{
+      _opMgrSelected.add(img.path);
+      el.style.borderColor = 'var(--cyan)';
+      check.style.display = 'flex';
+    }
+    updateOpMgrDeleteBtn();
+  };
+  list.appendChild(wrap);
+}
+
+
+function clearOpImageSelection(kind){
+  if(kind==='profile'){
+    _selectedProfileImgPath = '';
+    // 아바타 초기화 (이니셜로 복귀)
+    const avatarImg     = document.getElementById('avatarImg');
+    const avatarInitial = document.getElementById('avatarInitial');
+    const preview       = document.getElementById('profileImgPreview');
+    if(avatarImg){ avatarImg.src=''; avatarImg.style.display='none'; }
+    if(avatarInitial) avatarInitial.style.display='';
+    if(preview){ preview.src=''; preview.style.display='none'; }
+  } else {
+    _selectedOgImgPath = '';
+    const preview = document.getElementById('ogImgPreview');
+    if(preview){ preview.src=''; preview.style.display='none'; }
+  }
+}
+
 </script>
-
-
 
 
 <always-on-top-app></always-on-top-app><script>
