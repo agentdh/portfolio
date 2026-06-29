@@ -8,7 +8,7 @@
 <meta property="og:url" content="https://agentdh.github.io/portfolio/">
 <meta property="og:image" id="ogImageMeta" content="./opimage/1782689930050-잠드는-거리_20241122204406.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" id="twitterImageMeta" content="">
+<meta name="twitter:image" id="twitterImageMeta" content="./opimage/1782689930050-잠드는-거리_20241122204406.jpg">
 <title>BOWONE — Portfolio &amp; Commission</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Space+Mono:wght@400;700&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
@@ -543,7 +543,7 @@ color:var(--cyan);
 
 </style>
 
-<meta property="twitter:image" content="./opimage/1782689930050-잠드는-거리_20241122204406.jpg"><style>
+<style>
 /* 공개 뷰어: 관리자 전용 요소 숨김 */
 #authBtn,#savePortfolioBtn,.admin-auth-btn,
 #port-unrg-panel,#unregistered-panel,
@@ -563,8 +563,8 @@ color:var(--cyan);
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689916265-%EB%AC%B4%EC%A0%9C416_20250627204430.png",
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "ogImgRawUrl": "",
-    "updatedAt": "2026-06-29T02:56:26.445Z"
+    "ogImgRawUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
+    "updatedAt": "2026-06-29T03:03:58.909Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -4949,10 +4949,10 @@ color:var(--cyan);
       </div>
     </div>
 
-    <div class="form-group"><label>닉네임</label><input type="text" id="pName" placeholder="BOWONE"></div>
-    <div class="form-group"><label>역할</label><input type="text" id="pRole" placeholder="Illustrator · Animator"></div>
-    <div class="form-group"><label>한줄 소개</label><textarea id="pBio" rows="3"></textarea></div>
-    <div class="form-group"><label>이메일</label><input type="email" id="pEmail" placeholder="your@email.com"></div>
+    <div class="form-group"><label>닉네임</label><input type="text" id="pName" placeholder="BOWONE" data-auto-save-bound="1"></div>
+    <div class="form-group"><label>역할</label><input type="text" id="pRole" placeholder="Illustrator · Animator" data-auto-save-bound="1"></div>
+    <div class="form-group"><label>한줄 소개</label><textarea id="pBio" rows="3" data-auto-save-bound="1"></textarea></div>
+    <div class="form-group"><label>이메일</label><input type="email" id="pEmail" placeholder="your@email.com" data-auto-save-bound="1"></div>
     <p id="profileAutoSaveStatus" style="font-size:11px;color:var(--text-dim);margin-top:4px;">변경하면 자동 저장됩니다.</p>
   </div>
 </div>
@@ -7577,6 +7577,11 @@ function applyProfile(p){
       if(preview){ preview.src=''; preview.style.display='none'; }
     }
     _selectedOgImgPath = p.ogImgPath||'';
+
+    const ogMeta = document.getElementById('ogImageMeta');
+    const twMeta = document.getElementById('twitterImageMeta');
+    if(ogMeta) ogMeta.content = p.ogImgUrl || '';
+    if(twMeta) twMeta.content = p.ogImgUrl || '';
   }
 }
 
