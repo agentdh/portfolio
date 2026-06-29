@@ -563,8 +563,8 @@ color:var(--cyan);
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689916265-%EB%AC%B4%EC%A0%9C416_20250627204430.png",
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "ogImgRawUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-06-29T03:03:58.909Z"
+    "ogImgRawUrl": "https://agentdh.github.io/portfolio/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
+    "updatedAt": "2026-06-29T05:25:21.537Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -2053,7 +2053,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">LD 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="thumbnail-ld">
+        <div class="grid-3 fade-in visible" id="thumbnail-ld">
           <div class="card generated-card drag-ready" data-doc-id="auto_210459359" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/thumbnail/2026-05-20.조자라.jpg" data-title="2026 05 20.조자라" data-desc="" data-grid="thumbnail-ld" data-source-path="thumbnail/2026-05-20.조자라.jpg" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1418418662">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_210459359')" title="수정">수정</button>
@@ -4944,7 +4944,7 @@ color:var(--cyan);
     <div class="form-group">
       <label>링크 공유 썸네일 (OG 이미지)</label>
       <div style="display:flex;gap:8px;align-items:center;">
-        <img id="ogImgPreview" src="./opimage/1782689930050-잠드는-거리_20241122204406.jpg" alt="" style="width: 80px; height: 45px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.15); display: block;">
+        <img id="ogImgPreview" src="https://agentdh.github.io/portfolio/opimage/1782689930050-잠드는-거리_20241122204406.jpg" alt="" style="width: 80px; height: 45px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.15); display: block;">
         <button class="btn-secondary" style="font-size:12px;" onclick="openOpImagePicker('og')">🖼 이미지 선택</button>
       </div>
     </div>
@@ -7569,18 +7569,19 @@ function applyProfile(p){
   }
 
   // OG 이미지
-  if('ogImgUrl' in (p||{})){
+  {
+    const ogUrl = toPublicAbsoluteUrl(p.ogImgUrl || p.ogImgRawUrl || '');
     const preview = document.getElementById('ogImgPreview');
-    if(p.ogImgUrl){
-      if(preview){ preview.src=p.ogImgUrl; preview.style.display='block'; }
+    if(ogUrl){
+      if(preview){ preview.src=ogUrl; preview.style.display='block'; }
     } else {
       if(preview){ preview.src=''; preview.style.display='none'; }
     }
     _selectedOgImgPath = p.ogImgPath||'';
-
     const ogMeta = document.getElementById('ogImageMeta');
     const twMeta = document.getElementById('twitterImageMeta');
-    if(ogMeta) ogMeta.content = p.ogImgUrl || '';
+    if(ogMeta) ogMeta.setAttribute('content', ogUrl);
+    if(twMeta) twMeta.setAttribute('content', ogUrl);
     if(twMeta) twMeta.content = p.ogImgUrl || '';
   }
 }
@@ -7918,6 +7919,16 @@ window.addEventListener('load', () => {
   setTimeout(initSectionToggles,1000);
   setTimeout(initSectionToggles,2000);
 });
+
+function toPublicAbsoluteUrl(url){
+  if(!url) return '';
+  const value = String(url).trim();
+  if(value.startsWith('blob:') || value.startsWith('data:') || value.startsWith('inline_')) return '';
+  if(/^https?:\/\//i.test(value)) return value;
+  const clean = value.replace(/^\.?\//, '').replace(/^\/+/, '');
+  return 'https://agentdh.github.io/portfolio/' + clean;
+}
+
 </script>
 
 
@@ -7940,6 +7951,15 @@ ADMIN_STUBS.forEach(function(fn){
 window.loadGridOrder = function(){ return Promise.resolve(); };
 window.applyAllGridOrders = function(){};
 window.isAdmin = false;
+
+// 공개 뷰어: 프로필 클릭/편집 비활성화
+document.querySelectorAll('.avatar-wrap').forEach(function(el){
+  el.style.cursor = 'default';
+  el.removeAttribute('onclick');
+  el.title = '';
+});
+var profileModal = document.getElementById('profileModal');
+if(profileModal) profileModal.remove();
 
 // ── 포트폴리오 카드 렌더링 (inline JSON 기반)
 function getInlinePortfolioPayload(){
@@ -8012,6 +8032,22 @@ function renderPortfolioFromData(data){
     }
   });
 }
+
+// ── toggleSection (공개 뷰어용)
+window.toggleSection = function(sectionId, btn){
+  var section = document.getElementById(sectionId);
+  if(!section) return;
+  var isHidden = section.style.display === 'none' || section.classList.contains('collapsed');
+  if(isHidden){
+    section.style.display = '';
+    section.classList.remove('collapsed');
+    if(btn) btn.textContent = '닫기';
+  } else {
+    section.style.display = 'none';
+    section.classList.add('collapsed');
+    if(btn) btn.textContent = '열기';
+  }
+};
 
 // ── DOMContentLoaded 이후 실행
 window.addEventListener('DOMContentLoaded', function(){
