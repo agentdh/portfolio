@@ -556,7 +556,7 @@ color:var(--cyan);
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://agentdh.github.io/portfolio/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-06-29T05:44:02.169Z"
+    "updatedAt": "2026-06-29T06:04:05.265Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -1914,9 +1914,9 @@ color:var(--cyan);
 <!-- MAIN TAB NAV: 소개 / 포트폴리오 / 주의사항 / 가격표 -->
 <div class="tab-nav-wrap">
   <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('about',this)">소개</button>
+    <button class="tab-btn" onclick="switchTab('about',this)">소개</button>
     <button class="tab-btn" onclick="switchTab('notice',this)">주의사항</button>
-    <button class="tab-btn" onclick="switchTab('work',this)">포트폴리오</button>
+    <button class="tab-btn active" onclick="switchTab('work',this)">포트폴리오</button>
     <button class="tab-btn" onclick="switchTab('commission',this)">가격표</button>
   </div>
 </div>
@@ -1925,7 +1925,7 @@ color:var(--cyan);
 
 
 <!-- ══ 소개 탭 ══ -->
-<div class="tab-panel active" id="tab-about">
+<div class="tab-panel" id="tab-about">
 
 <div class="about-card about-top fade-in visible">
 <h4>학력</h4>
@@ -1934,7 +1934,7 @@ color:var(--cyan);
 </ul>
 </div>
 
-<div class="about-grid fade-in" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
+<div class="about-grid fade-in visible" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
 
 <div class="about-card" style="width:420px;">
 <h4>작업</h4>
@@ -2130,7 +2130,7 @@ color:var(--cyan);
 
 
 <!-- ══ 포트폴리오 탭 ══ -->
-<div class="tab-panel" id="tab-work">
+<div class="tab-panel active" id="tab-work">
   <!-- 포트폴리오 레이아웃: 미등록 패널(좌) + 그리드(우) -->
   <div id="port-layout">
 
@@ -2153,7 +2153,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">LD 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="thumbnail-ld">
+        <div class="grid-3 fade-in visible" id="thumbnail-ld">
           <div class="card generated-card drag-ready" data-doc-id="auto_210459359" data-type="image" data-url="https://raw.githubusercontent.com/agentdh/portfolio/main/thumbnail/2026-05-20.조자라.jpg" data-title="2026 05 20.조자라" data-desc="" data-grid="thumbnail-ld" data-source-path="thumbnail/2026-05-20.조자라.jpg" data-source-kind="github" onclick="handleCardClick(event,this)" draggable="true" data-static-key="static_1418418662">
     <span class="card-select-mark">✓</span>
     <button class="card-edit" onclick="editCard(event,'auto_210459359')" title="수정">수정</button>
