@@ -369,6 +369,9 @@ border-radius:0;
 .image-viewer-controls{display:flex;align-items:center;justify-content:center;margin-top:10px;}
 .image-viewer-reset{padding:6px 14px;border-radius:999px;border:1px solid var(--border2);background:var(--surface);color:var(--text-dim);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;}
 .image-viewer-reset:hover{border-color:var(--cyan);color:var(--cyan);}
+.card-link-preview{min-height:280px;display:flex;align-items:center;justify-content:center;background:#050509;border-radius:10px;padding:32px;}
+.card-link-preview a{display:inline-flex;align-items:center;justify-content:center;min-width:150px;padding:13px 22px;border:1px solid var(--cyan);border-radius:8px;color:var(--cyan);background:rgba(0,229,255,.08);text-decoration:none;font-weight:700;}
+.card-link-preview a:hover{background:rgba(0,229,255,.16);}
 @media(max-width:640px){.video-modal.image-viewer-mode{width:96%;height:82vh}.image-viewer-stage{min-height:220px}.image-viewer-nav{width:36px;height:48px}.image-viewer-prev{left:8px}.image-viewer-next{right:8px}}
 
 .fade-in{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
@@ -5015,12 +5018,12 @@ function setupPublicViewer(){
   window.addEventListener('mouseup',function(){viewer.drag=false;var current=document.querySelector('#videoContainer .image-viewer-stage');if(current)current.classList.remove('dragging');});
  }
 }
-function publicImageIndexes(gridId){
- return (Array.isArray(data[gridId])?data[gridId]:[]).map(function(item,index){return{item:item,index:index};}).filter(function(row){return (row.item.type||'image')==='image';});
+function publicCardIndexes(gridId){
+ return (Array.isArray(data[gridId])?data[gridId]:[]).map(function(item,index){return{item:item,index:index};}).filter(function(row){return !!(row.item&&(row.item.src||row.item.url));});
 }
 window.movePublicCard=function(direction,event){
  if(event){event.preventDefault();event.stopPropagation();}
- var cards=publicImageIndexes(viewer.gridId);if(!cards.length)return;
+ var cards=publicCardIndexes(viewer.gridId);if(!cards.length)return;
  var current=cards.findIndex(function(row){return row.index===viewer.index;});
  var next=cards[(current+direction+cards.length)%cards.length];
  if(next)openPublicCard(next.item,viewer.gridId,next.index);
@@ -5028,7 +5031,6 @@ window.movePublicCard=function(direction,event){
 window.resetPublicViewer=function(){resetPublicViewer();};
 function openPublicCard(item,gridId,index){
  var url=item.src||item.url||'',id=ytId(url);
- if(item.type==='link'&&!id){window.open(url,'_blank','noopener');return;}
  var box=document.getElementById('videoContainer'),modal=document.getElementById('videoModal');if(!box||!modal)return;
  viewer.gridId=gridId||'';viewer.index=Number.isInteger(index)?index:-1;resetPublicViewer();
  if((item.type||'image')==='image'){
@@ -5037,8 +5039,8 @@ function openPublicCard(item,gridId,index){
  }
  modal.querySelector('.video-modal')?.classList.remove('image-viewer-mode');
  var media=id?'<iframe src="https://www.youtube.com/embed/'+esc(id)+'?autoplay=1" allow="autoplay" allowfullscreen></iframe>':
-  (item.type==='video'?'<video src="'+esc(url)+'" controls autoplay playsinline></video>':'<img src="'+esc(url)+'" alt="">');
- box.innerHTML='<div class="media-preview"><div class="media-preview-media">'+media+'</div><div class="media-preview-title">'+esc(item.title||'제목 없음')+'</div>'+(item.desc?'<div class="media-preview-desc">'+esc(item.desc)+'</div>':'')+'</div>';
+  (item.type==='video'?'<video src="'+esc(url)+'" controls autoplay playsinline></video>':'<div class="card-link-preview"><a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">링크 열기</a></div>');
+ box.innerHTML='<div class="media-preview"><button class="image-viewer-nav image-viewer-prev" type="button" onclick="movePublicCard(-1,event)" aria-label="이전 카드">‹</button><div class="media-preview-media">'+media+'</div><button class="image-viewer-nav image-viewer-next" type="button" onclick="movePublicCard(1,event)" aria-label="다음 카드">›</button><div class="media-preview-title">'+esc(item.title||'제목 없음')+'</div>'+(item.desc?'<div class="media-preview-desc">'+esc(item.desc)+'</div>':'')+'</div>';
  modal.classList.add('open');
 }
 window.closeVideoOnly=function(){var m=document.getElementById('videoModal');if(m)m.classList.remove('open');var b=document.getElementById('videoContainer');if(b)b.innerHTML='';viewer.gridId='';viewer.index=-1;resetPublicViewer();};
