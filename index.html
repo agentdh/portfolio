@@ -603,8 +603,7 @@ color:var(--cyan);
 
 
 /* 카드 9장 초과 내부 스크롤 + 공통 테마 */
-.portfolio-scroll-9{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;align-content:start!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#00a9bd #11111a;scroll-snap-type:y proximity;transition:border-color .22s,box-shadow .22s}
-.portfolio-scroll-9>.card:nth-child(3n+1){scroll-snap-align:start}
+.portfolio-scroll-9{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;align-content:start!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#00a9bd #11111a;transition:border-color .22s,box-shadow .22s}
 .portfolio-scroll-9.scroll-target,.style-pane-grid.scroll-target{border-color:rgba(0,229,255,.5)!important;box-shadow:0 0 0 1px rgba(0,229,255,.16),0 0 22px rgba(0,229,255,.08)}
 .portfolio-scroll-9::-webkit-scrollbar,.style-pane-grid::-webkit-scrollbar{width:11px!important;background:#11111a!important}
 .portfolio-scroll-9::-webkit-scrollbar-track,.style-pane-grid::-webkit-scrollbar-track{background:#11111a!important;border-left:1px solid rgba(255,255,255,.07)!important;border-radius:8px!important}
@@ -624,8 +623,7 @@ color:var(--cyan);
 .style-pane-tab span{writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;font-size:12px;letter-spacing:.08em}
 .style-pane-tab small{font-size:9px;color:var(--text-off)}
 .style-pane.active>.style-pane-tab{display:none}
-.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;overscroll-behavior-y:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.55) rgba(255,255,255,.035);scroll-snap-type:y proximity;transition:border-color .22s,box-shadow .22s}
-.style-pane-grid>.card:nth-child(3n+1){scroll-snap-align:start}
+.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;overscroll-behavior-y:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.55) rgba(255,255,255,.035);transition:border-color .22s,box-shadow .22s}
 .style-pane.active>.style-pane-grid{display:grid!important;overflow-x:hidden;overflow-y:auto!important;animation:stylePaneSlideIn .32s cubic-bezier(.22,.75,.25,1) both}
 .style-pane-grid::-webkit-scrollbar{width:10px}
 .style-pane-grid::-webkit-scrollbar-track{background:rgba(255,255,255,.025);border-left:1px solid rgba(255,255,255,.06);border-radius:8px}
@@ -642,7 +640,6 @@ color:var(--cyan);
  .style-accordion[data-active="illust-semi-painted"]{grid-template-columns:42px 42px minmax(0,1fr)}
  .style-pane-tab{padding:10px 6px}
  .style-accordion{height:min(634px,72vh)}
- .portfolio-scroll-9,.style-pane-grid{scroll-snap-type:none}
 }
 </style>
 
