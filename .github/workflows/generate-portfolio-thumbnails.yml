@@ -1,4 +1,4 @@
-# migration-version: 2
+# migration-version: 3
 name: Generate portfolio thumbnails
 
 on:
