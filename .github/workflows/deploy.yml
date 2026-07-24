@@ -1,4 +1,4 @@
-# deployment-version: 3
+# deployment-version: 4
 name: Deploy Portfolio
 
 on:
