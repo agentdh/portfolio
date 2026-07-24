@@ -603,7 +603,7 @@ color:var(--cyan);
 
 
 /* 카드 9장 초과 내부 스크롤 + 공통 테마 */
-.portfolio-scroll-9{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;align-content:start!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#00a9bd #11111a}
+.portfolio-scroll-9{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;align-content:start!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#00a9bd #11111a}
 .portfolio-scroll-9::-webkit-scrollbar,.style-pane-grid::-webkit-scrollbar{width:11px!important;background:#11111a!important}
 .portfolio-scroll-9::-webkit-scrollbar-track,.style-pane-grid::-webkit-scrollbar-track{background:#11111a!important;border-left:1px solid rgba(255,255,255,.07)!important;border-radius:8px!important}
 .portfolio-scroll-9::-webkit-scrollbar-thumb,.style-pane-grid::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00d4ea,#087f91)!important;border:3px solid #11111a!important;border-radius:10px!important;min-height:46px!important}
@@ -622,7 +622,7 @@ color:var(--cyan);
 .style-pane-tab span{writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;font-size:12px;letter-spacing:.08em}
 .style-pane-tab small{font-size:9px;color:var(--text-off)}
 .style-pane.active>.style-pane-tab{display:none}
-.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;overscroll-behavior-y:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.55) rgba(255,255,255,.035)}
+.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;overscroll-behavior-y:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.55) rgba(255,255,255,.035)}
 .style-pane.active>.style-pane-grid{display:grid!important;overflow-x:hidden;overflow-y:auto!important;animation:stylePaneSlideIn .32s cubic-bezier(.22,.75,.25,1) both}
 .style-pane-grid::-webkit-scrollbar{width:10px}
 .style-pane-grid::-webkit-scrollbar-track{background:rgba(255,255,255,.025);border-left:1px solid rgba(255,255,255,.06);border-radius:8px}
