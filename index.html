@@ -5136,7 +5136,7 @@ document.addEventListener('wheel',function(e){
  }
  panel.scrollBy({top:e.deltaY,behavior:'auto'});
 },{capture:true,passive:false});
-document.addEventListener('contextmenu',function(e){if(e.target.closest&&e.target.closest('img'))e.preventDefault();},true);
+document.addEventListener('contextmenu',function(e){e.preventDefault();},true);
 document.addEventListener('dragstart',function(e){if(e.target.closest&&e.target.closest('img'))e.preventDefault();},true);
 window.switchTab=function(key,btn){
  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+key);});
