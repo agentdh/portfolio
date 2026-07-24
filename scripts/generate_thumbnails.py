@@ -43,7 +43,7 @@ def source_path(item):
 
 
 def thumbnail_path(original: Path):
-    return original.parent / "_thumbnails" / (original.stem + ".webp")
+    return original.parent / "card-thumbs" / (original.stem + ".webp")
 
 
 def build_thumbnail(original: Path, target: Path):
@@ -102,9 +102,10 @@ def update_embedded_payload(payload):
 
 
 def remove_legacy_thumbnail_dirs():
-    for path in ROOT.rglob(".thumbnails"):
-        if path.is_dir():
-            shutil.rmtree(path)
+    for legacy_name in (".thumbnails", "_thumbnails"):
+        for path in ROOT.rglob(legacy_name):
+            if path.is_dir():
+                shutil.rmtree(path)
 
 
 def main():
