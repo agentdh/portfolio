@@ -5007,7 +5007,7 @@ function makeCard(item,gridId,index){
  }else if(type==='link'){
   badge='LINK';badgeClass='link';media='<div class="card-thumb ph">↗</div>';
  }else{
-  media='<img loading="lazy" decoding="async" src="'+esc(url)+'" alt="'+esc(item.title||'')+'">';
+  media='<img loading="lazy" decoding="async" src="'+esc(item.thumbnailSrc||url)+'" alt="'+esc(item.title||'')+'">';
  }
  card.innerHTML='<div class="card-thumb">'+media+'</div><span class="type-badge '+badgeClass+'">'+badge+'</span><div class="card-body"><div class="card-title">'+esc(item.title||'제목 없음')+'</div>'+(item.desc?'<div class="card-desc">'+esc(item.desc)+'</div>':'')+'</div>';
  card.addEventListener('click',function(){openPublicCard(item,gridId,index);});
