@@ -1,4 +1,4 @@
-# migration-version: 3
+# migration-version: 4
 name: Generate portfolio thumbnails
 
 on:
@@ -30,10 +30,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install image encoder
-        run: python -m pip install --disable-pip-version-check pillow
+      - name: Install image and video encoders
+        run: python -m pip install --disable-pip-version-check pillow imageio-ffmpeg
 
-      - name: Generate WebP thumbnails and update data
+      - name: Generate image and video thumbnails and update data
         run: python scripts/generate_thumbnails.py
 
       - name: Commit generated thumbnails
@@ -45,5 +45,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Generate lightweight portfolio thumbnails"
+          git commit -m "Generate animated GIF and video card previews"
           git push
