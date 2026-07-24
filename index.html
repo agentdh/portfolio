@@ -6,9 +6,9 @@
 <meta property="og:title" content="BOWONE — Portfolio &amp; Commission">
 <meta property="og:description" content="일러스트, 애니메이션, 3D 모델링 멀티미디어 아티스트 보원">
 <meta property="og:url" content="https://agentdh.github.io/portfolio/">
-<meta property="og:image" id="ogImageMeta" content="https://agentdh.github.io/portfolio/opimage/1782689930050-%EC%9E%A0%EB%93%9C%EB%8A%94-%EA%B1%B0%EB%A6%AC_20241122204406.jpg">
+<meta property="og:image" id="ogImageMeta" content="https://agentdh.github.io/portfolio/opimage/1782689930050-잠드는-거리_20241122204406.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" id="twitterImageMeta" content="https://agentdh.github.io/portfolio/opimage/1782689930050-%EC%9E%A0%EB%93%9C%EB%8A%94-%EA%B1%B0%EB%A6%AC_20241122204406.jpg">
+<meta name="twitter:image" id="twitterImageMeta" content="https://agentdh.github.io/portfolio/opimage/1782689930050-잠드는-거리_20241122204406.jpg">
 <title>BOWONE — Portfolio &amp; Commission</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Space+Mono:wght@400;700&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
@@ -300,6 +300,36 @@ border-radius:0;
 .modal h3{font-size:16px;font-weight:600;margin-bottom:18px;font-family:'Space Grotesk',sans-serif}
 .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;line-height:1;}
 .modal-close:hover{color:var(--text)}
+#profileModal .modal{scrollbar-width:thin;scrollbar-color:#00a9bd #11111a}
+#profileModal .modal::-webkit-scrollbar{width:11px;background:#11111a}
+#profileModal .modal::-webkit-scrollbar-track{background:#11111a;border-left:1px solid rgba(255,255,255,.07);border-radius:8px}
+#profileModal .modal::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00d4ea,#087f91);border:3px solid #11111a;border-radius:10px;min-height:46px}
+#profileModal .modal::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#35efff,#00a9bd)}
+#profileModal .modal::-webkit-scrollbar-button{display:none;width:0;height:0;background:transparent}
+#profileModal .modal::-webkit-scrollbar-corner{background:#11111a}
+#profileModal .modal-close{position:sticky;top:-16px;z-index:8;float:right;width:38px;height:38px;margin:-12px -12px -38px 0;border:1px solid var(--border2);border-radius:9px;background:rgba(13,13,20,.94);color:var(--text);font-size:28px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+#profileModal .modal-close:hover{border-color:var(--cyan);color:var(--cyan);background:#11111a}
+*{scrollbar-width:thin;scrollbar-color:#00a9bd #11111a}
+*::-webkit-scrollbar{width:11px;height:11px;background:#11111a}
+*::-webkit-scrollbar-track{background:#11111a;border:1px solid rgba(255,255,255,.06);border-radius:8px}
+*::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00d4ea,#087f91);border:3px solid #11111a;border-radius:10px;min-height:42px;min-width:42px}
+*::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#35efff,#00a9bd)}
+*::-webkit-scrollbar-button{display:none;width:0;height:0;background:transparent}
+*::-webkit-scrollbar-corner{background:#11111a}
+.crop-modal{max-width:900px!important;width:min(94vw,900px)!important}
+.crop-help{font-size:11px;color:var(--text-dim);margin:-8px 0 12px}
+.crop-workspace{display:flex;justify-content:center;align-items:center;min-height:260px;max-height:62vh;overflow:auto;padding:12px;background:#090912;border:1px solid var(--border2);border-radius:10px}
+.crop-viewport{position:relative;flex:none;touch-action:none;user-select:none}
+.crop-viewport>img{display:block;width:100%;height:100%;pointer-events:none}
+.crop-selection{position:absolute;border:2px solid var(--cyan);box-shadow:0 0 0 9999px rgba(0,0,0,.55),0 0 18px rgba(0,229,255,.25);cursor:move;touch-action:none}
+.crop-selection.profile::before{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 9999px rgba(0,0,0,.58);pointer-events:none;z-index:1}
+.crop-selection.profile::after{content:"";position:absolute;inset:0;border:2px solid rgba(255,255,255,.9);border-radius:50%;pointer-events:none;z-index:2}
+.crop-handle{position:absolute;width:16px;height:16px;border:2px solid #0d0d14;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,.7);z-index:3}
+.crop-handle[data-corner="nw"]{left:-9px;top:-9px;cursor:nwse-resize}
+.crop-handle[data-corner="ne"]{right:-9px;top:-9px;cursor:nesw-resize}
+.crop-handle[data-corner="sw"]{left:-9px;bottom:-9px;cursor:nesw-resize}
+.crop-handle[data-corner="se"]{right:-9px;bottom:-9px;cursor:nwse-resize}
+.crop-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-size:11px;color:var(--text-dim);margin-bottom:5px;letter-spacing:.04em}
 .form-group input,.form-group textarea,.form-group select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:9px 12px;border-radius:8px;font-family:'Noto Sans KR',sans-serif;font-weight:300;outline:none;transition:border-color .2s;}
@@ -727,20 +757,26 @@ color:var(--cyan);
 .dualpip-per-video-menu-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
-</style><style wxt-shadow-root-document-styles="lz05c1dqban">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}</style></head>
+</style><style wxt-shadow-root-document-styles="q9iyqe1wgo">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}</style></head>
 <body><script id="portfolio-data" type="application/json">{
   "profile": {
     "name": "BOWONE",
     "role": "Illustrator · Animator · 3D Modeler",
     "bio": "일러스트, 애니메이션, 3D 모델링을 중심으로\n다양한 디지털 콘텐츠를 제작하고 있는\n멀티미디어 아티스트 보원입니다.\n\n캐릭터 디자인부터 MV 제작,\n게임용 픽셀아트 및 마인크래프트 리소스 제작까지\n폭넓은 작업을 진행하고 있습니다.\n\nE-mail : agentdh@naver.com",
     "email": "agentdh@naver.com",
-    "profileImgPath": "opimage/1782689916265-무제416_20250627204430.png",
-    "profileImgUrl": "./opimage/1782689916265-무제416_20250627204430.png",
-    "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689916265-%EB%AC%B4%EC%A0%9C416_20250627204430.png",
+    "profileImgPath": "opimage/1782689883234-무제22_20241013202118.png",
+    "profileImgUrl": "./opimage/1782689883234-무제22_20241013202118.png",
+    "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
+    "profileCrop": {
+      "x": 0.4975124378109453,
+      "y": 0,
+      "w": 0.2879353233830846,
+      "h": 0.5121681415929203
+    },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-07-24T14:07:20.468Z"
+    "updatedAt": "2026-07-24T14:51:50.141Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -2542,13 +2578,109 @@ color:var(--cyan);
       }
     ]
   },
-  "opimages": []
+  "opimages": [
+    {
+      "name": "1782689876253-Shoka_20241018182309.png",
+      "path": "opimage/1782689876253-Shoka_20241018182309.png",
+      "url": "./opimage/1782689876253-Shoka_20241018182309.png"
+    },
+    {
+      "name": "1782689880140-무제20_20241013192114.png",
+      "path": "opimage/1782689880140-무제20_20241013192114.png",
+      "url": "./opimage/1782689880140-무제20_20241013192114.png"
+    },
+    {
+      "name": "1782689883234-무제22_20241013202118.png",
+      "path": "opimage/1782689883234-무제22_20241013202118.png",
+      "url": "./opimage/1782689883234-무제22_20241013202118.png"
+    },
+    {
+      "name": "1782689886210-무제23_20241014200105.png",
+      "path": "opimage/1782689886210-무제23_20241014200105.png",
+      "url": "./opimage/1782689886210-무제23_20241014200105.png"
+    },
+    {
+      "name": "1782689890371-무제24_20241014201951.png",
+      "path": "opimage/1782689890371-무제24_20241014201951.png",
+      "url": "./opimage/1782689890371-무제24_20241014201951.png"
+    },
+    {
+      "name": "1782689893728-무제68_20241113152449.jpg",
+      "path": "opimage/1782689893728-무제68_20241113152449.jpg",
+      "url": "./opimage/1782689893728-무제68_20241113152449.jpg"
+    },
+    {
+      "name": "1782689895710-무제78_20241117142549.jpg",
+      "path": "opimage/1782689895710-무제78_20241117142549.jpg",
+      "url": "./opimage/1782689895710-무제78_20241117142549.jpg"
+    },
+    {
+      "name": "1782689898259-무제83_20241123144935.jpg",
+      "path": "opimage/1782689898259-무제83_20241123144935.jpg",
+      "url": "./opimage/1782689898259-무제83_20241123144935.jpg"
+    },
+    {
+      "name": "1782689900754-무제94_20241124193943.jpg",
+      "path": "opimage/1782689900754-무제94_20241124193943.jpg",
+      "url": "./opimage/1782689900754-무제94_20241124193943.jpg"
+    },
+    {
+      "name": "1782689902532-무제106_20241129201840.jpg",
+      "path": "opimage/1782689902532-무제106_20241129201840.jpg",
+      "url": "./opimage/1782689902532-무제106_20241129201840.jpg"
+    },
+    {
+      "name": "1782689905058-무제107_20241130121901.jpg",
+      "path": "opimage/1782689905058-무제107_20241130121901.jpg",
+      "url": "./opimage/1782689905058-무제107_20241130121901.jpg"
+    },
+    {
+      "name": "1782689907068-무제137_20241204204812.jpg",
+      "path": "opimage/1782689907068-무제137_20241204204812.jpg",
+      "url": "./opimage/1782689907068-무제137_20241204204812.jpg"
+    },
+    {
+      "name": "1782689910431-무제140_20241205202650.jpg",
+      "path": "opimage/1782689910431-무제140_20241205202650.jpg",
+      "url": "./opimage/1782689910431-무제140_20241205202650.jpg"
+    },
+    {
+      "name": "1782689913446-무제221_20250201161329.jpg",
+      "path": "opimage/1782689913446-무제221_20250201161329.jpg",
+      "url": "./opimage/1782689913446-무제221_20250201161329.jpg"
+    },
+    {
+      "name": "1782689916265-무제416_20250627204430.png",
+      "path": "opimage/1782689916265-무제416_20250627204430.png",
+      "url": "./opimage/1782689916265-무제416_20250627204430.png"
+    },
+    {
+      "name": "1782689920139-_20241117204917.jpg",
+      "path": "opimage/1782689920139-_20241117204917.jpg",
+      "url": "./opimage/1782689920139-_20241117204917.jpg"
+    },
+    {
+      "name": "1782689922341-일러스트1_2.png",
+      "path": "opimage/1782689922341-일러스트1_2.png",
+      "url": "./opimage/1782689922341-일러스트1_2.png"
+    },
+    {
+      "name": "1782689926341-일러스트2.png",
+      "path": "opimage/1782689926341-일러스트2.png",
+      "url": "./opimage/1782689926341-일러스트2.png"
+    },
+    {
+      "name": "1782689930050-잠드는-거리_20241122204406.jpg",
+      "path": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
+      "url": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg"
+    }
+  ]
 }</script>
 <div id="page-wrap">
 <div id="main-area">
 <header>
   <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-  <div class="avatar-wrap" style="cursor: default;"><span id="avatarInitial" style="display: none;">BW</span><img id="avatarImg" src="./opimage/1782689916265-무제416_20250627204430.png" alt="" style="display: block;"></div>
+  <div class="avatar-wrap" style="cursor: default;"><span id="avatarInitial" style="display: none;">BW</span><img id="avatarImg" src="./opimage/1782689883234-무제22_20241013202118.png" alt="" style="display: block; width: 347.3%; height: 195.248%; left: -172.786%; top: 0%; object-fit: fill;"></div>
   
 
 
@@ -2598,7 +2730,7 @@ color:var(--cyan);
 </ul>
 </div>
 
-<div class="about-grid fade-in visible" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
+<div class="about-grid fade-in" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
 
 <div class="about-card" style="width:420px;">
 <h4>작업</h4>
@@ -2783,7 +2915,7 @@ color:var(--cyan);
 </div>
 <div style="height:15px;"></div>
 
-<div class="about-card about-top fade-in visible">
+<div class="about-card about-top fade-in">
 <h4>수상 / 대외활동</h4>
 <ul>
 <li>2026 한국게임학회 × 넥슨게임즈 입선</li>
@@ -2817,7 +2949,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">LD 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible portfolio-scroll-9" id="thumbnail-ld" style="max-height: 708px;">
+        <div class="grid-3 fade-in visible" id="thumbnail-ld" style="">
           
         <div class="card-add" onclick="openAddModal('thumbnail-ld','LD 썸네일',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2825,7 +2957,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">SD 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-sd">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-sd">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="thumbnail-sd">
+        <div class="grid-3 fade-in" id="thumbnail-sd">
           
         <div class="card-add" onclick="openAddModal('thumbnail-sd','SD 썸네일',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2833,7 +2965,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">합성 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-composite">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-composite">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="thumbnail-composite">
+        <div class="grid-3 fade-in" id="thumbnail-composite">
           
         <div class="card-add" onclick="openAddModal('thumbnail-composite','합성 썸네일',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2854,7 +2986,7 @@ color:var(--cyan);
           <div class="style-accordion" id="styleAccordion" data-active="illust-simple">
             <section class="style-pane active" data-style-grid="illust-simple">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-simple')"><span>심플</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid visible" id="illust-simple">
+              <div class="grid-3 fade-in style-pane-grid" id="illust-simple">
                 
               <div class="card-add" onclick="openAddModal('illust-simple','심플',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2862,7 +2994,7 @@ color:var(--cyan);
             </section>
             <section class="style-pane" data-style-grid="illust-line">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-line')"><span>얇은 선</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid visible" id="illust-line">
+              <div class="grid-3 fade-in style-pane-grid" id="illust-line">
                 
               <div class="card-add" onclick="openAddModal('illust-line','얇은 선',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2870,7 +3002,7 @@ color:var(--cyan);
             </section>
             <section class="style-pane" data-style-grid="illust-semi-painted">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-semi-painted')"><span>반무테</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid visible" id="illust-semi-painted">
+              <div class="grid-3 fade-in style-pane-grid" id="illust-semi-painted">
                 
               <div class="card-add" onclick="openAddModal('illust-semi-painted','반무테',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2881,7 +3013,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">커버일러스트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-cover">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-cover">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-cover" style="">
+        <div class="grid-3 fade-in" id="illust-cover">
           
         <div class="card-add" onclick="openAddModal('illust-cover','커버일러스트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2897,7 +3029,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">컨셉아트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-conceptart">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-conceptart">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-conceptart" style="">
+        <div class="grid-3 fade-in" id="illust-conceptart">
           
         <div class="card-add" onclick="openAddModal('illust-conceptart','컨셉아트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2977,7 +3109,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">스킨<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-skin">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-skin">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="mc-skin">
+        <div class="grid-3 fade-in" id="mc-skin">
           
         <div class="card-add" onclick="openAddModal('mc-skin','스킨',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2985,7 +3117,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">모델링<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-model">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-model">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="mc-model">
+        <div class="grid-3 fade-in" id="mc-model">
           
         <div class="card-add" onclick="openAddModal('mc-model','모델링',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3013,7 +3145,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">MV<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mvAnimationGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mvAnimationGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="mvAnimationGrid">
+        <div class="grid-3 fade-in" id="mvAnimationGrid">
           
         <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3021,7 +3153,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">2D Animation<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="animation2DGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="animation2DGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="animation2DGrid" style="">
+        <div class="grid-3 fade-in" id="animation2DGrid">
           
         <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3095,7 +3227,7 @@ color:var(--cyan);
 
   <!-- 저작권 -->
   <div class="sub-panel active" id="notice-copyright">
-    <div class="policy-block fade-in visible">
+    <div class="policy-block fade-in">
       <div class="policy-title">📋 저작권 안내</div>
       <div class="policy-text">
         <p>저의 모든 커미션 작업물들의 저작권은<br>계약서를 따로 작성해서 작업하는 것이 아닌 이상 모두 <strong style="color:var(--cyan)">보원</strong>에게 있음을 알려드립니다.</p>
@@ -4572,16 +4704,35 @@ color:var(--cyan);
     <p id="opMgrStatus" style="font-size:11px;color:var(--cyan);min-height:16px;margin-bottom:8px;"></p>
 
     <!-- 이미지 그리드 -->
-    <div id="opImageManagerList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:380px;overflow-y:auto;"></div>
-    <p id="opImageManagerEmpty" style="color:var(--text-dim);font-size:13px;display:none;margin-top:8px;">등록된 이미지가 없습니다.</p>
+    <div id="opImageManagerList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:380px;overflow-y:auto;"><div data-img-path="opimage/1782689876253-Shoka_20241018182309.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689876253-Shoka_20241018182309.png" alt="1782689876253-Shoka_20241018182309.png" title="1782689876253-Shoka_20241018182309.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689880140-무제20_20241013192114.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689880140-무제20_20241013192114.png" alt="1782689880140-무제20_20241013192114.png" title="1782689880140-무제20_20241013192114.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689883234-무제22_20241013202118.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689883234-무제22_20241013202118.png" alt="1782689883234-무제22_20241013202118.png" title="1782689883234-무제22_20241013202118.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689886210-무제23_20241014200105.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689886210-무제23_20241014200105.png" alt="1782689886210-무제23_20241014200105.png" title="1782689886210-무제23_20241014200105.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689890371-무제24_20241014201951.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689890371-무제24_20241014201951.png" alt="1782689890371-무제24_20241014201951.png" title="1782689890371-무제24_20241014201951.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689893728-무제68_20241113152449.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689893728-무제68_20241113152449.jpg" alt="1782689893728-무제68_20241113152449.jpg" title="1782689893728-무제68_20241113152449.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689895710-무제78_20241117142549.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689895710-무제78_20241117142549.jpg" alt="1782689895710-무제78_20241117142549.jpg" title="1782689895710-무제78_20241117142549.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689898259-무제83_20241123144935.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689898259-무제83_20241123144935.jpg" alt="1782689898259-무제83_20241123144935.jpg" title="1782689898259-무제83_20241123144935.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689900754-무제94_20241124193943.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689900754-무제94_20241124193943.jpg" alt="1782689900754-무제94_20241124193943.jpg" title="1782689900754-무제94_20241124193943.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689902532-무제106_20241129201840.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689902532-무제106_20241129201840.jpg" alt="1782689902532-무제106_20241129201840.jpg" title="1782689902532-무제106_20241129201840.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689905058-무제107_20241130121901.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689905058-무제107_20241130121901.jpg" alt="1782689905058-무제107_20241130121901.jpg" title="1782689905058-무제107_20241130121901.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689907068-무제137_20241204204812.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689907068-무제137_20241204204812.jpg" alt="1782689907068-무제137_20241204204812.jpg" title="1782689907068-무제137_20241204204812.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689910431-무제140_20241205202650.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689910431-무제140_20241205202650.jpg" alt="1782689910431-무제140_20241205202650.jpg" title="1782689910431-무제140_20241205202650.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689913446-무제221_20250201161329.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689913446-무제221_20250201161329.jpg" alt="1782689913446-무제221_20250201161329.jpg" title="1782689913446-무제221_20250201161329.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689916265-무제416_20250627204430.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689916265-무제416_20250627204430.png" alt="1782689916265-무제416_20250627204430.png" title="1782689916265-무제416_20250627204430.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689920139-_20241117204917.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689920139-_20241117204917.jpg" alt="1782689920139-_20241117204917.jpg" title="1782689920139-_20241117204917.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689922341-일러스트1_2.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689922341-일러스트1_2.png" alt="1782689922341-일러스트1_2.png" title="1782689922341-일러스트1_2.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689926341-일러스트2.png" style="position: relative; cursor: pointer;"><img src="./opimage/1782689926341-일러스트2.png" alt="1782689926341-일러스트2.png" title="1782689926341-일러스트2.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div><div data-img-path="opimage/1782689930050-잠드는-거리_20241122204406.jpg" style="position: relative; cursor: pointer;"><img src="./opimage/1782689930050-잠드는-거리_20241122204406.jpg" alt="1782689930050-잠드는-거리_20241122204406.jpg" title="1782689930050-잠드는-거리_20241122204406.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"><div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0, 229, 255, 0.9); color: rgb(0, 0, 0); font-size: 12px; font-weight: 700; display: none; align-items: center; justify-content: center;">✓</div></div></div>
+    <p id="opImageManagerEmpty" style="color: var(--text-dim); font-size: 13px; margin-top: 8px; display: none;">등록된 이미지가 없습니다.</p>
   </div>
 </div>
-<div class="modal-backdrop" id="opImagePickerModal" onclick="closeOnBg(event,'opImagePickerModal')">
+<div class="modal-backdrop" id="opImagePickerModal" onclick="closeOnBg(event,'opImagePickerModal')" data-picker-kind="og">
   <div class="modal" style="max-width:600px;">
     <button class="modal-close" onclick="closeModal('opImagePickerModal')">×</button>
-    <h3 id="opImagePickerTitle">이미지 선택</h3>
-    <div id="opImagePickerList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-height:400px;overflow-y:auto;margin-top:12px;"></div>
-    <p id="opImagePickerEmpty" style="color:var(--text-dim);font-size:13px;display:none;">opimage 폴더에 이미지가 없습니다. 먼저 업로드해주세요.</p>
+    <h3 id="opImagePickerTitle">OG 썸네일 선택</h3>
+    <div id="opImagePickerList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-height:400px;overflow-y:auto;margin-top:12px;"><div style="position: relative; cursor: pointer;"><div style="width: 100%; aspect-ratio: 1 / 1; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.18); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; color: var(--text-dim); font-size: 11px; background: rgba(255, 255, 255, 0.04); transition: border-color 0.15s;"><svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:currentColor;opacity:.4"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path></svg><span>없음</span></div></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689876253-Shoka_20241018182309.png" alt="1782689876253-Shoka_20241018182309.png" title="1782689876253-Shoka_20241018182309.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689880140-무제20_20241013192114.png" alt="1782689880140-무제20_20241013192114.png" title="1782689880140-무제20_20241013192114.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689883234-무제22_20241013202118.png" alt="1782689883234-무제22_20241013202118.png" title="1782689883234-무제22_20241013202118.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689886210-무제23_20241014200105.png" alt="1782689886210-무제23_20241014200105.png" title="1782689886210-무제23_20241014200105.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689890371-무제24_20241014201951.png" alt="1782689890371-무제24_20241014201951.png" title="1782689890371-무제24_20241014201951.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689893728-무제68_20241113152449.jpg" alt="1782689893728-무제68_20241113152449.jpg" title="1782689893728-무제68_20241113152449.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689895710-무제78_20241117142549.jpg" alt="1782689895710-무제78_20241117142549.jpg" title="1782689895710-무제78_20241117142549.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689898259-무제83_20241123144935.jpg" alt="1782689898259-무제83_20241123144935.jpg" title="1782689898259-무제83_20241123144935.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689900754-무제94_20241124193943.jpg" alt="1782689900754-무제94_20241124193943.jpg" title="1782689900754-무제94_20241124193943.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689902532-무제106_20241129201840.jpg" alt="1782689902532-무제106_20241129201840.jpg" title="1782689902532-무제106_20241129201840.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689905058-무제107_20241130121901.jpg" alt="1782689905058-무제107_20241130121901.jpg" title="1782689905058-무제107_20241130121901.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689907068-무제137_20241204204812.jpg" alt="1782689907068-무제137_20241204204812.jpg" title="1782689907068-무제137_20241204204812.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689910431-무제140_20241205202650.jpg" alt="1782689910431-무제140_20241205202650.jpg" title="1782689910431-무제140_20241205202650.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689913446-무제221_20250201161329.jpg" alt="1782689913446-무제221_20250201161329.jpg" title="1782689913446-무제221_20250201161329.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689916265-무제416_20250627204430.png" alt="1782689916265-무제416_20250627204430.png" title="1782689916265-무제416_20250627204430.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689920139-_20241117204917.jpg" alt="1782689920139-_20241117204917.jpg" title="1782689920139-_20241117204917.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689922341-일러스트1_2.png" alt="1782689922341-일러스트1_2.png" title="1782689922341-일러스트1_2.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689926341-일러스트2.png" alt="1782689926341-일러스트2.png" title="1782689926341-일러스트2.png" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border: 2px solid transparent; transition: border-color 0.15s; display: block;"></div><div style="position: relative; cursor: pointer;"><img src="./opimage/1782689930050-잠드는-거리_20241122204406.jpg" alt="1782689930050-잠드는-거리_20241122204406.jpg" title="1782689930050-잠드는-거리_20241122204406.jpg" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; border-width: 2px; border-style: solid; border-color: var(--cyan); border-image: none; transition: border-color 0.15s; display: block;"></div></div>
+    <p id="opImagePickerEmpty" style="color: var(--text-dim); font-size: 13px; display: none;">opimage 폴더에 이미지가 없습니다. 먼저 업로드해주세요.</p>
+  </div>
+</div>
+<div class="modal-backdrop" id="imageCropModal">
+  <div class="modal crop-modal">
+    <button class="modal-close" onclick="closeImageCropper()">×</button>
+    <h3 id="imageCropTitle">프로필 이미지 영역 지정 (1:1)</h3>
+    <p class="crop-help">영역을 드래그해 이동하고, 모서리를 잡아 비율을 유지한 채 크기를 조절할 수 있습니다.</p>
+    <div class="crop-workspace"><div class="crop-viewport" id="cropViewport" style="width: 804px; height: 452px;">
+      <img id="cropSourceImage" alt="" crossorigin="anonymous" src="./opimage/1782689883234-무제22_20241013202118.png?crop=1784904692831">
+      <div class="crop-selection profile" id="cropSelection" style="left: 400px; top: 0px; width: 231.5px; height: 231.5px;">
+        <i class="crop-handle" data-corner="nw"></i><i class="crop-handle" data-corner="ne"></i>
+        <i class="crop-handle" data-corner="sw"></i><i class="crop-handle" data-corner="se"></i>
+      </div>
+    </div></div>
+    <div class="crop-actions">
+      <button class="btn-secondary" onclick="cropUseFullRatio()">전체 비율</button>
+      <button class="btn-secondary" onclick="closeImageCropper()">취소</button>
+      <button class="btn-primary" id="cropConfirmBtn" style="width:auto;padding-left:24px;padding-right:24px" onclick="confirmImageCrop()">적용</button>
+    </div>
   </div>
 </div>
 <div class="video-modal-backdrop" id="videoModal" onclick="closeVideoModal(event)">
@@ -4928,7 +5079,12 @@ function applyProfile(p){
  if(p.name&&n)n.textContent=p.name;
  if(p.role&&r)r.textContent=p.role;
  if(p.bio&&b)b.innerHTML=esc(p.bio).replace(/\n/g,'<br>');
- if(img&&p.profileImgUrl){img.src=p.profileImgUrl;img.loading='lazy';img.decoding='async';img.style.display='block';if(ini)ini.style.display='none';}
+ if(img&&p.profileImgUrl){
+  img.src=p.profileImgUrl;img.loading='lazy';img.decoding='async';img.style.display='block';if(ini)ini.style.display='none';
+  var c=p.profileCrop;
+  if(c&&c.w>0&&c.h>0){img.style.objectFit='fill';img.style.width=(100/c.w)+'%';img.style.height=(100/c.h)+'%';img.style.left=(-100*c.x/c.w)+'%';img.style.top=(-100*c.y/c.h)+'%';}
+  else{img.style.objectFit='cover';img.style.width='100%';img.style.height='100%';img.style.left='0';img.style.top='0';}
+ }
 }
 function makeCard(item,gridId,index){
  var card=document.createElement('div'),url=item.src||item.url||'',type=item.type||'image',id=ytId(url);
