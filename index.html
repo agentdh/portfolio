@@ -5177,7 +5177,7 @@ document.addEventListener('DOMContentLoaded',function(){
  document.querySelectorAll('.tab-panel').forEach(function(panel){panel.classList.toggle('active',panel.id==='tab-about');});
  document.querySelectorAll('.tab-btn').forEach(function(btn){btn.classList.toggle('active',(btn.getAttribute('onclick')||'').indexOf("'about'")>=0);});
  document.querySelectorAll('#port-grids .port-sub').forEach(function(panel){panel.classList.toggle('active',panel.id==='port-sub-thumbnail');});
- var portTabs=document.querySelectorAll('#tab-work > .sub-tab-wrap .sub-tab');portTabs.forEach(function(btn,index){btn.classList.toggle('active',index===0);});
+ var portTabs=document.querySelectorAll('#port-grids > .sub-tab-wrap .sub-tab');portTabs.forEach(function(btn,index){btn.classList.toggle('active',index===0);});
  ['notice','commission'].forEach(function(key){var root=document.getElementById('tab-'+key);if(!root)return;root.querySelectorAll('.sub-tab').forEach(function(btn,index){btn.classList.toggle('active',index===0);});root.querySelectorAll('.sub-panel').forEach(function(panel,index){panel.classList.toggle('active',index===0);});});
  document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(function(section){var has=Array.isArray(data[section.id])&&data[section.id].length>0;section.style.display=has?'':'none';section.classList.toggle('collapsed',!has);});
  var styleOrder=['illust-simple','illust-line','illust-semi-painted'],firstFilledStyle=styleOrder.find(function(id){return Array.isArray(data[id])&&data[id].length>0;})||'';
