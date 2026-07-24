@@ -10,7 +10,7 @@
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-07-24T06:15:19.386Z"
+    "updatedAt": "2026-07-24T13:03:01.937Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -33,9 +33,9 @@
         "type": "image"
       },
       {
-        "title": "3",
+        "title": "3(1)",
         "desc": "",
-        "src": "./thumbnail/3.png",
+        "src": "./thumbnail/3(1).png",
         "type": "image"
       },
       {
@@ -81,9 +81,9 @@
         "type": "image"
       },
       {
-        "title": "4",
+        "title": "4(1)",
         "desc": "",
-        "src": "./thumbnail/4.png",
+        "src": "./thumbnail/4(1).png",
         "type": "image"
       },
       {
@@ -99,15 +99,27 @@
         "type": "image"
       },
       {
-        "title": "38",
-        "desc": "",
-        "src": "./thumbnail/38.png",
-        "type": "image"
-      },
-      {
         "title": "썸네일 (6)",
         "desc": "",
         "src": "./thumbnail/썸네일 (6).png",
+        "type": "image"
+      },
+      {
+        "title": "4(2)",
+        "desc": "",
+        "src": "./thumbnail/4(2).png",
+        "type": "image"
+      },
+      {
+        "title": "5",
+        "desc": "",
+        "src": "./thumbnail/5.jpg",
+        "type": "image"
+      },
+      {
+        "title": "38",
+        "desc": "",
+        "src": "./thumbnail/38.png",
         "type": "image"
       },
       {
@@ -171,6 +183,12 @@
         "type": "image"
       },
       {
+        "title": "3(2)",
+        "desc": "",
+        "src": "./thumbnail/3(2).png",
+        "type": "image"
+      },
+      {
         "title": "안정식님1",
         "desc": "",
         "src": "./thumbnail/안정식님1.png",
@@ -213,15 +231,27 @@
         "type": "image"
       },
       {
+        "title": "무제514 20250808203841",
+        "desc": "",
+        "src": "./illustration/무제514_20250808203841.png",
+        "type": "image"
+      },
+      {
         "title": "Shoka 20241018182309",
         "desc": "",
         "src": "./illustration/Shoka_20241018182309.png",
         "type": "image"
       },
       {
-        "title": "무제137 20241204204812",
+        "title": "무제178 20241225144902",
         "desc": "",
-        "src": "./illustration/무제137_20241204204812.jpg",
+        "src": "./illustration/무제178_20241225144902.jpg",
+        "type": "image"
+      },
+      {
+        "title": "무제391 20250608132523",
+        "desc": "",
+        "src": "./illustration/무제391_20250608132523.png",
         "type": "image"
       },
       {
@@ -237,27 +267,39 @@
         "type": "image"
       },
       {
+        "title": "무제267 20250303085323",
+        "desc": "",
+        "src": "./illustration/무제267_20250303085323.png",
+        "type": "image"
+      },
+      {
+        "title": "무제30 20241019181254",
+        "desc": "",
+        "src": "./illustration/무제30_20241019181254.png",
+        "type": "image"
+      },
+      {
+        "title": "무제266 20250301203217",
+        "desc": "",
+        "src": "./illustration/무제266_20250301203217.png",
+        "type": "image"
+      },
+      {
         "title": "심플 (3)",
         "desc": "",
         "src": "./illustration/심플 (3).png",
         "type": "image"
       },
       {
-        "title": "심플 (2)",
+        "title": "무제359 20250510205228",
         "desc": "",
-        "src": "./illustration/심플 (2).png",
+        "src": "./illustration/무제359_20250510205228.png",
         "type": "image"
       },
       {
-        "title": "이프리트",
+        "title": "무제137 20241204204812",
         "desc": "",
-        "src": "./illustration/이프리트.png",
-        "type": "image"
-      },
-      {
-        "title": "무제48 20241109205553",
-        "desc": "",
-        "src": "./illustration/무제48_20241109205553.jpg",
+        "src": "./illustration/무제137_20241204204812.jpg",
         "type": "image"
       },
       {
@@ -267,9 +309,15 @@
         "type": "image"
       },
       {
-        "title": "무제30 20241019181254",
+        "title": "무제48 20241109205553",
         "desc": "",
-        "src": "./illustration/무제30_20241019181254.png",
+        "src": "./illustration/무제48_20241109205553.jpg",
+        "type": "image"
+      },
+      {
+        "title": "심플 (2)",
+        "desc": "",
+        "src": "./illustration/심플 (2).png",
         "type": "image"
       }
     ],
@@ -281,9 +329,21 @@
         "type": "image"
       },
       {
+        "title": "263",
+        "desc": "",
+        "src": "./illustration/263.png",
+        "type": "image"
+      },
+      {
         "title": "무제373 20250517154734",
         "desc": "",
         "src": "./illustration/무제373_20250517154734.png",
+        "type": "image"
+      },
+      {
+        "title": "230",
+        "desc": "",
+        "src": "./illustration/230.png",
         "type": "image"
       },
       {
@@ -293,9 +353,33 @@
         "type": "image"
       },
       {
+        "title": "무제656 20251005205553",
+        "desc": "",
+        "src": "./illustration/무제656_20251005205553.png",
+        "type": "image"
+      },
+      {
+        "title": "무제658 20251007144254",
+        "desc": "",
+        "src": "./illustration/무제658_20251007144254.png",
+        "type": "image"
+      },
+      {
+        "title": "무제555 20250823205731",
+        "desc": "",
+        "src": "./illustration/무제555_20250823205731.png",
+        "type": "image"
+      },
+      {
         "title": "루아레시안님 (1)",
         "desc": "",
         "src": "./illustration/루아레시안님 (1).png",
+        "type": "image"
+      },
+      {
+        "title": "1 2",
+        "desc": "",
+        "src": "./illustration/1_2.png",
         "type": "image"
       },
       {
@@ -320,6 +404,18 @@
         "title": "바이올렛",
         "desc": "",
         "src": "./illustration/바이올렛.png",
+        "type": "image"
+      },
+      {
+        "title": "무제187 20250103195114",
+        "desc": "",
+        "src": "./illustration/무제187_20250103195114.png",
+        "type": "image"
+      },
+      {
+        "title": "무제181 20241226151328",
+        "desc": "",
+        "src": "./illustration/무제181_20241226151328.jpg",
         "type": "image"
       }
     ],
@@ -349,45 +445,27 @@
         "type": "image"
       },
       {
-        "title": "1",
+        "title": "2026.03",
         "desc": "",
-        "src": "./illustration/1.png",
+        "src": "./illustration/2026.03.png",
         "type": "image"
       },
       {
-        "title": "무제140 20241205202650",
+        "title": "1(1)",
         "desc": "",
-        "src": "./illustration/무제140_20241205202650.jpg",
+        "src": "./illustration/1(1).png",
         "type": "image"
       },
       {
-        "title": "무제221 20250201161329",
+        "title": "2026.02(1)",
         "desc": "",
-        "src": "./illustration/무제221_20250201161329.jpg",
+        "src": "./illustration/2026.02(1).jpg",
         "type": "image"
       },
       {
-        "title": "무제416 20250627204430",
+        "title": "208",
         "desc": "",
-        "src": "./illustration/무제416_20250627204430.png",
-        "type": "image"
-      },
-      {
-        "title": "深海 20241117204917",
-        "desc": "",
-        "src": "./illustration/深海_20241117204917.jpg",
-        "type": "image"
-      },
-      {
-        "title": "강쏘쏘님 (2)",
-        "desc": "",
-        "src": "./illustration/강쏘쏘님 (2).png",
-        "type": "image"
-      },
-      {
-        "title": "강쏘쏘님 (1)",
-        "desc": "",
-        "src": "./illustration/강쏘쏘님 (1).png",
+        "src": "./illustration/208.png",
         "type": "image"
       },
       {
@@ -403,9 +481,15 @@
         "type": "image"
       },
       {
-        "title": "146",
+        "title": "186 20250101190312",
         "desc": "",
-        "src": "./illustration/146.png",
+        "src": "./illustration/186_20250101190312.png",
+        "type": "image"
+      },
+      {
+        "title": "238",
+        "desc": "",
+        "src": "./illustration/238.png",
         "type": "image"
       },
       {
@@ -421,15 +505,9 @@
         "type": "image"
       },
       {
-        "title": "무제83 20241123144935",
+        "title": "무제171 20241221133628",
         "desc": "",
-        "src": "./illustration/무제83_20241123144935.jpg",
-        "type": "image"
-      },
-      {
-        "title": "무제68 20241113152449",
-        "desc": "",
-        "src": "./illustration/무제68_20241113152449.jpg",
+        "src": "./illustration/무제171_20241221133628.jpg",
         "type": "image"
       },
       {
@@ -477,6 +555,12 @@
         "type": "image"
       },
       {
+        "title": "강쏘쏘님 (2)",
+        "desc": "",
+        "src": "./illustration/강쏘쏘님 (2).png",
+        "type": "image"
+      },
+      {
         "title": "엔비베이비",
         "desc": "",
         "src": "./illustration/엔비베이비.png",
@@ -492,6 +576,36 @@
         "title": "KickBack",
         "desc": "",
         "src": "./illustration/KickBack.png",
+        "type": "image"
+      },
+      {
+        "title": "2025.12(1)",
+        "desc": "",
+        "src": "./illustration/2025.12(1).png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504195737",
+        "desc": "",
+        "src": "./illustration/무제334_20250504195737.png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504200837",
+        "desc": "",
+        "src": "./illustration/무제334_20250504200837.png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504195754",
+        "desc": "",
+        "src": "./illustration/무제334_20250504195754.png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504195746",
+        "desc": "",
+        "src": "./illustration/무제334_20250504195746.png",
         "type": "image"
       },
       {
@@ -575,6 +689,12 @@
     ],
     "illust-conceptart": [
       {
+        "title": "흑환",
+        "desc": "",
+        "src": "./illustration/흑환.png",
+        "type": "image"
+      },
+      {
         "title": "PARALLAX 컨셉아트",
         "desc": "",
         "src": "./illustration/PARALLAX_컨셉아트.png",
@@ -593,15 +713,21 @@
         "type": "image"
       },
       {
-        "title": "컨셉아트 (2)",
+        "title": "일러스트(1)",
         "desc": "",
-        "src": "./illustration/컨셉아트 (2).png",
+        "src": "./illustration/일러스트(1).png",
         "type": "image"
       },
       {
-        "title": "컨셉아트 (3)",
+        "title": "무제457 20250713193811",
         "desc": "",
-        "src": "./illustration/컨셉아트 (3).png",
+        "src": "./illustration/무제457_20250713193811.png",
+        "type": "image"
+      },
+      {
+        "title": "컨셉아트 (2)",
+        "desc": "",
+        "src": "./illustration/컨셉아트 (2).png",
         "type": "image"
       },
       {
@@ -617,9 +743,21 @@
         "type": "image"
       },
       {
+        "title": "컨셉아트 (3)",
+        "desc": "",
+        "src": "./illustration/컨셉아트 (3).png",
+        "type": "image"
+      },
+      {
         "title": "컨셉아트 (4)",
         "desc": "",
         "src": "./illustration/컨셉아트 (4).png",
+        "type": "image"
+      },
+      {
+        "title": "컨셉아트",
+        "desc": "",
+        "src": "./illustration/컨셉아트.png",
         "type": "image"
       },
       {
@@ -629,15 +767,21 @@
         "type": "image"
       },
       {
-        "title": "일러스트",
+        "title": "일러스트(2)",
         "desc": "",
-        "src": "./illustration/일러스트.png",
+        "src": "./illustration/일러스트(2).png",
         "type": "image"
       },
       {
         "title": "루아레시안님 (2)",
         "desc": "",
         "src": "./illustration/루아레시안님 (2).png",
+        "type": "image"
+      },
+      {
+        "title": "1(2)",
+        "desc": "",
+        "src": "./illustration/1(2).png",
         "type": "image"
       }
     ],
@@ -961,15 +1105,15 @@
         "type": "video"
       },
       {
-        "title": "Steins;Gate OP",
-        "desc": "",
-        "src": "https://www.youtube.com/watch?v=jHtya1rwFjo",
-        "type": "video"
-      },
-      {
         "title": "K/DA-POPSTARS",
         "desc": "",
         "src": "https://www.youtube.com/watch?v=fPcrFhfwXv8",
+        "type": "video"
+      },
+      {
+        "title": "Steins;Gate OP",
+        "desc": "",
+        "src": "https://www.youtube.com/watch?v=jHtya1rwFjo",
         "type": "video"
       }
     ],
@@ -1166,12 +1310,6 @@
     ],
     "brand-symbol": [
       {
-        "title": "타이틀",
-        "desc": "",
-        "src": "./branding/타이틀.jpg",
-        "type": "image"
-      },
-      {
         "title": "♠A",
         "desc": "",
         "src": "./branding/♠A.png",
@@ -1187,9 +1325,9 @@
     "brand-emote": [],
     "brand-poster": [
       {
-        "title": "스케줄표2",
+        "title": "타이틀",
         "desc": "",
-        "src": "./branding/스케줄표2.png",
+        "src": "./branding/타이틀.jpg",
         "type": "image"
       },
       {
@@ -1197,9 +1335,21 @@
         "desc": "",
         "src": "./branding/스케줄표1.png",
         "type": "image"
+      },
+      {
+        "title": "스케줄표2",
+        "desc": "",
+        "src": "./branding/스케줄표2.png",
+        "type": "image"
       }
     ],
     "brand-etc": [
+      {
+        "title": "MadRush2",
+        "desc": "",
+        "src": "./branding/MadRush2.png",
+        "type": "image"
+      },
       {
         "title": "배비꼬 샘플",
         "desc": "",
