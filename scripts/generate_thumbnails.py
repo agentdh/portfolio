@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -42,7 +43,7 @@ def source_path(item):
 
 
 def thumbnail_path(original: Path):
-    return original.parent / ".thumbnails" / (original.stem + ".webp")
+    return original.parent / "_thumbnails" / (original.stem + ".webp")
 
 
 def build_thumbnail(original: Path, target: Path):
@@ -100,8 +101,15 @@ def update_embedded_payload(payload):
     INDEX_PATH.write_text(updated, encoding="utf-8")
 
 
+def remove_legacy_thumbnail_dirs():
+    for path in ROOT.rglob(".thumbnails"):
+        if path.is_dir():
+            shutil.rmtree(path)
+
+
 def main():
     payload = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+    remove_legacy_thumbnail_dirs()
     made, reused, skipped = update_payload(payload)
     write_json(DATA_PATH, payload)
     update_embedded_payload(payload)
