@@ -83,8 +83,8 @@ hr.divider{max-width:960px;margin:0 auto;border:none;border-top:1px solid var(--
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s;cursor:pointer;position:relative;}
 .card:hover{transform:translateY(-3px);border-color:rgba(0,229,255,.3)}
 .card-thumb{width:100%;aspect-ratio:16/10;background:var(--bg3);position:relative;overflow:hidden;}
-.card-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-.card:hover .card-thumb img{transform:scale(1.04)}
+.card-thumb img{width:100%;height:100%;object-fit:contain;object-position:center;background:var(--bg3);transition:transform .3s}
+.card:hover .card-thumb img{transform:scale(1)}
 .card-thumb.ph{display:flex;align-items:center;justify-content:center;}
 .card-thumb.ph svg{width:32px;height:32px;opacity:.2;fill:var(--text)}
 .type-badge{position:absolute;top:8px;right:8px;font-size:9px;font-family:'Space Grotesk',sans-serif;font-weight:600;padding:3px 7px;border-radius:4px;letter-spacing:.05em;}
@@ -327,6 +327,20 @@ border-radius:0;
 .media-preview-media video,.media-preview-media iframe{width:100%;aspect-ratio:16/9;border:none;display:block;background:#000;}
 .media-preview-title{font-size:16px;font-weight:600;color:var(--text);margin-top:14px;line-height:1.5;}
 .media-preview-desc{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.8;white-space:pre-line;}
+.video-modal.image-viewer-mode{max-width:1180px;height:min(88vh,900px);}
+.video-modal.image-viewer-mode #videoContainer,.video-modal.image-viewer-mode .media-preview{height:100%;}
+.video-modal.image-viewer-mode .media-preview{display:flex;flex-direction:column;min-height:0;position:relative;}
+.image-viewer-stage{position:relative;flex:1;min-height:320px;background:#050509;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;}
+.image-viewer-stage.dragging{cursor:grabbing;}
+.image-viewer-image{max-width:100%;max-height:100%;display:block;object-fit:contain;transform-origin:center center;will-change:transform;pointer-events:none;}
+.image-viewer-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:44px;height:58px;border:1px solid rgba(255,255,255,.16);border-radius:9px;background:rgba(13,13,20,.72);color:#fff;font-size:30px;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:background .15s,border-color .15s;}
+.image-viewer-nav:hover{background:rgba(0,229,255,.16);border-color:var(--cyan);color:var(--cyan);}
+.image-viewer-prev{left:16px}.image-viewer-next{right:16px}
+.image-viewer-controls{display:flex;align-items:center;justify-content:center;margin-top:10px;}
+.image-viewer-reset{padding:6px 14px;border-radius:999px;border:1px solid var(--border2);background:var(--surface);color:var(--text-dim);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;}
+.image-viewer-reset:hover{border-color:var(--cyan);color:var(--cyan);}
+@media(max-width:640px){.video-modal.image-viewer-mode{width:96%;height:82vh}.image-viewer-stage{min-height:220px}.image-viewer-nav{width:36px;height:48px}.image-viewer-prev{left:8px}.image-viewer-next{right:8px}}
+
 .fade-in{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
 
@@ -440,6 +454,21 @@ color:var(--cyan);
 .pup-path{font-size:8px;color:var(--text-off);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .pup-status{padding:6px 12px;border-top:1px solid var(--border);font-size:9px;color:var(--text-off);flex-shrink:0;display:flex;justify-content:space-between;}
 
+/* 업로드 작업별 진행도 */
+#pup-upload-progress{position:fixed;display:none;flex-direction:column;gap:8px;z-index:121;}
+#pup-upload-progress.active{display:flex;}
+.pup-progress-item{padding:10px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,.28);}
+.pup-progress-item.failed{border-color:rgba(231,76,60,.55);}
+.pup-progress-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px;font-size:10px;}
+.pup-progress-name{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pup-progress-percent{color:var(--cyan);font-family:'Space Mono',monospace;flex-shrink:0;}
+.pup-progress-item.failed .pup-progress-percent{color:#e74c3c;}
+.pup-progress-track{height:6px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;}
+.pup-progress-fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .2s ease;}
+.pup-progress-item.failed .pup-progress-fill{background:#e74c3c;}
+.pup-progress-stage{margin-top:5px;font-size:9px;color:var(--text-off);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+@media(max-width:1380px){#pup-upload-progress{display:none!important;}}
+
 /* 드래그 타깃 강조 */
 .grid-3.pup-drop-target,.grid-2.pup-drop-target{outline:2px dashed var(--cyan);outline-offset:-2px;background:rgba(0,229,255,.04);}
 
@@ -463,7 +492,6 @@ color:var(--cyan);
 
 
 /* ── VONA portfolio management patch ── */
-#tab-work .card-add,
 #tab-work .card-multi-upload{display:none!important;}
 .section-admin-controls{display:inline-flex;gap:6px;align-items:center;margin-left:10px;vertical-align:middle;}
 .admin-mini-btn.upload{border-color:rgba(94,207,177,.35);background:rgba(94,207,177,.07);color:var(--green);}
@@ -544,10 +572,18 @@ color:var(--cyan);
 .section-toggle-btn:hover{border-color:var(--cyan);color:var(--cyan);}
 
 
+/* 카드 9장 초과 내부 스크롤 + 공통 테마 */
+.portfolio-scroll-9{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;align-content:start!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#00a9bd #11111a}
+.portfolio-scroll-9::-webkit-scrollbar,.style-pane-grid::-webkit-scrollbar{width:11px!important;background:#11111a!important}
+.portfolio-scroll-9::-webkit-scrollbar-track,.style-pane-grid::-webkit-scrollbar-track{background:#11111a!important;border-left:1px solid rgba(255,255,255,.07)!important;border-radius:8px!important}
+.portfolio-scroll-9::-webkit-scrollbar-thumb,.style-pane-grid::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00d4ea,#087f91)!important;border:3px solid #11111a!important;border-radius:10px!important;min-height:46px!important}
+.portfolio-scroll-9::-webkit-scrollbar-thumb:hover,.style-pane-grid::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#35efff,#00a9bd)!important}
+.portfolio-scroll-9::-webkit-scrollbar-button,.style-pane-grid::-webkit-scrollbar-button{display:none!important;width:0!important;height:0!important;background:transparent!important}
+.portfolio-scroll-9::-webkit-scrollbar-corner,.style-pane-grid::-webkit-scrollbar-corner{background:#11111a!important}
 /* 일러스트 스타일 가로 아코디언 */
 .style-group{margin-bottom:28px}
 .style-group-title{margin-bottom:14px}
-.style-accordion{display:grid;width:100%;height:634px;gap:8px;align-items:stretch;grid-template-columns:minmax(0,1fr) 48px 48px;transition:grid-template-columns .3s ease}
+.style-accordion{display:grid;width:100%;height:634px;gap:8px;align-items:stretch;grid-template-columns:minmax(0,1fr) 48px 48px;transition:grid-template-columns .38s cubic-bezier(.22,.75,.25,1)}
 .style-accordion[data-active="illust-line"]{grid-template-columns:48px minmax(0,1fr) 48px}
 .style-accordion[data-active="illust-semi-painted"]{grid-template-columns:48px 48px minmax(0,1fr)}
 .style-pane{display:flex;flex-direction:column;min-width:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);transition:border-color .2s,background .2s}
@@ -556,8 +592,14 @@ color:var(--cyan);
 .style-pane-tab span{writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;font-size:12px;letter-spacing:.08em}
 .style-pane-tab small{font-size:9px;color:var(--text-off)}
 .style-pane.active>.style-pane-tab{display:none}
-.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;scrollbar-gutter:stable}
-.style-pane.active>.style-pane-grid{display:grid!important;overflow-x:hidden;overflow-y:auto!important}
+.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.55) rgba(255,255,255,.035)}
+.style-pane.active>.style-pane-grid{display:grid!important;overflow-x:hidden;overflow-y:auto!important;animation:stylePaneSlideIn .32s cubic-bezier(.22,.75,.25,1) both}
+.style-pane-grid::-webkit-scrollbar{width:10px}
+.style-pane-grid::-webkit-scrollbar-track{background:rgba(255,255,255,.025);border-left:1px solid rgba(255,255,255,.06);border-radius:8px}
+.style-pane-grid::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(0,229,255,.72),rgba(0,229,255,.32));border:2px solid #11111a;border-radius:8px;min-height:44px}
+.style-pane-grid::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,rgba(0,229,255,.95),rgba(0,229,255,.5))}
+.style-pane-grid::-webkit-scrollbar-corner{background:transparent}
+@keyframes stylePaneSlideIn{from{opacity:.25;transform:translateX(28px)}to{opacity:1;transform:translateX(0)}}
 .style-pane.drop-active{border-color:var(--cyan)!important;background:rgba(0,229,255,.08)!important;box-shadow:inset 0 0 0 2px rgba(0,229,255,.25)}
 .style-pane.drop-active>.style-pane-tab{color:var(--cyan);background:rgba(0,229,255,.08)}
 .style-accordion.closed{display:none}
@@ -685,7 +727,7 @@ color:var(--cyan);
 .dualpip-per-video-menu-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
-</style><style wxt-shadow-root-document-styles="gvzkqfm5us">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}</style></head>
+</style><style wxt-shadow-root-document-styles="v16ev7gpo8">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}</style></head>
 <body><script id="portfolio-data" type="application/json">{
   "profile": {
     "name": "BOWONE",
@@ -698,7 +740,7 @@ color:var(--cyan);
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-07-24T06:15:19.386Z"
+    "updatedAt": "2026-07-24T13:03:01.937Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -721,9 +763,9 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "3",
+        "title": "3(1)",
         "desc": "",
-        "src": "./thumbnail/3.png",
+        "src": "./thumbnail/3(1).png",
         "type": "image"
       },
       {
@@ -769,9 +811,9 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "4",
+        "title": "4(1)",
         "desc": "",
-        "src": "./thumbnail/4.png",
+        "src": "./thumbnail/4(1).png",
         "type": "image"
       },
       {
@@ -787,15 +829,27 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "38",
-        "desc": "",
-        "src": "./thumbnail/38.png",
-        "type": "image"
-      },
-      {
         "title": "썸네일 (6)",
         "desc": "",
         "src": "./thumbnail/썸네일 (6).png",
+        "type": "image"
+      },
+      {
+        "title": "4(2)",
+        "desc": "",
+        "src": "./thumbnail/4(2).png",
+        "type": "image"
+      },
+      {
+        "title": "5",
+        "desc": "",
+        "src": "./thumbnail/5.jpg",
+        "type": "image"
+      },
+      {
+        "title": "38",
+        "desc": "",
+        "src": "./thumbnail/38.png",
         "type": "image"
       },
       {
@@ -859,6 +913,12 @@ color:var(--cyan);
         "type": "image"
       },
       {
+        "title": "3(2)",
+        "desc": "",
+        "src": "./thumbnail/3(2).png",
+        "type": "image"
+      },
+      {
         "title": "안정식님1",
         "desc": "",
         "src": "./thumbnail/안정식님1.png",
@@ -901,15 +961,27 @@ color:var(--cyan);
         "type": "image"
       },
       {
+        "title": "무제514 20250808203841",
+        "desc": "",
+        "src": "./illustration/무제514_20250808203841.png",
+        "type": "image"
+      },
+      {
         "title": "Shoka 20241018182309",
         "desc": "",
         "src": "./illustration/Shoka_20241018182309.png",
         "type": "image"
       },
       {
-        "title": "무제137 20241204204812",
+        "title": "무제178 20241225144902",
         "desc": "",
-        "src": "./illustration/무제137_20241204204812.jpg",
+        "src": "./illustration/무제178_20241225144902.jpg",
+        "type": "image"
+      },
+      {
+        "title": "무제391 20250608132523",
+        "desc": "",
+        "src": "./illustration/무제391_20250608132523.png",
         "type": "image"
       },
       {
@@ -925,27 +997,39 @@ color:var(--cyan);
         "type": "image"
       },
       {
+        "title": "무제267 20250303085323",
+        "desc": "",
+        "src": "./illustration/무제267_20250303085323.png",
+        "type": "image"
+      },
+      {
+        "title": "무제30 20241019181254",
+        "desc": "",
+        "src": "./illustration/무제30_20241019181254.png",
+        "type": "image"
+      },
+      {
+        "title": "무제266 20250301203217",
+        "desc": "",
+        "src": "./illustration/무제266_20250301203217.png",
+        "type": "image"
+      },
+      {
         "title": "심플 (3)",
         "desc": "",
         "src": "./illustration/심플 (3).png",
         "type": "image"
       },
       {
-        "title": "심플 (2)",
+        "title": "무제359 20250510205228",
         "desc": "",
-        "src": "./illustration/심플 (2).png",
+        "src": "./illustration/무제359_20250510205228.png",
         "type": "image"
       },
       {
-        "title": "이프리트",
+        "title": "무제137 20241204204812",
         "desc": "",
-        "src": "./illustration/이프리트.png",
-        "type": "image"
-      },
-      {
-        "title": "무제48 20241109205553",
-        "desc": "",
-        "src": "./illustration/무제48_20241109205553.jpg",
+        "src": "./illustration/무제137_20241204204812.jpg",
         "type": "image"
       },
       {
@@ -955,9 +1039,15 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "무제30 20241019181254",
+        "title": "무제48 20241109205553",
         "desc": "",
-        "src": "./illustration/무제30_20241019181254.png",
+        "src": "./illustration/무제48_20241109205553.jpg",
+        "type": "image"
+      },
+      {
+        "title": "심플 (2)",
+        "desc": "",
+        "src": "./illustration/심플 (2).png",
         "type": "image"
       }
     ],
@@ -969,9 +1059,21 @@ color:var(--cyan);
         "type": "image"
       },
       {
+        "title": "263",
+        "desc": "",
+        "src": "./illustration/263.png",
+        "type": "image"
+      },
+      {
         "title": "무제373 20250517154734",
         "desc": "",
         "src": "./illustration/무제373_20250517154734.png",
+        "type": "image"
+      },
+      {
+        "title": "230",
+        "desc": "",
+        "src": "./illustration/230.png",
         "type": "image"
       },
       {
@@ -981,9 +1083,33 @@ color:var(--cyan);
         "type": "image"
       },
       {
+        "title": "무제656 20251005205553",
+        "desc": "",
+        "src": "./illustration/무제656_20251005205553.png",
+        "type": "image"
+      },
+      {
+        "title": "무제658 20251007144254",
+        "desc": "",
+        "src": "./illustration/무제658_20251007144254.png",
+        "type": "image"
+      },
+      {
+        "title": "무제555 20250823205731",
+        "desc": "",
+        "src": "./illustration/무제555_20250823205731.png",
+        "type": "image"
+      },
+      {
         "title": "루아레시안님 (1)",
         "desc": "",
         "src": "./illustration/루아레시안님 (1).png",
+        "type": "image"
+      },
+      {
+        "title": "1 2",
+        "desc": "",
+        "src": "./illustration/1_2.png",
         "type": "image"
       },
       {
@@ -1008,6 +1134,18 @@ color:var(--cyan);
         "title": "바이올렛",
         "desc": "",
         "src": "./illustration/바이올렛.png",
+        "type": "image"
+      },
+      {
+        "title": "무제187 20250103195114",
+        "desc": "",
+        "src": "./illustration/무제187_20250103195114.png",
+        "type": "image"
+      },
+      {
+        "title": "무제181 20241226151328",
+        "desc": "",
+        "src": "./illustration/무제181_20241226151328.jpg",
         "type": "image"
       }
     ],
@@ -1037,45 +1175,27 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "1",
+        "title": "2026.03",
         "desc": "",
-        "src": "./illustration/1.png",
+        "src": "./illustration/2026.03.png",
         "type": "image"
       },
       {
-        "title": "무제140 20241205202650",
+        "title": "1(1)",
         "desc": "",
-        "src": "./illustration/무제140_20241205202650.jpg",
+        "src": "./illustration/1(1).png",
         "type": "image"
       },
       {
-        "title": "무제221 20250201161329",
+        "title": "2026.02(1)",
         "desc": "",
-        "src": "./illustration/무제221_20250201161329.jpg",
+        "src": "./illustration/2026.02(1).jpg",
         "type": "image"
       },
       {
-        "title": "무제416 20250627204430",
+        "title": "208",
         "desc": "",
-        "src": "./illustration/무제416_20250627204430.png",
-        "type": "image"
-      },
-      {
-        "title": "深海 20241117204917",
-        "desc": "",
-        "src": "./illustration/深海_20241117204917.jpg",
-        "type": "image"
-      },
-      {
-        "title": "강쏘쏘님 (2)",
-        "desc": "",
-        "src": "./illustration/강쏘쏘님 (2).png",
-        "type": "image"
-      },
-      {
-        "title": "강쏘쏘님 (1)",
-        "desc": "",
-        "src": "./illustration/강쏘쏘님 (1).png",
+        "src": "./illustration/208.png",
         "type": "image"
       },
       {
@@ -1091,9 +1211,15 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "146",
+        "title": "186 20250101190312",
         "desc": "",
-        "src": "./illustration/146.png",
+        "src": "./illustration/186_20250101190312.png",
+        "type": "image"
+      },
+      {
+        "title": "238",
+        "desc": "",
+        "src": "./illustration/238.png",
         "type": "image"
       },
       {
@@ -1109,15 +1235,9 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "무제83 20241123144935",
+        "title": "무제171 20241221133628",
         "desc": "",
-        "src": "./illustration/무제83_20241123144935.jpg",
-        "type": "image"
-      },
-      {
-        "title": "무제68 20241113152449",
-        "desc": "",
-        "src": "./illustration/무제68_20241113152449.jpg",
+        "src": "./illustration/무제171_20241221133628.jpg",
         "type": "image"
       },
       {
@@ -1165,6 +1285,12 @@ color:var(--cyan);
         "type": "image"
       },
       {
+        "title": "강쏘쏘님 (2)",
+        "desc": "",
+        "src": "./illustration/강쏘쏘님 (2).png",
+        "type": "image"
+      },
+      {
         "title": "엔비베이비",
         "desc": "",
         "src": "./illustration/엔비베이비.png",
@@ -1180,6 +1306,36 @@ color:var(--cyan);
         "title": "KickBack",
         "desc": "",
         "src": "./illustration/KickBack.png",
+        "type": "image"
+      },
+      {
+        "title": "2025.12(1)",
+        "desc": "",
+        "src": "./illustration/2025.12(1).png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504195737",
+        "desc": "",
+        "src": "./illustration/무제334_20250504195737.png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504200837",
+        "desc": "",
+        "src": "./illustration/무제334_20250504200837.png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504195754",
+        "desc": "",
+        "src": "./illustration/무제334_20250504195754.png",
+        "type": "image"
+      },
+      {
+        "title": "무제334 20250504195746",
+        "desc": "",
+        "src": "./illustration/무제334_20250504195746.png",
         "type": "image"
       },
       {
@@ -1263,6 +1419,12 @@ color:var(--cyan);
     ],
     "illust-conceptart": [
       {
+        "title": "흑환",
+        "desc": "",
+        "src": "./illustration/흑환.png",
+        "type": "image"
+      },
+      {
         "title": "PARALLAX 컨셉아트",
         "desc": "",
         "src": "./illustration/PARALLAX_컨셉아트.png",
@@ -1281,15 +1443,21 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "컨셉아트 (2)",
+        "title": "일러스트(1)",
         "desc": "",
-        "src": "./illustration/컨셉아트 (2).png",
+        "src": "./illustration/일러스트(1).png",
         "type": "image"
       },
       {
-        "title": "컨셉아트 (3)",
+        "title": "무제457 20250713193811",
         "desc": "",
-        "src": "./illustration/컨셉아트 (3).png",
+        "src": "./illustration/무제457_20250713193811.png",
+        "type": "image"
+      },
+      {
+        "title": "컨셉아트 (2)",
+        "desc": "",
+        "src": "./illustration/컨셉아트 (2).png",
         "type": "image"
       },
       {
@@ -1305,9 +1473,21 @@ color:var(--cyan);
         "type": "image"
       },
       {
+        "title": "컨셉아트 (3)",
+        "desc": "",
+        "src": "./illustration/컨셉아트 (3).png",
+        "type": "image"
+      },
+      {
         "title": "컨셉아트 (4)",
         "desc": "",
         "src": "./illustration/컨셉아트 (4).png",
+        "type": "image"
+      },
+      {
+        "title": "컨셉아트",
+        "desc": "",
+        "src": "./illustration/컨셉아트.png",
         "type": "image"
       },
       {
@@ -1317,15 +1497,21 @@ color:var(--cyan);
         "type": "image"
       },
       {
-        "title": "일러스트",
+        "title": "일러스트(2)",
         "desc": "",
-        "src": "./illustration/일러스트.png",
+        "src": "./illustration/일러스트(2).png",
         "type": "image"
       },
       {
         "title": "루아레시안님 (2)",
         "desc": "",
         "src": "./illustration/루아레시안님 (2).png",
+        "type": "image"
+      },
+      {
+        "title": "1(2)",
+        "desc": "",
+        "src": "./illustration/1(2).png",
         "type": "image"
       }
     ],
@@ -1649,15 +1835,15 @@ color:var(--cyan);
         "type": "video"
       },
       {
-        "title": "Steins;Gate OP",
-        "desc": "",
-        "src": "https://www.youtube.com/watch?v=jHtya1rwFjo",
-        "type": "video"
-      },
-      {
         "title": "K/DA-POPSTARS",
         "desc": "",
         "src": "https://www.youtube.com/watch?v=fPcrFhfwXv8",
+        "type": "video"
+      },
+      {
+        "title": "Steins;Gate OP",
+        "desc": "",
+        "src": "https://www.youtube.com/watch?v=jHtya1rwFjo",
         "type": "video"
       }
     ],
@@ -1854,12 +2040,6 @@ color:var(--cyan);
     ],
     "brand-symbol": [
       {
-        "title": "타이틀",
-        "desc": "",
-        "src": "./branding/타이틀.jpg",
-        "type": "image"
-      },
-      {
         "title": "♠A",
         "desc": "",
         "src": "./branding/♠A.png",
@@ -1875,9 +2055,9 @@ color:var(--cyan);
     "brand-emote": [],
     "brand-poster": [
       {
-        "title": "스케줄표2",
+        "title": "타이틀",
         "desc": "",
-        "src": "./branding/스케줄표2.png",
+        "src": "./branding/타이틀.jpg",
         "type": "image"
       },
       {
@@ -1885,9 +2065,21 @@ color:var(--cyan);
         "desc": "",
         "src": "./branding/스케줄표1.png",
         "type": "image"
+      },
+      {
+        "title": "스케줄표2",
+        "desc": "",
+        "src": "./branding/스케줄표2.png",
+        "type": "image"
       }
     ],
     "brand-etc": [
+      {
+        "title": "MadRush2",
+        "desc": "",
+        "src": "./branding/MadRush2.png",
+        "type": "image"
+      },
       {
         "title": "배비꼬 샘플",
         "desc": "",
@@ -2175,13 +2367,13 @@ color:var(--cyan);
     <div id="port-grids">
       <div class="sub-tab-wrap">
         <button class="sub-tab" onclick="switchPortTab('thumbnail',this)">썸네일</button>
-        <button class="sub-tab active" onclick="switchPortTab('illust',this)">일러스트</button>
+        <button class="sub-tab" onclick="switchPortTab('illust',this)">일러스트</button>
         <button class="sub-tab" onclick="switchPortTab('3d',this)">3D</button>
         <button class="sub-tab" onclick="switchPortTab('live2d',this)">Live2D</button>
         <button class="sub-tab" onclick="switchPortTab('pixel',this)">픽셀아트</button>
         <button class="sub-tab" onclick="switchPortTab('minecraft',this)">마인크래프트</button>
         <button class="sub-tab" onclick="switchPortTab('animation',this)">애니메이션·영상</button>
-        <button class="sub-tab" onclick="switchPortTab('branding',this)">브랜딩·채널아트</button>
+        <button class="sub-tab active" onclick="switchPortTab('branding',this)">브랜딩·채널아트</button>
       </div>
 
       <!-- 썸네일 -->
@@ -2189,7 +2381,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">LD 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="thumbnail-ld">
+        <div class="grid-3 fade-in visible" id="thumbnail-ld" style="">
           
         <div class="card-add" onclick="openAddModal('thumbnail-ld','LD 썸네일',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2213,7 +2405,7 @@ color:var(--cyan);
       </div>
 
       <!-- 일러스트 -->
-      <div class="port-sub active" id="port-sub-illust">
+      <div class="port-sub" id="port-sub-illust">
         <div class="style-group" id="illust-style-group">
           <div class="portfolio-section-title style-group-title">
             <span>스타일</span>
@@ -2234,7 +2426,7 @@ color:var(--cyan);
             </section>
             <section class="style-pane" data-style-grid="illust-line">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-line')"><span>얇은 선</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid visible" id="illust-line">
+              <div class="grid-3 fade-in style-pane-grid" id="illust-line">
                 
               <div class="card-add" onclick="openAddModal('illust-line','얇은 선',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2242,7 +2434,7 @@ color:var(--cyan);
             </section>
             <section class="style-pane" data-style-grid="illust-semi-painted">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-semi-painted')"><span>반무테</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid visible" id="illust-semi-painted">
+              <div class="grid-3 fade-in style-pane-grid" id="illust-semi-painted">
                 
               <div class="card-add" onclick="openAddModal('illust-semi-painted','반무테',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2253,15 +2445,23 @@ color:var(--cyan);
         <div class="portfolio-section-title">커버일러스트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-cover">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-cover">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible" id="illust-cover">
+        <div class="grid-3 fade-in" id="illust-cover" style="">
           
         <div class="card-add" onclick="openAddModal('illust-cover','커버일러스트',this)" style="">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
+          </div></div>
+        <div class="portfolio-section-title">러프퀄<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
+      <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-rough">여러 파일 업로드</button>
+      <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-rough">카드 추가</button></span></div>
+        <div class="grid-3 fade-in" id="illust-rough" style="">
+          
+        <div class="card-add" onclick="openAddModal('illust-rough','러프퀄',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div></div>
         <div class="portfolio-section-title">컨셉아트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-conceptart">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-conceptart">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-conceptart">
+        <div class="grid-3 fade-in" id="illust-conceptart" style="">
           
         <div class="card-add" onclick="openAddModal('illust-conceptart','컨셉아트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2273,7 +2473,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">캐릭터<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="work3d-character">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="work3d-character">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="work3d-character">
+        <div class="grid-3 fade-in visible" id="work3d-character">
           
         <div class="card-add" onclick="openAddModal('work3d-character','3D 캐릭터',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2281,7 +2481,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">아이템<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="work3d-item">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="work3d-item">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="work3d-item">
+        <div class="grid-3 fade-in visible" id="work3d-item">
           
         <div class="card-add" onclick="openAddModal('work3d-item','3D 아이템',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2298,10 +2498,10 @@ color:var(--cyan);
 
       <!-- Live2D -->
       <div class="port-sub" id="port-sub-live2d">
-        <div class="sec-label fade-in">Live2D<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
+        <div class="sec-label fade-in visible">Live2D<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="live2d-work">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="live2d-work">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="live2d-work">
+        <div class="grid-3 fade-in visible" id="live2d-work">
           
         <div class="card-add" onclick="openAddModal('live2d-work','Live2D',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2313,7 +2513,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">픽셀아트 일러스트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="pixel-illust">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="pixel-illust">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="pixel-illust">
+        <div class="grid-3 fade-in visible" id="pixel-illust" style="">
           
         <div class="card-add" onclick="openAddModal('pixel-illust','픽셀아트 일러스트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2341,7 +2541,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">스킨<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-skin">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-skin">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-skin">
+        <div class="grid-3 fade-in visible" id="mc-skin">
           
         <div class="card-add" onclick="openAddModal('mc-skin','스킨',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2349,7 +2549,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">모델링<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-model">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-model">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-model">
+        <div class="grid-3 fade-in visible" id="mc-model">
           
         <div class="card-add" onclick="openAddModal('mc-model','모델링',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2357,7 +2557,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">애니메이션<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-animation">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-animation">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-animation">
+        <div class="grid-3 fade-in visible" id="mc-animation">
           
         <div class="card-add" onclick="openAddModal('mc-animation','MC 애니메이션',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2365,7 +2565,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">리소스팩<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-resource">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-resource">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-resource">
+        <div class="grid-3 fade-in visible" id="mc-resource">
           
         <div class="card-add" onclick="openAddModal('mc-resource','리소스팩',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2377,7 +2577,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">MV<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mvAnimationGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mvAnimationGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mvAnimationGrid">
+        <div class="grid-3 fade-in visible" id="mvAnimationGrid">
           
         <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2385,7 +2585,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">2D Animation<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="animation2DGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="animation2DGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="animation2DGrid">
+        <div class="grid-3 fade-in visible" id="animation2DGrid" style="">
           
         <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2393,7 +2593,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">3D Animation<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="animation3DGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="animation3DGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="animation3DGrid">
+        <div class="grid-3 fade-in visible" id="animation3DGrid">
           
         <div class="card-add" onclick="openAddModal('animation3DGrid','3D Animation',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2401,11 +2601,11 @@ color:var(--cyan);
       </div>
 
       <!-- 브랜딩·채널아트 -->
-      <div class="port-sub" id="port-sub-branding">
+      <div class="port-sub active" id="port-sub-branding">
         <div class="portfolio-section-title">방송 대기화면<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-wait">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-wait">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-wait">
+        <div class="grid-3 fade-in visible" id="brand-wait">
           
         <div class="card-add" onclick="openAddModal('brand-wait','방송 대기화면',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2413,7 +2613,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">심볼 디자인<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-symbol">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-symbol">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-symbol">
+        <div class="grid-3 fade-in visible" id="brand-symbol">
           
         <div class="card-add" onclick="openAddModal('brand-symbol','심볼 디자인',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2421,7 +2621,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">이모티콘<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-emote">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-emote">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-emote">
+        <div class="grid-3 fade-in visible" id="brand-emote">
           <div class="card-add" onclick="openAddModal('brand-emote','이모티콘',this)" style="display: none;">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
@@ -2429,7 +2629,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">포스터<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-poster">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-poster">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-poster">
+        <div class="grid-3 fade-in visible" id="brand-poster">
           
         <div class="card-add" onclick="openAddModal('brand-poster','포스터',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2437,7 +2637,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">기타<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-etc">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-etc">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-etc">
+        <div class="grid-3 fade-in visible" id="brand-etc">
           
         <div class="card-add" onclick="openAddModal('brand-etc','기타',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3888,6 +4088,7 @@ color:var(--cyan);
 
 <!-- ── 미등록 카드 패널 (관리자 전용) ── -->
 
+<div id="pup-upload-progress" aria-live="polite" class="" style="left: 1326.5px; width: 320px; top: 375.391px;"></div>
 </div><!-- /page-wrap -->
 
 <!-- MODALS -->
