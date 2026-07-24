@@ -5172,8 +5172,31 @@ window.toggleStyleGroup=function(){
 window.openStyleBatchUpload=function(){};
 window.openStyleAddModal=function(){};
 
+function preloadAllPublicThumbnails(){
+ var urls=[];
+ Object.keys(data||{}).forEach(function(gridId){
+  (Array.isArray(data[gridId])?data[gridId]:[]).forEach(function(item){
+   if((item.type||'image')==='image'&&item.thumbnailSrc)urls.push(item.thumbnailSrc);
+  });
+ });
+ urls=[...new Set(urls)];
+ var cursor=0;
+ function worker(){
+  return new Promise(function(resolve){
+   function next(){
+    if(cursor>=urls.length){resolve();return;}
+    var img=new Image(),url=urls[cursor++];
+    img.decoding='async';img.onload=img.onerror=next;img.src=url;
+   }
+   next();
+  });
+ }
+ return Promise.all(Array.from({length:Math.min(12,urls.length)},worker));
+}
+
 document.addEventListener('DOMContentLoaded',function(){
  payload=readPayload();data=payload.portfolio||payload||{};window.portfolioData=data;applyProfile(payload.profile||{});
+ setTimeout(preloadAllPublicThumbnails,0);
  document.querySelectorAll('.tab-panel').forEach(function(panel){panel.classList.toggle('active',panel.id==='tab-about');});
  document.querySelectorAll('.tab-btn').forEach(function(btn){btn.classList.toggle('active',(btn.getAttribute('onclick')||'').indexOf("'about'")>=0);});
  document.querySelectorAll('#port-grids .port-sub').forEach(function(panel){panel.classList.toggle('active',panel.id==='port-sub-thumbnail');});
