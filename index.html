@@ -573,7 +573,7 @@ color:var(--cyan);
 
 
 /* 카드 9장 초과 내부 스크롤 + 공통 테마 */
-.portfolio-scroll-9{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;align-content:start!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#00a9bd #11111a}
+.portfolio-scroll-9{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;align-content:start!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#00a9bd #11111a}
 .portfolio-scroll-9::-webkit-scrollbar,.style-pane-grid::-webkit-scrollbar{width:11px!important;background:#11111a!important}
 .portfolio-scroll-9::-webkit-scrollbar-track,.style-pane-grid::-webkit-scrollbar-track{background:#11111a!important;border-left:1px solid rgba(255,255,255,.07)!important;border-radius:8px!important}
 .portfolio-scroll-9::-webkit-scrollbar-thumb,.style-pane-grid::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00d4ea,#087f91)!important;border:3px solid #11111a!important;border-radius:10px!important;min-height:46px!important}
@@ -592,7 +592,7 @@ color:var(--cyan);
 .style-pane-tab span{writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;font-size:12px;letter-spacing:.08em}
 .style-pane-tab small{font-size:9px;color:var(--text-off)}
 .style-pane.active>.style-pane-tab{display:none}
-.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.55) rgba(255,255,255,.035)}
+.style-pane-grid{display:none!important;padding:0;min-width:0;height:100%;max-height:100%;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:14px!important;align-content:start;overscroll-behavior-y:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.55) rgba(255,255,255,.035)}
 .style-pane.active>.style-pane-grid{display:grid!important;overflow-x:hidden;overflow-y:auto!important;animation:stylePaneSlideIn .32s cubic-bezier(.22,.75,.25,1) both}
 .style-pane-grid::-webkit-scrollbar{width:10px}
 .style-pane-grid::-webkit-scrollbar-track{background:rgba(255,255,255,.025);border-left:1px solid rgba(255,255,255,.06);border-radius:8px}
@@ -727,7 +727,7 @@ color:var(--cyan);
 .dualpip-per-video-menu-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
-</style><style wxt-shadow-root-document-styles="6lt5a8ss4a5">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}</style></head>
+</style><style wxt-shadow-root-document-styles="lz05c1dqban">@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-divide-x-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}</style><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}</style></head>
 <body><script id="portfolio-data" type="application/json">{
   "profile": {
     "name": "BOWONE",
@@ -740,7 +740,7 @@ color:var(--cyan);
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-07-24T13:56:19.809Z"
+    "updatedAt": "2026-07-24T14:07:20.468Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -2598,7 +2598,7 @@ color:var(--cyan);
 </ul>
 </div>
 
-<div class="about-grid fade-in" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
+<div class="about-grid fade-in visible" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
 
 <div class="about-card" style="width:420px;">
 <h4>작업</h4>
@@ -2783,7 +2783,7 @@ color:var(--cyan);
 </div>
 <div style="height:15px;"></div>
 
-<div class="about-card about-top fade-in">
+<div class="about-card about-top fade-in visible">
 <h4>수상 / 대외활동</h4>
 <ul>
 <li>2026 한국게임학회 × 넥슨게임즈 입선</li>
@@ -2817,7 +2817,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">LD 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in portfolio-scroll-9 visible" id="thumbnail-ld" style="max-height: 708px;">
+        <div class="grid-3 fade-in visible portfolio-scroll-9" id="thumbnail-ld" style="max-height: 708px;">
           
         <div class="card-add" onclick="openAddModal('thumbnail-ld','LD 썸네일',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2854,7 +2854,7 @@ color:var(--cyan);
           <div class="style-accordion" id="styleAccordion" data-active="illust-simple">
             <section class="style-pane active" data-style-grid="illust-simple">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-simple')"><span>심플</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid" id="illust-simple">
+              <div class="grid-3 fade-in style-pane-grid visible" id="illust-simple">
                 
               <div class="card-add" onclick="openAddModal('illust-simple','심플',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2862,7 +2862,7 @@ color:var(--cyan);
             </section>
             <section class="style-pane" data-style-grid="illust-line">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-line')"><span>얇은 선</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid" id="illust-line">
+              <div class="grid-3 fade-in style-pane-grid visible" id="illust-line">
                 
               <div class="card-add" onclick="openAddModal('illust-line','얇은 선',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2870,7 +2870,7 @@ color:var(--cyan);
             </section>
             <section class="style-pane" data-style-grid="illust-semi-painted">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-semi-painted')"><span>반무테</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid" id="illust-semi-painted">
+              <div class="grid-3 fade-in style-pane-grid visible" id="illust-semi-painted">
                 
               <div class="card-add" onclick="openAddModal('illust-semi-painted','반무테',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2881,15 +2881,15 @@ color:var(--cyan);
         <div class="portfolio-section-title">커버일러스트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-cover">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-cover">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-cover">
+        <div class="grid-3 fade-in" id="illust-cover" style="">
           
         <div class="card-add" onclick="openAddModal('illust-cover','커버일러스트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div></div>
-        <div class="portfolio-section-title">러프퀄<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">러프퀄<button class="section-toggle-btn">열기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-rough">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-rough">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-rough">
+        <div class="grid-3 fade-in collapsed" id="illust-rough" style="display: none;">
           
         <div class="card-add" onclick="openAddModal('illust-rough','러프퀄',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2897,7 +2897,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">컨셉아트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-conceptart">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-conceptart">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-conceptart">
+        <div class="grid-3 fade-in" id="illust-conceptart" style="">
           
         <div class="card-add" onclick="openAddModal('illust-conceptart','컨셉아트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2977,7 +2977,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">스킨<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-skin">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-skin">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-skin">
+        <div class="grid-3 fade-in visible" id="mc-skin">
           
         <div class="card-add" onclick="openAddModal('mc-skin','스킨',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -2985,7 +2985,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">모델링<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mc-model">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mc-model">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mc-model">
+        <div class="grid-3 fade-in visible" id="mc-model">
           
         <div class="card-add" onclick="openAddModal('mc-model','모델링',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3013,7 +3013,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">MV<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="mvAnimationGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="mvAnimationGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="mvAnimationGrid">
+        <div class="grid-3 fade-in visible" id="mvAnimationGrid">
           
         <div class="card-add" onclick="openAddModal('mvAnimationGrid','MV',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3021,7 +3021,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">2D Animation<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="animation2DGrid">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="animation2DGrid">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="animation2DGrid">
+        <div class="grid-3 fade-in" id="animation2DGrid" style="">
           
         <div class="card-add" onclick="openAddModal('animation2DGrid','2D Animation',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3054,10 +3054,10 @@ color:var(--cyan);
         <div class="card-add" onclick="openAddModal('brand-symbol','심볼 디자인',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div></div>
-        <div class="portfolio-section-title">이모티콘<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
+        <div class="portfolio-section-title">이모티콘<button class="section-toggle-btn">열기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="brand-emote">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="brand-emote">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="brand-emote">
+        <div class="grid-3 fade-in collapsed" id="brand-emote" style="display: none;">
           <div class="card-add" onclick="openAddModal('brand-emote','이모티콘',this)" style="display: none;">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
           </div>
@@ -3095,7 +3095,7 @@ color:var(--cyan);
 
   <!-- 저작권 -->
   <div class="sub-panel active" id="notice-copyright">
-    <div class="policy-block fade-in">
+    <div class="policy-block fade-in visible">
       <div class="policy-title">📋 저작권 안내</div>
       <div class="policy-text">
         <p>저의 모든 커미션 작업물들의 저작권은<br>계약서를 따로 작성해서 작업하는 것이 아닌 이상 모두 <strong style="color:var(--cyan)">보원</strong>에게 있음을 알려드립니다.</p>
@@ -5038,6 +5038,11 @@ document.addEventListener('keydown',function(e){
  else if(e.key==='ArrowLeft')window.movePublicCard(-1,e);
  else if(e.key==='ArrowRight')window.movePublicCard(1,e);
 });
+document.addEventListener('wheel',function(e){
+ var panel=e.target.closest&&e.target.closest('.portfolio-scroll-9,.style-pane-grid');
+ if(!panel||panel.getClientRects().length===0)return;
+ e.preventDefault();e.stopPropagation();panel.scrollTop+=e.deltaY;
+},{capture:true,passive:false});
 window.switchTab=function(key,btn){
  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+key);});
  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b===btn);});
@@ -5063,7 +5068,7 @@ window.activeStyleGridId='illust-simple';
 window.activateStylePane=function(id){
  window.activeStyleGridId=id;
  document.querySelectorAll('#styleAccordion .style-pane').forEach(function(p){p.classList.toggle('active',p.dataset.styleGrid===id);});
- var a=document.getElementById('styleAccordion');if(a)a.classList.remove('closed');
+ var a=document.getElementById('styleAccordion');if(a){a.classList.remove('closed');a.dataset.active=id;}
  var t=document.getElementById('styleGroupToggle');if(t)t.textContent='닫기';
  renderGrid(id);
 };
@@ -5082,11 +5087,12 @@ document.addEventListener('DOMContentLoaded',function(){
  document.querySelectorAll('#port-grids .port-sub').forEach(function(panel){panel.classList.toggle('active',panel.id==='port-sub-thumbnail');});
  var portTabs=document.querySelectorAll('#tab-work > .sub-tab-wrap .sub-tab');portTabs.forEach(function(btn,index){btn.classList.toggle('active',index===0);});
  ['notice','commission'].forEach(function(key){var root=document.getElementById('tab-'+key);if(!root)return;root.querySelectorAll('.sub-tab').forEach(function(btn,index){btn.classList.toggle('active',index===0);});root.querySelectorAll('.sub-panel').forEach(function(panel,index){panel.classList.toggle('active',index===0);});});
- document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(function(section){section.style.display='';section.classList.remove('collapsed');});
- document.querySelectorAll('#tab-work .section-toggle-btn').forEach(function(btn){btn.textContent='닫기';});
- var styleAccordion=document.getElementById('styleAccordion');if(styleAccordion)styleAccordion.classList.remove('closed');
- var styleToggle=document.getElementById('styleGroupToggle');if(styleToggle)styleToggle.textContent='닫기';
- document.querySelectorAll('#styleAccordion .style-pane').forEach(function(pane){pane.classList.toggle('active',pane.dataset.styleGrid==='illust-simple');});
+ document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(function(section){var has=Array.isArray(data[section.id])&&data[section.id].length>0;section.style.display=has?'':'none';section.classList.toggle('collapsed',!has);});
+ var styleOrder=['illust-simple','illust-line','illust-semi-painted'],firstFilledStyle=styleOrder.find(function(id){return Array.isArray(data[id])&&data[id].length>0;})||'';
+ window.activeStyleGridId=firstFilledStyle||'illust-simple';
+ var styleAccordion=document.getElementById('styleAccordion');if(styleAccordion){styleAccordion.classList.toggle('closed',!firstFilledStyle);styleAccordion.dataset.active=firstFilledStyle||'illust-simple';}
+ var styleToggle=document.getElementById('styleGroupToggle');if(styleToggle)styleToggle.textContent=firstFilledStyle?'닫기':'열기';
+ document.querySelectorAll('#styleAccordion .style-pane').forEach(function(pane){pane.classList.toggle('active',pane.dataset.styleGrid===firstFilledStyle);});
  document.querySelectorAll('.fade-in').forEach(function(el){el.classList.add('visible');});
  document.querySelectorAll('.avatar-wrap').forEach(function(el){el.removeAttribute('onclick');el.style.cursor='default';});
  var pm=document.getElementById('profileModal');if(pm)pm.remove();
@@ -5094,7 +5100,7 @@ document.addEventListener('DOMContentLoaded',function(){
   if(btn.id==='styleGroupToggle')return;
   var title=btn.closest('.portfolio-section-title,.sec-title,.sec-label')||btn.parentElement,target=title?title.nextElementSibling:null;
   while(target&&!target.matches('.grid-3,.grid-2,.card-grid,.sub-panel,.option-block,.pixel-grid'))target=target.nextElementSibling;
-  if(target)btn.onclick=function(e){e.preventDefault();toggleSection(target.id,btn);};
+  if(target){btn.textContent=target.style.display==='none'?'열기':'닫기';btn.onclick=function(e){e.preventDefault();toggleSection(target.id,btn);};}
  });
 });
 })();
