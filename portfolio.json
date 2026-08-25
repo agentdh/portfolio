@@ -9,14 +9,14 @@
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
     "profileCrop": {
       "w": 0.2879353233830846,
-      "x": 0.4975124378109453,
       "h": 0.5121681415929203,
+      "x": 0.4975124378109453,
       "y": 0
     },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-07-24T15:50:54.568Z"
+    "updatedAt": "2026-08-25T01:53:47.025Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -1074,7 +1074,9 @@
         "title": "ezgif 6 70c92f2944",
         "desc": "",
         "src": "./3d/ezgif-6-70c92f2944.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "N test 2",
@@ -1132,13 +1134,17 @@
         "title": "Um1sdEl3LpV5AI6NuBfHxEMuP9FN96ss",
         "desc": "",
         "src": "./live2d/Um1sdEl3LpV5AI6NuBfHxEMuP9FN96ss.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "ezgif 3 83ca2338b2",
         "desc": "",
         "src": "./live2d/ezgif-3-83ca2338b2.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "녹화 2023 09 28 04 48 48 188",
@@ -1186,7 +1192,9 @@
         "title": "2400",
         "desc": "",
         "src": "./pixelart/1782645251194-2400.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       }
     ],
     "pixel-illust": [
@@ -1194,55 +1202,73 @@
         "title": "enaga 480",
         "desc": "",
         "src": "./pixelart/enaga_480.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "애화,키샤2 (2025 12 08 03 09 02 UTC)",
         "desc": "",
         "src": "./pixelart/애화,키샤2 (2025_12_08 03_09_02 UTC).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "렌야2 (2025 12 08 03 09 02 UTC)",
         "desc": "",
         "src": "./pixelart/렌야2 (2025_12_08 03_09_02 UTC).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "토우2 (2025 12 08 03 09 02 UTC)",
         "desc": "",
         "src": "./pixelart/토우2 (2025_12_08 03_09_02 UTC).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "후유2 (2025 12 08 03 09 02 UTC)",
         "desc": "",
         "src": "./pixelart/후유2 (2025_12_08 03_09_02 UTC).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "오츠2 (2025 12 08 03 09 02 UTC)",
         "desc": "",
         "src": "./pixelart/오츠2 (2025_12_08 03_09_02 UTC).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "사에2 (2025 12 08 03 09 02 UTC)",
         "desc": "",
         "src": "./pixelart/사에2 (2025_12_08 03_09_02 UTC).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "덴2 (2025 12 24 11 19 53 UTC)",
         "desc": "",
         "src": "./pixelart/덴2 (2025_12_24 11_19_53 UTC).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "eLVaaV6GcpkOMpxEUYiT2m47XdkXAbJ5",
         "desc": "",
         "src": "./pixelart/eLVaaV6GcpkOMpxEUYiT2m47XdkXAbJ5.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "XvQreIu4tyt8PC0Bh05Nrmaq3IWumkF3",
@@ -1266,13 +1292,17 @@
         "title": "1782610245149 ezgif 5 a6061d6a2b",
         "desc": "",
         "src": "./pixelart/1782610245149-ezgif-5-a6061d6a2b.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "2m31fp1BccUO0HKreICATmNZHwdMQbVx",
         "desc": "",
         "src": "./pixelart/2m31fp1BccUO0HKreICATmNZHwdMQbVx.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       }
     ],
     "mc-skin": [
@@ -1517,6 +1547,14 @@
     ],
     "mvAnimationGrid": [
       {
+        "title": "【마인크래프트 M/V】SNAKE EYES || 하코스 벨즈",
+        "desc": "",
+        "src": "https://youtu.be/wtLa3jj6X7g?si=yzS1M-d_HQ8FZabM",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
+      },
+      {
         "title": "SKY HIGH.배비꼬",
         "desc": "",
         "src": "https://youtu.be/UoKUdXDwonM",
@@ -1557,15 +1595,57 @@
         "thumbnailSrc": ""
       },
       {
-        "title": "0애니메이션",
+        "title": "쵸봄-괴물",
         "desc": "",
-        "src": "./animation-video/0애니메이션.gif",
-        "type": "image"
+        "src": "https://youtu.be/31102OJ-EGo?si=vMquKIG2UB6Thd9V",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
-        "title": "포니-영상커버",
+        "title": "쵸봄-내꺼 하는 법",
         "desc": "",
-        "src": "https://www.youtube.com/watch?v=XFY8OVmBpUc",
+        "src": "https://youtu.be/eZDKpUq5ks0?si=NJf6-3DF0qE-3esk",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
+      },
+      {
+        "title": "쵸봄-에고록",
+        "desc": "",
+        "src": "https://youtu.be/Ti41jmj37c8?si=m2Pd1hE4NRxrKxtQ",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
+      },
+      {
+        "title": "쵸봄-강풍 올백",
+        "desc": "",
+        "src": "https://youtu.be/vE2fiAsfBsI?si=ZsDjmEVBCtoxCArQ",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
+      },
+      {
+        "title": "쵸봄-포니",
+        "desc": "",
+        "src": "https://youtu.be/ydd5OVbgqpA?si=3I7ugPndPneYHfkV",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
+      },
+      {
+        "title": "cyqha-절정찬가",
+        "desc": "",
+        "src": "https://youtu.be/r87Y4zBvxwg?si=gZ3T2W_G9pyKAnZp",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
+      },
+      {
+        "title": "쵸봄-빌런",
+        "desc": "",
+        "src": "https://youtu.be/_3HEKJC_3oY?si=jDwzJgisSzdEsicR",
         "type": "video",
         "thumbnailPath": "",
         "thumbnailSrc": ""
@@ -1600,49 +1680,65 @@
         "title": "애니메이션2",
         "desc": "",
         "src": "./animation-video/애니메이션2.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "15",
         "desc": "",
         "src": "./animation-video/15.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "3",
         "desc": "",
         "src": "./animation-video/3.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "9",
         "desc": "",
         "src": "./animation-video/9.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "애니메이션",
         "desc": "",
         "src": "./animation-video/애니메이션.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "14",
         "desc": "",
         "src": "./animation-video/14.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "내꺼하는법 (7)",
         "desc": "",
         "src": "./animation-video/내꺼하는법 (7).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "제로투 (2)",
         "desc": "",
         "src": "./animation-video/제로투 (2).gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       },
       {
         "title": "연습영상",
@@ -1677,7 +1773,9 @@
         "title": "ezgif 69d93ad54b884649",
         "desc": "",
         "src": "./branding/ezgif-69d93ad54b884649.gif",
-        "type": "image"
+        "type": "image",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
       }
     ],
     "brand-symbol": [
