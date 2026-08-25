@@ -38,6 +38,15 @@ header{max-width:960px;margin:0 auto;padding:56px 24px 40px;display:flex;align-i
 .profile-role{font-size:12px;color:var(--text-dim);margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
 .profile-bio{margin-top:10px;font-size:13px;color:var(--text-dim);max-width:480px;line-height:1.75;}
 .profile-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.commission-link-card{width:250px;flex:0 0 250px;align-self:center;padding:20px;border:1px solid rgba(88,101,242,.45);border-radius:14px;background:linear-gradient(145deg,rgba(88,101,242,.14),rgba(17,17,26,.92));box-shadow:0 16px 38px rgba(0,0,0,.22)}
+.commission-link-kicker{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:#8b9cff;margin-bottom:7px}
+.commission-link-title{display:block;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;line-height:1.3}
+.commission-link-desc{margin:7px 0 15px;color:var(--text-dim);font-size:11px;line-height:1.65}
+.commission-link-button{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:9px 12px;border:1px solid #7289da;border-radius:8px;background:#5865f2;color:#fff;text-decoration:none;font-size:12px;font-weight:600;transition:transform .2s,background .2s,box-shadow .2s}
+.commission-link-button:hover{background:#6d78f5;transform:translateY(-1px);box-shadow:0 8px 22px rgba(88,101,242,.28)}
+.commission-link-button svg{width:15px;height:15px;fill:currentColor}
+@media(max-width:760px){header{flex-wrap:wrap}.commission-link-card{width:100%;flex-basis:100%;margin-left:116px}}
+@media(max-width:520px){.commission-link-card{margin-left:0}}
 .p-tag{font-size:11px;padding:4px 11px;border-radius:100px;border:1px solid var(--border2);color:var(--text-dim);background:var(--bg3);letter-spacing:.03em;transition:all .2s;}
 .p-tag.hl{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
 
@@ -2770,6 +2779,12 @@ color:var(--cyan);
       <span class="p-tag hl">Live2D</span><span class="p-tag hl">픽셀아트</span><span class="p-tag hl">마인크래프트</span><span class="p-tag hl">브랜딩</span>
     </div>
   </div>
+  <aside class="commission-link-card" aria-label="Discord 의뢰 링크">
+    <div class="commission-link-kicker">DISCORD COMMISSION</div>
+    <strong class="commission-link-title" id="commissionLinkTitle">의뢰하러 가기</strong>
+    <p class="commission-link-desc">작업 문의와 상담은 Discord에서 편하게 진행할 수 있습니다.</p>
+    <a class="commission-link-button" id="commissionLinkButton" href="https://discord.gg/EZhs87qRvU" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.32 4.37A19.79 19.79 0 0 0 15.44 3a13.78 13.78 0 0 0-.62 1.28 18.27 18.27 0 0 0-5.63 0A12.64 12.64 0 0 0 8.55 3a19.74 19.74 0 0 0-4.88 1.37C.58 8.96-.26 13.44.15 17.86A19.9 19.9 0 0 0 6.13 21a14.7 14.7 0 0 0 1.48-2.05 12.9 12.9 0 0 1-2.33-1.12l.57-.44c4.49 2.08 9.36 2.08 13.8 0l.58.44c-.74.43-1.52.8-2.34 1.12A14.24 14.24 0 0 0 19.36 21a19.8 19.8 0 0 0 5.98-3.14c.49-5.13-.83-9.57-5.02-13.49ZM8.02 15.15c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.08 2.76-2.45 2.76Zm8.52 0c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.07 2.76-2.45 2.76Z"/></svg><span id="commissionLinkButtonLabel">의뢰하러 가기</span></a>
+  </aside>
 </header>
 
 <div class="contact-row">
