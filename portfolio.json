@@ -8,15 +8,15 @@
     "profileImgUrl": "./opimage/1782689883234-무제22_20241013202118.png",
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
     "profileCrop": {
-      "x": 0.4975124378109453,
-      "y": 0,
       "h": 0.5121681415929203,
+      "y": 0,
+      "x": 0.4975124378109453,
       "w": 0.2879353233830846
     },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-08-25T02:15:34.285Z"
+    "updatedAt": "2026-08-25T19:58:29.567Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -1263,6 +1263,70 @@
         "thumbnailSrc": ""
       },
       {
+        "title": "7엘리아2",
+        "desc": "",
+        "src": "./pixelart/7엘리아2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/7엘리아2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/7엘리아2.webp"
+      },
+      {
+        "title": "8우진2",
+        "desc": "",
+        "src": "./pixelart/8우진2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/8우진2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/8우진2.webp"
+      },
+      {
+        "title": "6단향2",
+        "desc": "",
+        "src": "./pixelart/6단향2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/6단향2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/6단향2.webp"
+      },
+      {
+        "title": "5안드레2",
+        "desc": "",
+        "src": "./pixelart/5안드레2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/5안드레2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/5안드레2.webp"
+      },
+      {
+        "title": "4임호2",
+        "desc": "",
+        "src": "./pixelart/4임호2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/4임호2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/4임호2.webp"
+      },
+      {
+        "title": "3시에나2",
+        "desc": "",
+        "src": "./pixelart/3시에나2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/3시에나2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/3시에나2.webp"
+      },
+      {
+        "title": "2클레어2",
+        "desc": "",
+        "src": "./pixelart/2클레어2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/2클레어2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/2클레어2.webp"
+      },
+      {
+        "title": "1해찬2",
+        "desc": "",
+        "src": "./pixelart/1해찬2.png",
+        "type": "image",
+        "thumbnailPath": "pixelart/card-thumbs/1해찬2.webp",
+        "thumbnailSrc": "./pixelart/card-thumbs/1해찬2.webp"
+      },
+      {
         "title": "eLVaaV6GcpkOMpxEUYiT2m47XdkXAbJ5",
         "desc": "",
         "src": "./pixelart/eLVaaV6GcpkOMpxEUYiT2m47XdkXAbJ5.gif",
@@ -1345,6 +1409,14 @@
         "type": "image",
         "thumbnailPath": "minecraft/card-thumbs/스킨 (5).webp",
         "thumbnailSrc": "./minecraft/card-thumbs/스킨 (5).webp"
+      },
+      {
+        "title": "스크린샷 2026 07 15 174840",
+        "desc": "",
+        "src": "./minecraft/스크린샷-2026-07-15-174840.png",
+        "type": "image",
+        "thumbnailPath": "minecraft/card-thumbs/스크린샷-2026-07-15-174840.webp",
+        "thumbnailSrc": "./minecraft/card-thumbs/스크린샷-2026-07-15-174840.webp"
       }
     ],
     "mc-model": [
@@ -1422,6 +1494,14 @@
       }
     ],
     "mc-animation": [
+      {
+        "title": "【마인크래프트 M/V】SNAKE EYES || 하코스 벨즈",
+        "desc": "",
+        "src": "https://youtu.be/wtLa3jj6X7g?si=yzS1M-d_HQ8FZabM",
+        "type": "video",
+        "thumbnailPath": "",
+        "thumbnailSrc": ""
+      },
       {
         "title": "1782610229507 testef1235dfsa",
         "desc": "",
@@ -1543,17 +1623,25 @@
         "type": "image",
         "thumbnailPath": "minecraft/card-thumbs/2022-04-01_18.41.30.webp",
         "thumbnailSrc": "./minecraft/card-thumbs/2022-04-01_18.41.30.webp"
+      },
+      {
+        "title": "스크린샷 2026 07 15 175142",
+        "desc": "",
+        "src": "./minecraft/스크린샷-2026-07-15-175142.png",
+        "type": "image",
+        "thumbnailPath": "minecraft/card-thumbs/스크린샷-2026-07-15-175142.webp",
+        "thumbnailSrc": "./minecraft/card-thumbs/스크린샷-2026-07-15-175142.webp"
+      },
+      {
+        "title": "스크린샷 2026 07 15 175137",
+        "desc": "",
+        "src": "./minecraft/스크린샷-2026-07-15-175137.png",
+        "type": "image",
+        "thumbnailPath": "minecraft/card-thumbs/스크린샷-2026-07-15-175137.webp",
+        "thumbnailSrc": "./minecraft/card-thumbs/스크린샷-2026-07-15-175137.webp"
       }
     ],
     "mvAnimationGrid": [
-      {
-        "title": "【마인크래프트 M/V】SNAKE EYES || 하코스 벨즈",
-        "desc": "",
-        "src": "https://youtu.be/wtLa3jj6X7g?si=yzS1M-d_HQ8FZabM",
-        "type": "video",
-        "thumbnailPath": "",
-        "thumbnailSrc": ""
-      },
       {
         "title": "SKY HIGH.배비꼬",
         "desc": "",
