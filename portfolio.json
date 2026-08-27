@@ -4,19 +4,21 @@
     "role": "Illustrator · Animator · 3D Modeler",
     "bio": "일러스트, 애니메이션, 3D 모델링을 중심으로\n다양한 디지털 콘텐츠를 제작하고 있는\n멀티미디어 아티스트 보원입니다.\n\n캐릭터 디자인부터 MV 제작,\n게임용 픽셀아트 및 마인크래프트 리소스 제작까지\n폭넓은 작업을 진행하고 있습니다.\n\nE-mail : agentdh@naver.com",
     "email": "agentdh@naver.com",
+    "commissionLinkTitle": "의뢰하러 가기",
+    "commissionLinkUrl": "https://discord.gg/EZhs87qRvU",
     "profileImgPath": "opimage/1782689883234-무제22_20241013202118.png",
     "profileImgUrl": "./opimage/1782689883234-무제22_20241013202118.png",
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
     "profileCrop": {
-      "x": 0.4975124378109453,
+      "w": 0.2879353233830846,
       "h": 0.5121681415929203,
-      "y": 0,
-      "w": 0.2879353233830846
+      "x": 0.4975124378109453,
+      "y": 0
     },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-08-25T20:14:10.031Z"
+    "updatedAt": "2026-08-27T11:46:33.397Z"
   },
   "portfolio": {
     "thumbnail-ld": [
