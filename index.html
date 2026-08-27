@@ -3067,15 +3067,15 @@ color:var(--cyan);
       <div class="port-sub" id="port-sub-illust">
         <div class="style-group" id="illust-style-group">
           <div class="portfolio-section-title style-group-title">
-            <span>스타일</span>
+            <span>스타일 / <strong id="activeStyleName">반무테</strong></span>
             <button type="button" class="section-toggle-btn" id="styleGroupToggle" onclick="toggleStyleGroup()">닫기</button>
             <span class="section-admin-controls" id="styleGroupControls">
               <button type="button" class="admin-mini-btn upload" onclick="openStyleBatchUpload(event)">여러 파일 업로드</button>
               <button type="button" class="admin-mini-btn" onclick="openStyleAddModal(event)">카드 추가</button>
             </span>
           </div>
-          <div class="style-accordion" id="styleAccordion" data-active="illust-simple">
-            <section class="style-pane active" data-style-grid="illust-simple">
+          <div class="style-accordion" id="styleAccordion" data-active="illust-semi-painted">
+            <section class="style-pane" data-style-grid="illust-simple">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-simple')"><span>심플</span><small>열기</small></button>
               <div class="grid-3 fade-in style-pane-grid visible" id="illust-simple" data-scroll-focus-until="1787827895017">
                 
@@ -3091,7 +3091,7 @@ color:var(--cyan);
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
                 </div></div>
             </section>
-            <section class="style-pane" data-style-grid="illust-semi-painted">
+            <section class="style-pane active" data-style-grid="illust-semi-painted">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-semi-painted')"><span>반무테</span><small>열기</small></button>
               <div class="grid-3 fade-in style-pane-grid" id="illust-semi-painted">
                 
@@ -3491,7 +3491,7 @@ color:var(--cyan);
     <button class="sub-tab" onclick="switchSub('commission','branding',this)">브랜딩·채널아트</button>
   </div>
 
-<div class="sub-panel active" id="commission-3d">
+<div class="sub-panel" id="commission-3d">
 <div class="price-layout"><div class="price-main">
 <div class="sec-label-lg"><span class="sec-num">08</span><h2 class="sec-title">3D<span class="en">Modeling</span></h2></div>
 <div class="option-block">
@@ -3569,7 +3569,7 @@ color:var(--cyan);
 
 
   <!-- 썸네일 -->
-  <div class="sub-panel" id="commission-thumbnail">
+  <div class="sub-panel active" id="commission-thumbnail">
 <div class="price-layout">
 <div class="price-main">
 <div class="sec-label-lg"><span class="sec-num">01</span><h2 class="sec-title">썸네일<span class="en">Thumbnail</span></h2></div>
@@ -5343,18 +5343,19 @@ window.toggleSection=function(id,btn){
  el.style.display=hidden?'':'none';el.classList.toggle('collapsed',!hidden);if(btn)btn.textContent=hidden?'닫기':'열기';
  if(hidden)setTimeout(updatePublicGridScrolls,0);
 };
-window.activeStyleGridId='illust-simple';
+window.activeStyleGridId='illust-semi-painted';
 window.activateStylePane=function(id){
  window.activeStyleGridId=id;
  document.querySelectorAll('#styleAccordion .style-pane').forEach(function(p){p.classList.toggle('active',p.dataset.styleGrid===id);});
  var a=document.getElementById('styleAccordion');if(a){a.classList.remove('closed');a.dataset.active=id;}
  var t=document.getElementById('styleGroupToggle');if(t)t.textContent='닫기';
+ var n=document.getElementById('activeStyleName'),names={'illust-simple':'심플','illust-line':'얇은 선','illust-semi-painted':'반무테'};if(n)n.textContent=names[id]||'반무테';
  renderGrid(id);
 };
 window.toggleStyleGroup=function(){
  var a=document.getElementById('styleAccordion'),t=document.getElementById('styleGroupToggle');if(!a)return;
  var opening=a.classList.contains('closed');a.classList.toggle('closed',!opening);if(t)t.textContent=opening?'닫기':'열기';
- if(opening)activateStylePane(window.activeStyleGridId||'illust-simple');
+ if(opening)activateStylePane(window.activeStyleGridId||'illust-semi-painted');
 };
 window.openStyleBatchUpload=function(){};
 window.openStyleAddModal=function(){};
@@ -5388,13 +5389,14 @@ document.addEventListener('DOMContentLoaded',function(){
  document.querySelectorAll('.tab-btn').forEach(function(btn){btn.classList.toggle('active',(btn.getAttribute('onclick')||'').indexOf("'about'")>=0);});
  document.querySelectorAll('#port-grids .port-sub').forEach(function(panel){panel.classList.toggle('active',panel.id==='port-sub-thumbnail');});
  var portTabs=document.querySelectorAll('#port-grids > .sub-tab-wrap .sub-tab');portTabs.forEach(function(btn,index){btn.classList.toggle('active',index===0);});
- ['notice','commission'].forEach(function(key){var root=document.getElementById('tab-'+key);if(!root)return;root.querySelectorAll('.sub-tab').forEach(function(btn,index){btn.classList.toggle('active',index===0);});root.querySelectorAll('.sub-panel').forEach(function(panel,index){panel.classList.toggle('active',index===0);});});
+ Object.entries({notice:'copyright',commission:'thumbnail'}).forEach(function(entry){var key=entry[0],subId=entry[1],root=document.getElementById('tab-'+key);if(!root)return;root.querySelectorAll('.sub-tab').forEach(function(btn){btn.classList.toggle('active',(btn.getAttribute('onclick')||'').indexOf("'"+subId+"'")>=0);});root.querySelectorAll('.sub-panel').forEach(function(panel){panel.classList.toggle('active',panel.id===key+'-'+subId);});});
  document.querySelectorAll('#tab-work .grid-3,#tab-work .grid-2').forEach(function(section){var has=Array.isArray(data[section.id])&&data[section.id].length>0;section.style.display=has?'':'none';section.classList.toggle('collapsed',!has);});
- var styleOrder=['illust-simple','illust-line','illust-semi-painted'],firstFilledStyle=styleOrder.find(function(id){return Array.isArray(data[id])&&data[id].length>0;})||'';
- window.activeStyleGridId=firstFilledStyle||'illust-simple';
- var styleAccordion=document.getElementById('styleAccordion');if(styleAccordion){styleAccordion.classList.toggle('closed',!firstFilledStyle);styleAccordion.dataset.active=firstFilledStyle||'illust-simple';}
- var styleToggle=document.getElementById('styleGroupToggle');if(styleToggle)styleToggle.textContent=firstFilledStyle?'닫기':'열기';
- document.querySelectorAll('#styleAccordion .style-pane').forEach(function(pane){pane.classList.toggle('active',pane.dataset.styleGrid===firstFilledStyle);});
+ var defaultStyle='illust-semi-painted',styleIds=['illust-simple','illust-line','illust-semi-painted'],hasAnyStyle=styleIds.some(function(id){return Array.isArray(data[id])&&data[id].length>0;});
+ window.activeStyleGridId=defaultStyle;
+ var styleAccordion=document.getElementById('styleAccordion');if(styleAccordion){styleAccordion.classList.toggle('closed',!hasAnyStyle);styleAccordion.dataset.active=defaultStyle;}
+ var styleToggle=document.getElementById('styleGroupToggle');if(styleToggle)styleToggle.textContent=hasAnyStyle?'닫기':'열기';
+ var activeStyleName=document.getElementById('activeStyleName');if(activeStyleName)activeStyleName.textContent='반무테';
+ document.querySelectorAll('#styleAccordion .style-pane').forEach(function(pane){pane.classList.toggle('active',pane.dataset.styleGrid===defaultStyle);});
  document.querySelectorAll('.fade-in').forEach(function(el){el.classList.add('visible');});
  document.querySelectorAll('.avatar-wrap').forEach(function(el){el.removeAttribute('onclick');el.style.cursor='default';});
  var pm=document.getElementById('profileModal');if(pm)pm.remove();
