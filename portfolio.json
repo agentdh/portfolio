@@ -1954,6 +1954,232 @@
         "thumbnailPath": "branding/card-thumbs/일러스트3.webp",
         "thumbnailSrc": "./branding/card-thumbs/일러스트3.webp"
       }
+    ],
+    "illust-rough": [
+      {
+        "title": "하누 러프퀄2",
+        "desc": "",
+        "src": "./illustration/하누-러프퀄2.jpg",
+        "type": "image",
+        "sourcePath": "illustration/하누-러프퀄2.jpg"
+      },
+      {
+        "title": "하누 러프퀄1",
+        "desc": "",
+        "src": "./illustration/하누-러프퀄1.jpg",
+        "type": "image",
+        "sourcePath": "illustration/하누-러프퀄1.jpg"
+      },
+      {
+        "title": "레디언트 러프퀄",
+        "desc": "",
+        "src": "./illustration/레디언트-러프퀄.jpg",
+        "type": "image",
+        "sourcePath": "illustration/레디언트-러프퀄.jpg"
+      },
+      {
+        "title": "쥐시끼 러프퀄",
+        "desc": "",
+        "src": "./illustration/쥐시끼-러프퀄.jpg",
+        "type": "image",
+        "sourcePath": "illustration/쥐시끼-러프퀄.jpg"
+      },
+      {
+        "title": "265",
+        "desc": "",
+        "src": "./illustration/265.jpg",
+        "type": "image",
+        "sourcePath": "illustration/265.jpg"
+      },
+      {
+        "title": "深海 20241117204917",
+        "desc": "",
+        "src": "./illustration/深海_20241117204917.jpg",
+        "type": "image",
+        "sourcePath": "illustration/深海_20241117204917.jpg"
+      },
+      {
+        "title": "쥐시끼 러프퀄2",
+        "desc": "",
+        "src": "./illustration/쥐시끼-러프퀄2.jpg",
+        "type": "image",
+        "sourcePath": "illustration/쥐시끼-러프퀄2.jpg"
+      },
+      {
+        "title": "애옹님 러프퀄1",
+        "desc": "",
+        "src": "./illustration/애옹님-러프퀄1.png",
+        "type": "image",
+        "sourcePath": "illustration/애옹님-러프퀄1.png"
+      },
+      {
+        "title": "무제70 20241113205723",
+        "desc": "",
+        "src": "./illustration/무제70_20241113205723.jpg",
+        "type": "image",
+        "sourcePath": "illustration/무제70_20241113205723.jpg"
+      },
+      {
+        "title": "무제172 20241223195907",
+        "desc": "",
+        "src": "./illustration/무제172_20241223195907.jpg",
+        "type": "image",
+        "sourcePath": "illustration/무제172_20241223195907.jpg"
+      },
+      {
+        "title": "seolhwa00 러프퀄6",
+        "desc": "",
+        "src": "./illustration/seolhwa00-러프퀄6.png",
+        "type": "image",
+        "sourcePath": "illustration/seolhwa00-러프퀄6.png"
+      },
+      {
+        "title": "seolhwa00 러프퀄1",
+        "desc": "",
+        "src": "./illustration/seolhwa00-러프퀄1.png",
+        "type": "image",
+        "sourcePath": "illustration/seolhwa00-러프퀄1.png"
+      },
+      {
+        "title": "seolhwa00 러프퀄9",
+        "desc": "",
+        "src": "./illustration/seolhwa00-러프퀄9.png",
+        "type": "image",
+        "sourcePath": "illustration/seolhwa00-러프퀄9.png"
+      },
+      {
+        "title": "seolhwa00 러프퀄11",
+        "desc": "",
+        "src": "./illustration/seolhwa00-러프퀄11.png",
+        "type": "image",
+        "sourcePath": "illustration/seolhwa00-러프퀄11.png"
+      },
+      {
+        "title": "무제140 20241205202650",
+        "desc": "",
+        "src": "./illustration/무제140_20241205202650.jpg",
+        "type": "image",
+        "sourcePath": "illustration/무제140_20241205202650.jpg"
+      },
+      {
+        "title": "Sukiyakiudon님 러프퀄",
+        "desc": "",
+        "src": "./illustration/Sukiyakiudon님-러프퀄.png",
+        "type": "image",
+        "sourcePath": "illustration/Sukiyakiudon님-러프퀄.png"
+      },
+      {
+        "title": "무제83 20241123144935",
+        "desc": "",
+        "src": "./illustration/무제83_20241123144935.jpg",
+        "type": "image",
+        "sourcePath": "illustration/무제83_20241123144935.jpg"
+      },
+      {
+        "title": "262",
+        "desc": "",
+        "src": "./illustration/262.jpg",
+        "type": "image",
+        "sourcePath": "illustration/262.jpg"
+      },
+      {
+        "title": "260",
+        "desc": "",
+        "src": "./illustration/260.png",
+        "type": "image",
+        "sourcePath": "illustration/260.png"
+      },
+      {
+        "title": "2026.02(2)",
+        "desc": "",
+        "src": "./illustration/2026.02(2).png",
+        "type": "image",
+        "sourcePath": "illustration/2026.02(2).png"
+      },
+      {
+        "title": "2026.02(2)",
+        "desc": "",
+        "src": "./illustration/2026.02(2).jpg",
+        "type": "image",
+        "sourcePath": "illustration/2026.02(2).jpg"
+      },
+      {
+        "title": "강쏘쏘님 (1)",
+        "desc": "",
+        "src": "./illustration/강쏘쏘님 (1).png",
+        "type": "image",
+        "sourcePath": "illustration/강쏘쏘님 (1).png"
+      },
+      {
+        "title": "무제22 20241013202118",
+        "desc": "",
+        "src": "./illustration/무제22_20241013202118.png",
+        "type": "image",
+        "sourcePath": "illustration/무제22_20241013202118.png"
+      },
+      {
+        "title": "2026.02(1)",
+        "desc": "",
+        "src": "./illustration/2026.02(1).png",
+        "type": "image",
+        "sourcePath": "illustration/2026.02(1).png"
+      },
+      {
+        "title": "146",
+        "desc": "",
+        "src": "./illustration/146.png",
+        "type": "image",
+        "sourcePath": "illustration/146.png"
+      },
+      {
+        "title": "애옹님 낙서퀄2",
+        "desc": "",
+        "src": "./illustration/애옹님-낙서퀄2.png",
+        "type": "image",
+        "sourcePath": "illustration/애옹님-낙서퀄2.png"
+      },
+      {
+        "title": "무제68 20241113152449",
+        "desc": "",
+        "src": "./illustration/무제68_20241113152449.jpg",
+        "type": "image",
+        "sourcePath": "illustration/무제68_20241113152449.jpg"
+      },
+      {
+        "title": "무제24 20241014201951",
+        "desc": "",
+        "src": "./illustration/무제24_20241014201951.png",
+        "type": "image",
+        "sourcePath": "illustration/무제24_20241014201951.png"
+      },
+      {
+        "title": "이프리트",
+        "desc": "",
+        "src": "./illustration/이프리트.png",
+        "type": "image",
+        "sourcePath": "illustration/이프리트.png"
+      },
+      {
+        "title": "무제221 20250201161329",
+        "desc": "",
+        "src": "./illustration/무제221_20250201161329.jpg",
+        "type": "image",
+        "sourcePath": "illustration/무제221_20250201161329.jpg"
+      },
+      {
+        "title": "무제416 20250627204430",
+        "desc": "",
+        "src": "./illustration/무제416_20250627204430.png",
+        "type": "image",
+        "sourcePath": "illustration/무제416_20250627204430.png"
+      },
+      {
+        "title": "2025.12(2)",
+        "desc": "",
+        "src": "./illustration/2025.12(2).png",
+        "type": "image",
+        "sourcePath": "illustration/2025.12(2).png"
+      }
     ]
   },
   "opimages": []
