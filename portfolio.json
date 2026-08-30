@@ -18,7 +18,7 @@
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-08-28T17:32:27.674Z"
+    "updatedAt": "2026-08-30T09:57:24.703Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -932,6 +932,22 @@
       }
     ],
     "illust-rough": [
+      {
+        "title": "젠 러프퀄",
+        "desc": "",
+        "src": "./illustration/젠-러프퀄.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/젠-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/젠-러프퀄.webp"
+      },
+      {
+        "title": "한량 팬아트",
+        "desc": "",
+        "src": "./illustration/한량-팬아트.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/한량-팬아트.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/한량-팬아트.webp"
+      },
       {
         "title": "하누 러프퀄2",
         "desc": "",
