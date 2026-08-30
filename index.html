@@ -654,7 +654,7 @@ color:var(--cyan);
  .style-accordion{height:min(634px,72vh)}
 }
 </style>
-<meta name="maxai-mui-classname-prefix" content="injectDocumentStart-2026-08-28T17:31:50.544Z"><style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style>
+<meta name="maxai-mui-classname-prefix" content="injectDocumentStart-2026-08-30T09:55:37.191Z"><style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style>
 <style id="dualpip-entry-btn-styles">
 /* Control-bar button */
 .dualpip-entry-btn-container {
@@ -670,12 +670,12 @@ color:var(--cyan);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  padding: 5px 7px;
   cursor: pointer;
   border-radius: 4px;
   transition: opacity 0.15s, transform 0.15s;
   opacity: 0.85;
+  box-sizing: border-box;
 }
 
 .dualpip-entry-btn:hover {
@@ -699,6 +699,105 @@ color:var(--cyan);
   width: 22px;
   height: 22px;
   display: block;
+}
+
+/* Netflix: match native 42×42 button size */
+.dualpip-entry-btn-container.pip-netflix-btn {
+  width: 52px !important;
+  height: 52px !important;
+  margin-left: 3rem !important;
+  margin-top: -6px !important;
+  cursor: pointer !important;
+}
+.pip-netflix-btn .dualpip-entry-btn {
+  width: 42px !important;
+  height: 42px !important;
+  padding: 0 !important;
+  transition: all 0.2s ease-in-out !important;
+  background: transparent !important;
+  border-radius: 10px !important;
+}
+.pip-netflix-btn .dualpip-entry-btn:hover {
+  transform: scale(1.2) !important;
+}
+.pip-netflix-btn .dualpip-entry-btn:active {
+  transform: scale(0.9) !important;
+}
+.pip-netflix-btn .dualpip-entry-btn-icon {
+  width: 42px !important;
+  height: 42px !important;
+}
+.pip-netflix-btn .dualpip-entry-btn-icon svg {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+/* Prime Video: spacing to match native controls */
+.dualpip-entry-btn-container.pip-primevideo-btn {
+  margin-left: 20px !important;
+}
+
+/* TED: spacing and flex alignment */
+.dualpip-entry-btn-container.pip-ted-btn {
+  margin-left: 20px !important;
+  width: auto !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* HBO/Max: match native 54×54 button size */
+.dualpip-entry-btn-container.pip-hbo-btn {
+  width: 54px !important;
+  height: 54px !important;
+}
+
+/* Twitch: match native 32×32 button size */
+.dualpip-twitch-btn .dualpip-entry-btn {
+  height: 32px;
+  padding: 0 5px;
+}
+
+/* Rumble: exactly match native float-right buttons (content-box, 18px+6px padding) */
+.dualpip-rumble-btn {
+  float: right;
+  height: auto;
+  position: relative;
+}
+.dualpip-rumble-btn .dualpip-entry-btn {
+  box-sizing: content-box;
+  height: 18px;
+  min-height: 18px;
+  padding: 6px 9px;
+  position: relative;
+}
+.dualpip-rumble-btn .dualpip-entry-btn-icon {
+  width: 18px;
+  height: 18px;
+}
+.dualpip-rumble-btn .dualpip-entry-btn-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Naver pzp player: hide button when controls are hidden */
+.pzp-pc .dualpip-entry-btn-container {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.pzp-pc.pzp-pc--controls .dualpip-entry-btn-container {
+  opacity: 1;
+}
+
+/* TikTok overlay: sync button visibility with native controls */
+[class*='DivMediaCardOverlay'] .dualpip-entry-btn-container:not(.dualpip-per-video-btn) {
+  opacity: 0 !important;
+  transition: opacity 0.15s !important;
+  pointer-events: none !important;
+}
+[class*='DivMediaCardOverlay']:hover .dualpip-entry-btn-container:not(.dualpip-per-video-btn) {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 /* Per-video corner button */
@@ -770,7 +869,7 @@ color:var(--cyan);
 .dualpip-per-video-menu-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
-</style><style type="text/css">.transform-component-module_wrapper__SPB86 {
+</style><link id="USE_CHAT_GPT_AI_CONTENT_CSS_LINK_TAG" rel="stylesheet" href="chrome-extension://mhnlakgilnojmhinhkckjpncpbhabphi/content.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style type="text/css">.transform-component-module_wrapper__SPB86 {
   position: relative;
   width: -moz-fit-content;
   width: fit-content;
@@ -800,7 +899,7 @@ color:var(--cyan);
 .transform-component-module_content__FBWxo img {
   pointer-events: none;
 }
-</style><link id="USE_CHAT_GPT_AI_CONTENT_CSS_LINK_TAG" rel="stylesheet" href="chrome-extension://mhnlakgilnojmhinhkckjpncpbhabphi/content.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}.image-viewer-image{pointer-events:none!important;}</style></head>
+</style><style>#authBtn,#saveCardStateBtn,#savePortfolioBtn,#loadPortfolioBtn,.admin-auth-btn,#port-unrg-panel,#unregistered-panel,.card-del,.card-edit,.card-add,.card-multi-upload,.section-admin-controls,.admin-mini-btn,.card-select-mark,.pup-upload-area{display:none!important;}.image-viewer-image{pointer-events:none!important;}</style></head>
 <body><script id="portfolio-data" type="application/json">{
   "profile": {
     "name": "BOWONE",
@@ -821,7 +920,7 @@ color:var(--cyan);
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-08-28T17:32:27.674Z"
+    "updatedAt": "2026-08-30T09:57:24.703Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -1735,6 +1834,22 @@ color:var(--cyan);
       }
     ],
     "illust-rough": [
+      {
+        "title": "젠 러프퀄",
+        "desc": "",
+        "src": "./illustration/젠-러프퀄.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/젠-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/젠-러프퀄.webp"
+      },
+      {
+        "title": "한량 팬아트",
+        "desc": "",
+        "src": "./illustration/한량-팬아트.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/한량-팬아트.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/한량-팬아트.webp"
+      },
       {
         "title": "하누 러프퀄2",
         "desc": "",
@@ -3094,7 +3209,7 @@ color:var(--cyan);
 </ul>
 </div>
 
-<div class="about-grid fade-in visible" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
+<div class="about-grid fade-in" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,420px));gap:20px;justify-content:center;">
 
 <div class="about-card" style="width:420px;">
 <h4>작업</h4>
@@ -3313,7 +3428,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">LD 썸네일<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="thumbnail-ld">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="thumbnail-ld">카드 추가</button></span></div>
-        <div class="grid-3 fade-in visible portfolio-scroll-9" id="thumbnail-ld" style="max-height: 708px;" data-scroll-focus-until="1787938341743">
+        <div class="grid-3 fade-in visible" id="thumbnail-ld" style="">
           
         <div class="card-add" onclick="openAddModal('thumbnail-ld','LD 썸네일',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3366,7 +3481,7 @@ color:var(--cyan);
             </section>
             <section class="style-pane active" data-style-grid="illust-semi-painted">
               <button type="button" class="style-pane-tab" onclick="activateStylePane('illust-semi-painted')"><span>반무테</span><small>열기</small></button>
-              <div class="grid-3 fade-in style-pane-grid" id="illust-semi-painted">
+              <div class="grid-3 fade-in style-pane-grid visible" id="illust-semi-painted" data-scroll-focus-until="1788083788901">
                 
               <div class="card-add" onclick="openAddModal('illust-semi-painted','반무테',this)" style="">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3377,7 +3492,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">커버일러스트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-cover">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-cover">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-cover">
+        <div class="grid-3 fade-in visible portfolio-scroll-9" id="illust-cover" style="max-height: 708px;" data-scroll-focus-until="1788083808691">
           
         <div class="card-add" onclick="openAddModal('illust-cover','커버일러스트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3385,7 +3500,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">러프퀄<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-rough">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-rough">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-rough">
+        <div class="grid-3 fade-in visible portfolio-scroll-9" id="illust-rough" style="max-height: 708px;" data-scroll-focus-until="1788083775011">
           
         <div class="card-add" onclick="openAddModal('illust-rough','러프퀄',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -3393,7 +3508,7 @@ color:var(--cyan);
         <div class="portfolio-section-title">컨셉아트<button class="section-toggle-btn">닫기</button><span class="section-admin-controls">
       <button type="button" class="admin-mini-btn upload" data-act="batch" data-grid="illust-conceptart">여러 파일 업로드</button>
       <button type="button" class="admin-mini-btn" data-act="add" data-grid="illust-conceptart">카드 추가</button></span></div>
-        <div class="grid-3 fade-in" id="illust-conceptart">
+        <div class="grid-3 fade-in visible portfolio-scroll-9" id="illust-conceptart" style="max-height: 708px;">
           
         <div class="card-add" onclick="openAddModal('illust-conceptart','컨셉아트',this)" style="">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>추가
@@ -5020,27 +5135,29 @@ color:var(--cyan);
 
 <!-- ── 미등록 카드 패널 (관리자 전용) ── -->
 
-<div id="pup-upload-progress" aria-live="polite"></div>
+<div id="pup-upload-progress" aria-live="polite" class="" style="left: 1301.5px; width: 320px; top: 375.391px;"></div>
 </div><!-- /page-wrap -->
 
 <!-- MODALS -->
-<input type="file" id="batchUploadInput" multiple="" accept="image/*,.gif,video/mp4,video/webm,video/quicktime" style="display:none">
+<input type="file" id="batchUploadInput" multiple="" accept="image/*,.gif,video/mp4,video/webm,video/quicktime" style="display:none" data-grid="illust-rough">
 <div class="modal-backdrop" id="addModal" onclick="closeOnBg(event,'addModal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('addModal')">×</button>
-    <h3 id="addModalTitle">작업물 추가</h3>
-    <div class="type-tabs">
+    <h3 id="addModalTitle">러프퀄닫기
+      여러 파일 업로드
+      카드 추가 추가</h3>
+    <div class="type-tabs" style="display: flex;">
       <button class="type-tab active" data-type="image" onclick="selType(this)">🖼 이미지</button>
       <button class="type-tab" data-type="video" onclick="selType(this)">▶ 영상</button>
       <button class="type-tab" data-type="link" onclick="selType(this)">🔗 링크</button>
     </div>
-    <div class="source-file-info" id="sourceFileInfo">
+    <div class="source-file-info" id="sourceFileInfo" style="display: none;">
       <label>원본 파일명</label>
       <div class="source-file-name" id="sourceFileName">-</div>
     </div>
     <div class="form-group"><label>제목</label><input type="text" id="iTitle" placeholder="작업물 이름"></div>
-    <div class="form-group" id="urlGrp"><label id="urlLbl">URL</label><input type="url" id="iUrl" placeholder="https://"></div>
-    <div class="form-group" id="fileGrp" style="display:none"><label id="fileLbl">업로드 파일</label><input type="file" id="iFile" accept="image/*,.gif,video/mp4,video/webm,video/quicktime" style="color:var(--text-dim)"><div class="upload-help" id="uploadHelp">선택한 파일은 현재 패널에 연결된 GitHub 폴더로 업로드됩니다.</div></div>
+    <div class="form-group" id="urlGrp" style="display: none;"><label id="urlLbl">URL</label><input type="url" id="iUrl" placeholder="https://"></div>
+    <div class="form-group" id="fileGrp" style="display: block;"><label id="fileLbl">업로드 파일</label><input type="file" id="iFile" accept="image/*,.gif,video/mp4,video/webm,video/quicktime" style="color:var(--text-dim)"><div class="upload-help" id="uploadHelp">GitHub 폴더: illustration</div></div>
     <div class="form-group"><label>설명 (선택)</label><textarea id="iDesc" rows="2" placeholder="간단한 설명"></textarea></div>
     <button class="btn-primary" id="addSubmitBtn" onclick="addItem()">추가하기</button>
   </div>
