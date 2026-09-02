@@ -18,7 +18,7 @@
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-08-30T10:11:02.933Z"
+    "updatedAt": "2026-09-02T22:44:57.987Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -933,12 +933,36 @@
     ],
     "illust-rough": [
       {
+        "title": "뷰 러프퀄",
+        "desc": "",
+        "src": "./illustration/뷰-러프퀄.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/뷰-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/뷰-러프퀄.webp"
+      },
+      {
         "title": "젠 러프퀄",
         "desc": "",
         "src": "./illustration/젠-러프퀄.jpg",
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/젠-러프퀄.webp",
         "thumbnailSrc": "./illustration/card-thumbs/젠-러프퀄.webp"
+      },
+      {
+        "title": "쥐시끼 러프퀄3",
+        "desc": "",
+        "src": "./illustration/쥐시끼-러프퀄3.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/쥐시끼-러프퀄3.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/쥐시끼-러프퀄3.webp"
+      },
+      {
+        "title": "레디언트 러프퀄2",
+        "desc": "",
+        "src": "./illustration/레디언트-러프퀄2.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/레디언트-러프퀄2.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/레디언트-러프퀄2.webp"
       },
       {
         "title": "한량 팬아트",
@@ -955,6 +979,14 @@
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/하누-러프퀄2.webp",
         "thumbnailSrc": "./illustration/card-thumbs/하누-러프퀄2.webp"
+      },
+      {
+        "title": "신청용 러프퀄",
+        "desc": "",
+        "src": "./illustration/신청용-러프퀄.png",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/신청용-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/신청용-러프퀄.webp"
       },
       {
         "title": "하누 러프퀄1",
@@ -987,6 +1019,14 @@
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/265.webp",
         "thumbnailSrc": "./illustration/card-thumbs/265.webp"
+      },
+      {
+        "title": "띠용 러프퀄",
+        "desc": "",
+        "src": "./illustration/띠용-러프퀄.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/띠용-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/띠용-러프퀄.webp"
       },
       {
         "title": "深海 20241117204917",
