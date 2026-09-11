@@ -18,7 +18,7 @@
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-09-11T06:42:32.882Z"
+    "updatedAt": "2026-09-11T06:49:21.360Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -625,12 +625,12 @@
         "thumbnailSrc": "./illustration/card-thumbs/1(1).webp"
       },
       {
-        "title": "2026.02(1)",
+        "title": "2026.02(3)",
         "desc": "",
-        "src": "./illustration/2026.02(1).jpg",
+        "src": "./illustration/2026.02(3).jpg",
         "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026.02(1).webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026.02(1).webp"
+        "thumbnailPath": "illustration/card-thumbs/2026.02(3).webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026.02(3).webp"
       },
       {
         "title": "208",
@@ -1141,20 +1141,20 @@
         "thumbnailSrc": "./illustration/card-thumbs/260.webp"
       },
       {
-        "title": "2026.02(2)",
+        "title": "2026.02(3)",
         "desc": "",
-        "src": "./illustration/2026.02(2).png",
+        "src": "./illustration/2026.02(3).png",
         "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026.02(2).webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026.02(2).webp"
+        "thumbnailPath": "illustration/card-thumbs/2026.02(3).webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026.02(3).webp"
       },
       {
-        "title": "2026.02(2)",
+        "title": "2026.02(4)",
         "desc": "",
-        "src": "./illustration/2026.02(2).jpg",
+        "src": "./illustration/2026.02(4).png",
         "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026.02(2).webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026.02(2).webp"
+        "thumbnailPath": "illustration/card-thumbs/2026.02(4).webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026.02(4).webp"
       },
       {
         "title": "강쏘쏘님 (1)",
