@@ -10,15 +10,15 @@
     "profileImgUrl": "./opimage/1782689883234-무제22_20241013202118.png",
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
     "profileCrop": {
-      "w": 0.2879353233830846,
-      "y": 0,
+      "x": 0.4975124378109453,
       "h": 0.5121681415929203,
-      "x": 0.4975124378109453
+      "w": 0.2879353233830846,
+      "y": 0
     },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-09-11T06:49:21.360Z"
+    "updatedAt": "2026-09-11T06:54:49.631Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -625,12 +625,12 @@
         "thumbnailSrc": "./illustration/card-thumbs/1(1).webp"
       },
       {
-        "title": "2026.02(3)",
+        "title": "2026 02 28 1",
         "desc": "",
-        "src": "./illustration/2026.02(3).jpg",
+        "src": "./illustration/2026_02_28-1.jpg",
         "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026.02(3).webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026.02(3).webp"
+        "thumbnailPath": "illustration/card-thumbs/2026_02_28-1.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026_02_28-1.webp"
       },
       {
         "title": "208",
@@ -1141,20 +1141,12 @@
         "thumbnailSrc": "./illustration/card-thumbs/260.webp"
       },
       {
-        "title": "2026.02(3)",
+        "title": "2026 02 26 5",
         "desc": "",
-        "src": "./illustration/2026.02(3).png",
+        "src": "./illustration/2026_02_26-5.png",
         "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026.02(3).webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026.02(3).webp"
-      },
-      {
-        "title": "2026.02(4)",
-        "desc": "",
-        "src": "./illustration/2026.02(4).png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026.02(4).webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026.02(4).webp"
+        "thumbnailPath": "illustration/card-thumbs/2026_02_26-5.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026_02_26-5.webp"
       },
       {
         "title": "강쏘쏘님 (1)",
@@ -1173,12 +1165,20 @@
         "thumbnailSrc": "./illustration/card-thumbs/무제22_20241013202118.webp"
       },
       {
-        "title": "2026.02(1)",
+        "title": "2026 02 26 3",
         "desc": "",
-        "src": "./illustration/2026.02(1).png",
+        "src": "./illustration/2026_02_26-3.png",
         "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026.02(1).webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026.02(1).webp"
+        "thumbnailPath": "illustration/card-thumbs/2026_02_26-3.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026_02_26-3.webp"
+      },
+      {
+        "title": "2026 02 28 3",
+        "desc": "",
+        "src": "./illustration/2026_02_28-3.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/2026_02_28-3.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026_02_28-3.webp"
       },
       {
         "title": "146",
