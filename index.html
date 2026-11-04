@@ -298,6 +298,21 @@ border-radius:0;
 .calc-order-del{font-size:14px;color:var(--text-off);cursor:pointer;padding:0 2px;}
 .calc-order-del:hover{color:#e74c3c}
 .calc-order-items{font-size:10px;color:var(--text-off);line-height:1.6;}
+.calc-order-summary{display:flex;flex-direction:column;gap:3px;}
+.calc-order-summary-line{display:flex;flex-wrap:wrap;gap:5px;align-items:baseline;line-height:1.65;}
+.calc-order-summary-line strong{min-width:55px;color:var(--gold);font-weight:600;}
+.calc-order-summary-line span{flex:1;min-width:0;overflow-wrap:anywhere;color:var(--text-dim);}
+.calc-order-details{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--border2);max-height:280px;overflow-y:auto;font-size:10px;color:var(--text-dim);line-height:1.6;}
+.calc-order-item:hover .calc-order-details,.calc-order-item:focus-within .calc-order-details,.calc-order-item.calc-order-open .calc-order-details{display:block;}
+.calc-order-detail-heading{margin-bottom:7px;color:var(--gold);font-weight:600;}
+.calc-order-detail-row{display:flex;justify-content:space-between;gap:10px;padding:3px 0;}
+.calc-order-detail-row span:first-child{flex:1;overflow-wrap:anywhere;}
+.calc-order-detail-row span:last-child{white-space:nowrap;color:var(--text);}
+.calc-order-detail-total{border-top:1px solid var(--border2);margin-top:6px;padding-top:7px;font-weight:700;}
+.calc-order-detail-toggle,.calc-order-edit-btn{border:0;background:transparent;color:var(--text-off);font-size:10px;cursor:pointer;padding:2px 4px;}
+.calc-order-detail-toggle:hover,.calc-order-edit-btn:hover{color:var(--gold);}
+.calc-order-item.calc-order-editing{border-color:var(--gold);}
+.calc-btn-row .calc-cancel-edit{background:transparent;border:1px solid var(--border2);color:var(--text-dim);}
 .calc-grand-total{display:flex;justify-content:space-between;align-items:center;padding:10px 0 0;border-top:1px solid var(--border2);margin-top:6px;}
 .calc-grand-label{font-size:11px;color:var(--text-dim);}
 .calc-grand-price{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--cyan);}
@@ -5604,6 +5619,126 @@ function resetCalc(key){
   }
   renderCalc(key);
 }
+
+(function(){
+  const _originalRender=renderCalc,_originalAdd=addOrder,_originalRemove=removeOrder,_originalReset=resetCalc;
+  const safe=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+  function snap(key){
+    const box=document.getElementById(`calc-${key}`);if(!box)return null;
+    return {selects:Array.from(box.querySelectorAll('select'),s=>({value:s.value,index:s.selectedIndex})),quantities:Array.from(box.querySelectorAll('.qty-val'),q=>q.textContent),extraAdj:CALCS[key]?.extraAdj||0};
+  }
+  function restore(key,data){
+    const box=document.getElementById(`calc-${key}`);if(!box||!data)return;
+    let sels=box.querySelectorAll('select');
+    if(key==='illust'){
+      if(sels[0]&&data.selects[0])sels[0].value=data.selects[0].value;
+      if(sels[1]&&data.selects[1])sels[1].value=data.selects[1].value;
+      handleIllustTypeChange();
+    }else if(key==='pixel'){
+      const type=data.selects[0]?.value;
+      const top=box.querySelector('.calc-select-group:not([data-calc]) select');
+      if(top&&type){top.value=type;switchPixelType(type);}
+    }
+    sels=box.querySelectorAll('select');
+    (data.selects||[]).forEach((saved,i)=>{
+      const sel=sels[i];if(!sel||!saved)return;
+      sel.value=saved.value;
+      if(sel.value!==saved.value&&sel.options[saved.index])sel.selectedIndex=saved.index;
+    });
+    const qty=box.querySelectorAll('.qty-val');
+    (data.quantities||[]).forEach((q,i)=>{if(qty[i])qty[i].textContent=q;});
+    CALCS[key].extraAdj=Number(data.extraAdj)||0;calcFromDOM(key);
+  }
+  function makeSummary(key,items){
+    if(key!=='illust')return null;
+    const box=document.getElementById('calc-illust');
+    const gs=box?.querySelectorAll('[data-calc="illust"]')||[];
+    const picked=i=>{const s=gs[i]?.querySelector('select');return s&&s.selectedIndex>0?(s.options[s.selectedIndex]?.text||'').trim():'';};
+    const type=picked(0),purpose=type==='일러스트'?picked(1):'';
+    const required=[type,purpose,picked(2),picked(3)].filter(Boolean).join(' · ')||'선택 없음';
+    const people=Math.max(0,parseInt(gs[5]?.querySelector('.qty-val')?.textContent,10)||0);
+    const rate=items.find(it=>it.groupIndex===5)?.rateLabel||(people>0&&type==='컨셉아트'?'별도 협의':'해당 없음');
+    return [{label:'필수옵션',value:required},{label:'배경',value:picked(4)||'없음'},{label:'추가 인원',value:`${people}명`},{label:'적용 요율',value:rate}];
+  }
+  renderCalc=function(key){
+    _originalRender(key);
+    const c=CALCS[key],box=document.getElementById(`calc-${key}`);if(!c||!box)return;
+    const editing=Number.isInteger(c.editOrderIndex)&&c.editOrderIndex>=0;
+    const cards=box.querySelectorAll('.calc-orders .calc-order-item');
+    c.orders.forEach((ord,i)=>{
+      const card=cards[i];if(!card)return;
+      const body=card.querySelector('.calc-order-items');
+      if(body)body.innerHTML=ord.summary?`<div class="calc-order-summary">${ord.summary.map(x=>`<div class="calc-order-summary-line"><strong>${safe(x.label)}</strong><span>${safe(x.value)}</span></div>`).join('')}</div>`:safe(ord.desc);
+      const header=card.querySelector('.calc-order-header'),close=card.querySelector('.calc-order-del');
+      if(ord.snapshot&&header){
+        const b=document.createElement('button');b.type='button';b.className='calc-order-edit-btn';b.textContent='수정';
+        b.onclick=()=>window.editCalcOrder(key,i);header.insertBefore(b,close);
+      }
+      if(ord.detailItems){
+        const b=document.createElement('button');b.type='button';b.className='calc-order-detail-toggle';b.textContent='상세';
+        b.onclick=()=>card.classList.toggle('calc-order-open');if(header)header.insertBefore(b,close);
+        const details=document.createElement('div');details.className='calc-order-details';
+        const items=ord.detailItems.map(it=>`<div class="calc-order-detail-row"><span>${safe(it.name)}${it.qty>1?` ×${it.qty}`:''}${it.rateLabel?` [${safe(it.rateLabel)}]`:''}</span><span>${Number(it.amount).toLocaleString()}원</span></div>`).join('');
+        details.innerHTML=`<div class="calc-order-detail-heading">전체 선택 내역</div>${items}${ord.extraAdj?`<div class="calc-order-detail-row"><span>직접 입력</span><span>${Number(ord.extraAdj).toLocaleString()}원</span></div>`:''}<div class="calc-order-detail-row calc-order-detail-total"><span>주문 금액</span><span>${Number(ord.total).toLocaleString()}원</span></div>`;
+        card.appendChild(details);
+      }
+      if(editing&&c.editOrderIndex===i)card.classList.add('calc-order-editing');
+    });
+    const row=box.querySelector('.calc-btn-row');
+    if(row){
+      const buttons=row.querySelectorAll('.calc-action-btn.add-order');
+      if(buttons[0])buttons[0].textContent=editing?'수정 저장':'+ 주문 추가';
+      if(buttons[1])buttons[1].textContent=editing?'수정 저장 · 옵션 유지':'옵션 유지 추가';
+      let cancel=row.querySelector('.calc-cancel-edit');
+      if(editing&&!cancel){cancel=document.createElement('button');cancel.type='button';cancel.className='calc-action-btn calc-cancel-edit';cancel.textContent='수정 취소';cancel.onclick=()=>window.cancelCalcOrderEdit(key);row.appendChild(cancel);}
+      if(!editing&&cancel)cancel.remove();
+    }
+    if(editing){
+      const grand=box.querySelector('.calc-grand-price'),label=box.querySelector('.calc-grand-label');
+      const sub=c.items.reduce((v,it)=>v+it.price*it.qty,0)+c.extraAdj;
+      const sum=c.orders.reduce((v,o,i)=>v+(i===c.editOrderIndex?0:o.total),0)+sub;
+      if(grand)grand.textContent=sum.toLocaleString()+'원';
+      if(label)label.textContent=`전체 합계 (${c.orders.length}건)`;
+    }
+  };
+  addOrder=function(key,keepOptions){
+    initCalc(key);const c=CALCS[key],before=c.orders.length;
+    const state=snap(key);
+    const details=c.items.map(it=>({name:it.name,qty:it.qty,amount:it.price*it.qty,rateLabel:it.rateLabel||''}));
+    const summary=makeSummary(key,c.items),extra=c.extraAdj;
+    const editing=Number.isInteger(c.editOrderIndex)&&c.editOrderIndex>=0?c.editOrderIndex:-1;
+    _originalAdd(key,keepOptions);
+    if(c.orders.length<=before)return;
+    const order=c.orders[c.orders.length-1];
+    order.snapshot=state;order.detailItems=details;order.extraAdj=extra;
+    if(summary)order.summary=summary;
+    if(editing>=0&&editing<before){c.orders[editing]=order;c.orders.pop();}
+    c.editOrderIndex=-1;c.preEditState=null;
+    renderCalc(key);
+  };
+  window.editCalcOrder=function(key,index){
+    initCalc(key);const c=CALCS[key],ord=c.orders[index];
+    if(!ord?.snapshot){alert('이 주문은 수정 데이터가 없습니다.');return;}
+    if(!Number.isInteger(c.editOrderIndex)||c.editOrderIndex<0)c.preEditState=snap(key);
+    c.editOrderIndex=index;restore(key,ord.snapshot);
+    document.getElementById(`calc-${key}`)?.scrollIntoView?.({behavior:'smooth',block:'start'});
+  };
+  window.cancelCalcOrderEdit=function(key){
+    initCalc(key);const c=CALCS[key],old=c.preEditState;
+    c.editOrderIndex=-1;c.preEditState=null;
+    if(old)restore(key,old);else renderCalc(key);
+  };
+  removeOrder=function(key,index){
+    const c=CALCS[key];if(c){
+      if(c.editOrderIndex===index){c.editOrderIndex=-1;c.preEditState=null;}
+      else if(c.editOrderIndex>index)c.editOrderIndex--;}
+    _originalRemove(key,index);
+  };
+  resetCalc=function(key){
+    const c=CALCS[key];if(c){c.editOrderIndex=-1;c.preEditState=null;}
+    _originalReset(key);
+  };
+})();
 
 (function(){
 'use strict';
