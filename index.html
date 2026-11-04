@@ -4021,16 +4021,21 @@ color:var(--cyan);
 <div class="price-main">
 <div class="sec-label-lg"><span class="sec-num">01</span><h2 class="sec-title">썸네일<span class="en">Thumbnail</span></h2></div>
     <div class="pixel-grid">
-      <div class="price-card"><div class="price-card-label">기본형</div><div class="price-card-name">MD · LD 썸네일</div><div class="price-card-desc">캐릭터 2명 포함<br>레이어 분할 추가금 없음</div><div class="price-card-num">30,000<span class="unit">원</span></div></div>
+      <div class="price-card"><div class="price-card-label">기본형</div><div class="price-card-name">MD · LD 썸네일</div><div class="price-card-desc">기본 최대 3명 포함<br>사전 요청 시 레이어 분할 추가금 없음</div><div class="price-card-num">30,000<span class="unit">원</span></div></div>
       <div class="price-card"><div class="price-card-label">합성형</div><div class="price-card-name">누끼 · 배경 합성 썸네일</div><div class="price-card-desc">합성 + 텍스트 디자인<br>배경·소품 추가 가능</div><div class="price-card-num">15,000<span class="unit">원~</span></div></div>
       <div class="price-card"><div class="price-card-label">소스형</div><div class="price-card-name">유튜브 투명 소스 (PNG)</div><div class="price-card-desc">영상 편집 · 썸네일용<br>SD / LD 선택</div><div class="price-card-from">SD 기준</div><div class="price-card-num">10,000<span class="unit">원</span></div></div>
     </div>
     <div class="option-block">
       <div class="option-block-title">추가 옵션</div>
       <div class="option-row"><div class="opt-name">동일 캐릭터 추가 배치 (개당)</div><div class="opt-price add">+2,000</div></div>
-      <div class="option-row"><div class="opt-name">새로운 캐릭터 추가 (개당)</div><div class="opt-price add">+5,000</div></div>
+      <div class="option-row"><div class="opt-name">기본 3명 초과 새 캐릭터 추가 (개당)</div><div class="opt-price add">+5,000</div></div>
       <div class="option-row"><div class="opt-name">유튜브 소스 LD</div><div class="opt-price">20,000</div></div>
       <div class="option-row"><div class="opt-name">합성 썸네일 — 추가 배경 및 소품</div><div class="opt-price add">+5,000</div></div>
+    </div>
+    <div class="option-block">
+      <div class="option-block-title">레이어 분할 요청</div>
+      <div class="option-row"><div class="opt-name">작업 전 미리 요청한 레이어 분할<div class="opt-sub">캐릭터별 레이어 분할 · 추가금 없음</div></div><div class="opt-price free">₩0</div></div>
+      <div class="option-row"><div class="opt-name">작업 완료 후 추가 분할 요청<div class="opt-sub">사전 고지 없이 완성 후 요청하는 경우</div></div><div class="opt-price add">기본 +5,000 · 캐릭터당 +5,000</div></div>
     </div>
     <!-- 계산기 -->
 
@@ -4072,7 +4077,7 @@ color:var(--cyan);
           </div>
         </div>
         <div class="calc-select-group" data-calc="thumb">
-          <label>새 캐릭터 추가</label>
+          <label>새 캐릭터 추가 (기본 3명 초과)</label>
           <div class="calc-select-row">
             <select onchange="handleOptionChange(this,'thumb')">
               <option value="0">없음</option>
@@ -4102,6 +4107,21 @@ color:var(--cyan);
             </div>
           </div>
         </div>
+        <div class="calc-select-group" data-calc="thumb" data-thumb-late-split="true">
+          <label>레이어 분할 요청 시점</label>
+          <div class="calc-select-row">
+            <select onchange="handleOptionChange(this,'thumb')">
+              <option value="0">작업 전 요청 / 요청 없음 (추가금 없음)</option>
+              <option value="5000">완료 후 요청 (기본 5,000 + 캐릭터마다 5,000)</option>
+            </select>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty('thumb',4,-1)">−</button>
+              <div class="qty-val">0</div>
+              <button class="qty-btn" onclick="changeQty('thumb',4,+1)">+</button>
+            </div>
+          </div>
+          <div class="opt-sub" style="margin:5px 0 0;line-height:1.6">완료 후 요청할 때만 분할 대상 캐릭터 수를 설정합니다. 추가금 = 기본 5,000원 + 캐릭터당 5,000원.</div>
+        </div>
       <div class="calc-divider"></div>
       <div class="calc-extra">
         <input type="number" placeholder="직접 금액 입력 (+/-)" id="extra-thumb">
@@ -4130,7 +4150,9 @@ color:var(--cyan);
     <div class="notice">
       <strong>스타일 옵션</strong> — 심플(+0) · 얇은선(+20,000) · 반무테(+35,000) 중 택1<br>
       <strong>상업용</strong>이란 굿즈 제작·판매, 영리 목적 사용 등을 포함합니다. 반드시 사전 고지 필수.<br>
-      <strong>인원 추가 (누진 구간별 적용)</strong> — 추가 1~5명은 각 60%, 6~10명은 각 45%, 11~20명은 각 30%, 21명째부터는 각 25%를 적용합니다. 해당 구간에 속하는 추가 인원만 그 구간 요율로 계산하며, 캐릭터 기본금(흉상·반신·전신)만 기준으로 합니다. 스타일·배경·의상·직접 입력 금액은 제외하고 컨셉아트는 별도 협의합니다.
+      <strong>인원 추가 (누진 구간별 적용)</strong> — 추가 1~5명은 각 60%, 6~10명은 각 45%, 11~20명은 각 30%, 21명째부터는 각 25%를 적용합니다. 해당 구간에 속하는 추가 인원만 그 구간 요율로 계산하며, 캐릭터 기본금(흉상·반신·전신)만 기준으로 합니다. 스타일·배경·의상·직접 입력 금액은 제외하고 컨셉아트는 별도 협의합니다.<br>
+      <strong>레이어 분할</strong> — 캐릭터별 분할은 기본으로 포함됩니다. 추가 부위별 분할은 별도 문의가 필요합니다.<br>
+      <strong>분할 없이 작업</strong> — 캐릭터 작업비(기준금·스타일·추가 인원비)에 30% 할인. 배경·의상·직접 입력 금액은 할인 대상이 아닙니다. 컨셉아트는 별도 협의합니다.
     </div>
     <div class="pixel-grid">
       <div class="option-block"><div class="option-block-title">비상업용 <span style="color:var(--green)">Non-Commercial</span></div>
@@ -4275,6 +4297,18 @@ color:var(--cyan);
         <button class="qty-btn" onclick="changeQty('illust',6,+1)">+</button>
       </div>
     </div>
+  </div>
+
+  <div class="calc-select-group" data-calc="illust" data-illust-layer-split="true">
+    <label>레이어 분할</label>
+    <div class="calc-select-row">
+      <select id="illustLayerSplitSelect" onchange="handleOptionChange(this,'illust')">
+        <option value="0">캐릭터별 분할 (기본 포함 · 추가금 없음)</option>
+        <option value="no_split">분할 없이 작업 (캐릭터 작업비 30% 할인)</option>
+        <option value="consult">추가 부위별 분할 (별도 문의)</option>
+      </select>
+    </div>
+    <div class="opt-sub" style="margin:5px 0 0;line-height:1.6">캐릭터별 분할은 기본 제공. 추가 부위별 분할은 별도 견적 · 분할 없이 작업하면 캐릭터 작업비 30% 할인 (배경·의상 제외).</div>
   </div>
 
   <div class="calc-divider"></div>
@@ -5349,6 +5383,17 @@ function calcFromDOM(key){
       c.items.push({name:`${label}: ${optText}`,price:val,qty,groupIndex});
     }
   });
+  if(key==='thumb'){
+    const late=box.querySelector('[data-thumb-late-split="true"]');
+    const idx=Array.from(groups).indexOf(late);
+    const count=Math.max(0,parseInt(late?.querySelector('.qty-val')?.textContent,10)||0);
+    const chosen=late?.querySelector('select')?.value==='5000';
+    c.items=c.items.filter(it=>it.groupIndex!==idx || idx<0);
+    if(chosen&&count>0&&idx>=0){
+      const charge=5000+count*5000;
+      c.items.push({name:`완료 후 레이어 분할 (${count}명 · 기본 5,000원 + 인당 5,000원)`,price:charge,qty:1,groupIndex:idx});
+    }
+  }
   if(key==='illust'){
     const peopleGroup=groups[5];
     const peopleCount=Math.max(0,parseInt(peopleGroup?.querySelector('.qty-val')?.textContent,10)||0);
@@ -5381,6 +5426,21 @@ function calcFromDOM(key){
           rateLabel:breakdown.join(' + '),
           price:peoplePrice,qty:1,groupIndex:5
         });
+      }
+    }
+  }
+  if(key==='illust'){
+    const split=groups[7]?.querySelector('select')?.value;
+    const illustration=groups[0]?.querySelector('select')?.value==='illustration';
+    if(split==='consult'){
+      c.items.push({name:'레이어 분할: 추가 부위별 분할 (별도 문의)',price:0,qty:1,groupIndex:7});
+    }else if(split==='no_split'&&illustration){
+      const basePrice=Math.max(0,Number(groups[2]?.querySelector('select')?.value)||0);
+      if(basePrice>0){
+        // 배경·의상·직접 입력 금액을 제외한 캐릭터 기본금/스타일/인원 추가금만 할인
+        const characterWork=c.items.filter(it=>[2,3,5].includes(it.groupIndex)).reduce((sum,it)=>sum+it.price*it.qty,0);
+        const discount=Math.round(characterWork*0.30);
+        if(discount>0)c.items.push({name:'레이어 분할: 분할 없이 작업 (캐릭터 작업비 30% 할인)',price:-discount,qty:1,groupIndex:7});
       }
     }
   }
@@ -5475,6 +5535,12 @@ function handleIllustTypeChange(){
     `;
   }
 
+  const layerSplit=document.getElementById('illustLayerSplitSelect');
+  if(layerSplit){
+    const noSplit=layerSplit.querySelector('option[value="no_split"]');
+    if(noSplit)noSplit.disabled=type1!=='illustration';
+    if(type1!=='illustration'&&layerSplit.value==='no_split')layerSplit.value='0';
+  }
   calcFromDOM('illust');
 }
 function renderCalc(key){
@@ -5722,7 +5788,9 @@ function resetCalc(key){
     const type=picked(0),purpose=type==='일러스트'?picked(1):'';
     const required=[type,purpose,picked(2),picked(3)].filter(Boolean).join(' · ')||'선택 없음';
     const people=Math.max(0,parseInt(gs[5]?.querySelector('.qty-val')?.textContent,10)||0);
-    const rate=items.find(it=>it.groupIndex===5)?.rateLabel||(people>0&&type==='컨셉아트'?'별도 협의':'해당 없음');
+    const peopleRate=items.find(it=>it.groupIndex===5)?.rateLabel||(people>0&&type==='컨셉아트'?'별도 협의':'');
+    const splitDiscount=items.some(it=>it.groupIndex===7&&it.price<0);
+    const rate=[peopleRate,splitDiscount?'분할 없음 30% 할인':''].filter(Boolean).join(' · ')||'해당 없음';
     return [{label:'필수옵션',value:required},{label:'배경',value:picked(4)||'없음'},{label:'총원',value:`${people+1}명`},{label:'적용 요율',value:rate}];
   }
   renderCalc=function(key){
