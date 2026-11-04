@@ -303,8 +303,12 @@ border-radius:0;
 .calc-order-summary-line strong{min-width:55px;color:var(--gold);font-weight:600;}
 .calc-order-summary-line span{flex:1;min-width:0;overflow-wrap:anywhere;color:var(--text-dim);}
 .calc-order-details{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--border2);max-height:280px;overflow-y:auto;font-size:10px;color:var(--text-dim);line-height:1.6;}
-.calc-order-item:hover .calc-order-details,.calc-order-item:focus-within .calc-order-details,.calc-order-item.calc-order-open .calc-order-details{display:block;}
-.calc-order-detail-heading{margin-bottom:7px;color:var(--gold);font-weight:600;}
+/* 독립형 주문 상세 툴팁: 레이아웃/스크롤을 밀지 않는다 */
+.bw-order-floating-detail{display:none;position:fixed;left:0;top:0;width:min(380px,calc(100vw - 24px));max-height:min(410px,calc(100vh - 24px));overflow-y:auto;box-sizing:border-box;z-index:2147483000;padding:12px 14px 12px;background:#171720;color:var(--text,#e8e4de);border:1px solid rgba(200,185,154,.65);border-radius:8px;box-shadow:0 12px 36px rgba(0,0,0,.55);pointer-events:none;font-size:11px;line-height:1.5;}
+.bw-order-floating-detail.is-pinned{pointer-events:auto;}
+.bw-order-floating-detail .bw-order-popup-close{display:none;position:absolute;right:7px;top:5px;padding:0 5px;border:0;background:transparent;color:var(--text-off,#999);font-size:18px;cursor:pointer;}
+.bw-order-floating-detail.is-pinned .bw-order-popup-close{display:block;}
+.bw-order-floating-detail .calc-order-detail-heading{margin-bottom:7px;color:var(--gold);font-weight:600;}
 .calc-order-detail-row{display:flex;justify-content:space-between;gap:10px;padding:3px 0;}
 .calc-order-detail-row span:first-child{flex:1;overflow-wrap:anywhere;}
 .calc-order-detail-row span:last-child{white-space:nowrap;color:var(--text);}
@@ -5622,6 +5626,67 @@ function resetCalc(key){
 
 (function(){
   const _originalRender=renderCalc,_originalAdd=addOrder,_originalRemove=removeOrder,_originalReset=resetCalc;
+  // 화면의 다른 레이어에 고정 배치하는 주문 상세 팝업 (카드 높이를 변경하지 않음)
+  let orderPopupOwner=null,orderPopupPinned=false;
+  function getOrderPopup(){
+    let popup=document.getElementById('bw-order-floating-detail');
+    if(!popup){
+      popup=document.createElement('div');
+      popup.id='bw-order-floating-detail';
+      popup.className='bw-order-floating-detail';
+      popup.setAttribute('role','dialog');
+      popup.setAttribute('aria-label','주문 상세');
+      document.body.appendChild(popup);
+    }
+    return popup;
+  }
+  function hideOrderPopup(force=false){
+    if(orderPopupPinned&&!force)return;
+    const popup=document.getElementById('bw-order-floating-detail');
+    if(popup){popup.style.display='none';popup.classList.remove('is-pinned');}
+    orderPopupOwner=null;orderPopupPinned=false;
+  }
+  function placeOrderPopup(event){
+    const popup=document.getElementById('bw-order-floating-detail');
+    if(!popup||popup.style.display==='none')return;
+    const margin=12,offset=18;
+    const width=popup.offsetWidth,height=popup.offsetHeight;
+    const vw=document.documentElement.clientWidth||window.innerWidth;
+    const vh=document.documentElement.clientHeight||window.innerHeight;
+    const x=Number.isFinite(event.clientX)?event.clientX:vw/2;
+    const y=Number.isFinite(event.clientY)?event.clientY:vh/2;
+    let left=x+offset,top=y+offset;
+    if(left+width>vw-margin)left=x-width-offset;
+    if(top+height>vh-margin)top=y-height-offset;
+    popup.style.left=Math.max(margin,Math.min(left,Math.max(margin,vw-width-margin)))+'px';
+    popup.style.top=Math.max(margin,Math.min(top,Math.max(margin,vh-height-margin)))+'px';
+  }
+  function showOrderPopup(event,card,html,pinned=false){
+    if(orderPopupPinned&&!pinned)return;
+    const popup=getOrderPopup();
+    popup.innerHTML='<button type="button" class="bw-order-popup-close" aria-label="상세 닫기">×</button>'+html;
+    popup.querySelector('.bw-order-popup-close').onclick=()=>hideOrderPopup(true);
+    popup.classList.toggle('is-pinned',pinned);
+    popup.style.display='block';
+    orderPopupOwner=card;orderPopupPinned=pinned;
+    placeOrderPopup(event);
+  }
+  function toggleOrderPopup(event,card,html){
+    if(orderPopupPinned&&orderPopupOwner===card){hideOrderPopup(true);return;}
+    const rect=event.currentTarget?.getBoundingClientRect?.();
+    const position={clientX:event.clientX||rect?.right||window.innerWidth/2,clientY:event.clientY||rect?.bottom||window.innerHeight/2};
+    showOrderPopup(position,card,html,true);
+  }
+  document.addEventListener('pointerdown',event=>{
+    if(!orderPopupPinned)return;
+    if(getOrderPopup().contains(event.target)||event.target.closest?.('.calc-order-detail-toggle'))return;
+    hideOrderPopup(true);
+  });
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')hideOrderPopup(true);});
+  window.addEventListener('scroll',event=>{
+    if(event.target!==document.getElementById('bw-order-floating-detail'))hideOrderPopup(true);
+  },true);
+  window.addEventListener('resize',()=>hideOrderPopup(true));
   const safe=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
   function snap(key){
     const box=document.getElementById(`calc-${key}`);if(!box)return null;
@@ -5658,9 +5723,10 @@ function resetCalc(key){
     const required=[type,purpose,picked(2),picked(3)].filter(Boolean).join(' · ')||'선택 없음';
     const people=Math.max(0,parseInt(gs[5]?.querySelector('.qty-val')?.textContent,10)||0);
     const rate=items.find(it=>it.groupIndex===5)?.rateLabel||(people>0&&type==='컨셉아트'?'별도 협의':'해당 없음');
-    return [{label:'필수옵션',value:required},{label:'배경',value:picked(4)||'없음'},{label:'추가 인원',value:`${people}명`},{label:'적용 요율',value:rate}];
+    return [{label:'필수옵션',value:required},{label:'배경',value:picked(4)||'없음'},{label:'총원',value:`${people+1}명`},{label:'적용 요율',value:rate}];
   }
   renderCalc=function(key){
+    hideOrderPopup(true);
     _originalRender(key);
     const c=CALCS[key],box=document.getElementById(`calc-${key}`);if(!c||!box)return;
     const editing=Number.isInteger(c.editOrderIndex)&&c.editOrderIndex>=0;
@@ -5676,11 +5742,20 @@ function resetCalc(key){
       }
       if(ord.detailItems){
         const b=document.createElement('button');b.type='button';b.className='calc-order-detail-toggle';b.textContent='상세';
-        b.onclick=()=>card.classList.toggle('calc-order-open');if(header)header.insertBefore(b,close);
+        b.onclick=event=>{event.stopPropagation();toggleOrderPopup(event,card,details.innerHTML);};if(header)header.insertBefore(b,close);
         const details=document.createElement('div');details.className='calc-order-details';
         const items=ord.detailItems.map(it=>`<div class="calc-order-detail-row"><span>${safe(it.name)}${it.qty>1?` ×${it.qty}`:''}${it.rateLabel?` [${safe(it.rateLabel)}]`:''}</span><span>${Number(it.amount).toLocaleString()}원</span></div>`).join('');
         details.innerHTML=`<div class="calc-order-detail-heading">전체 선택 내역</div>${items}${ord.extraAdj?`<div class="calc-order-detail-row"><span>직접 입력</span><span>${Number(ord.extraAdj).toLocaleString()}원</span></div>`:''}<div class="calc-order-detail-row calc-order-detail-total"><span>주문 금액</span><span>${Number(ord.total).toLocaleString()}원</span></div>`;
-        card.appendChild(details);
+        // 주문 카드 위에서 포인터를 움직이면 별도 팝업이 마우스 위치를 따라 표시된다.
+        card.addEventListener('pointerenter',event=>{
+          if(event.pointerType==='mouse')showOrderPopup(event,card,details.innerHTML);
+        });
+        card.addEventListener('pointermove',event=>{
+          if(event.pointerType==='mouse'&&!orderPopupPinned&&orderPopupOwner===card)placeOrderPopup(event);
+        });
+        card.addEventListener('pointerleave',()=>{
+          if(!orderPopupPinned&&orderPopupOwner===card)hideOrderPopup(true);
+        });
       }
       if(editing&&c.editOrderIndex===i)card.classList.add('calc-order-editing');
     });
