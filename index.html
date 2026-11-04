@@ -4021,7 +4021,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="thumb">
           <label>기본 유형</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'thumb\')">
+            <select onchange="handleOptionChange(this,'thumb')">
               <option value="0">선택하세요.</option>
               <option value="30000">MD·LD 썸네일</option>
               <option value="15000">합성 썸네일</option>
@@ -4038,7 +4038,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="thumb">
           <label>동일 캐릭터 추가</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'thumb\')">
+            <select onchange="handleOptionChange(this,'thumb')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="2000">1명 (+2,000)</option>
@@ -4055,7 +4055,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="thumb">
           <label>새 캐릭터 추가</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'thumb\')">
+            <select onchange="handleOptionChange(this,'thumb')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="5000">1명 (+5,000)</option>
@@ -4071,7 +4071,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="thumb">
           <label>배경·소품 추가</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'thumb\')">
+            <select onchange="handleOptionChange(this,'thumb')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="5000">추가 (+5,000)</option>
@@ -4318,7 +4318,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="live2d">
           <label>SD 리깅</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'live2d\')">
+            <select onchange="handleOptionChange(this,'live2d')">
               <option value="0">선택하세요.</option>
               <option value="70000">SD 간단 (70,000)</option>
               <option value="120000">SD 디테일 (120,000)</option>
@@ -4333,7 +4333,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="live2d">
           <label>LD 리깅</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'live2d\')">
+            <select onchange="handleOptionChange(this,'live2d')">
               <option value="0">선택하세요.</option>
               <option value="180000">LD 간단 (180,000)</option>
               <option value="300000">LD 디테일 (300,000)</option>
@@ -4348,7 +4348,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="live2d">
           <label>파츠 분리</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'live2d\')">
+            <select onchange="handleOptionChange(this,'live2d')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="10000">간단한 분리 (+10,000)</option>
@@ -4366,7 +4366,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="live2d">
           <label>추가 기능 리깅</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'live2d\')">
+            <select onchange="handleOptionChange(this,'live2d')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="8000">간단 기능 (+8,000)</option>
@@ -4382,7 +4382,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="live2d">
           <label>패키지</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'live2d\')">
+            <select onchange="handleOptionChange(this,'live2d')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="290000">SD 패키지 (290,000)</option>
@@ -4446,12 +4446,12 @@ color:var(--cyan);
       </div>
 	  
 	  <div class="option-block">
-		<div class="option-block-title">픽셀아트 일러스트</div>
+		<div class="option-block-title">게임소스용 픽셀아트</div>
         <div class="option-row"><div class="opt-name">용도 기본금 — 개인작업용</div><div class="opt-price free">₩0</div></div>
         <div class="option-row"><div class="opt-name">용도 기본금 — 출시용</div><div class="opt-price free">3,000</div></div>
         <div class="option-row"><div class="opt-name">소형 (16~32px)<div class="opt-sub">게임소스용 픽셀 캐릭터/간단한 소형 스프라이트 기준</div></div><div class="opt-price">12,000</div></div>
-		<div class="option-row"><div class="opt-name">중형 (16~32px)<div class="opt-sub">게임소스용 픽셀 캐릭터/일반 캐릭터 스프라이트 기준</div></div><div class="opt-price">17,000</div></div>
-		<div class="option-row"><div class="opt-name">대형 (16~32px)<div class="opt-sub">게임소스용 픽셀 캐릭터/대형 캐릭터 또는 보스형 기준</div></div><div class="opt-price">22,000</div></div>
+		<div class="option-row"><div class="opt-name">중형 (33~89px)<div class="opt-sub">게임소스용 픽셀 캐릭터/일반 캐릭터 스프라이트 기준</div></div><div class="opt-price">17,000</div></div>
+		<div class="option-row"><div class="opt-name">대형 (90px+)<div class="opt-sub">게임소스용 픽셀 캐릭터/대형 캐릭터 또는 보스형 기준</div></div><div class="opt-price">22,000</div></div>
 		<div class="option-row"><div class="opt-name">동작 추가 기본금<div class="opt-sub">Run · Attack · Death 등 별도 동작 추가 시</div></div><div class="opt-price add">+10,000</div></div>
 		<div class="option-row"><div class="opt-name">일반 프레임 추가<div class="opt-sub">Run · Attack · Death 등 일반 동작 프레임</div></div><div class="opt-price add">+4,000 / 프레임</div></div>
 		<div class="option-row"><div class="opt-name">Idle 등 단순 움직임<div class="opt-sub">숨쉬기 · 깜빡임 · 단순 루프 움직임</div></div><div class="opt-price add">+1,000 / 프레임</div></div>
@@ -4479,7 +4479,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>용도 기본금</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음 / 개인소장</option>
                 <option value="30000">방송용</option>
               </select>
@@ -4493,7 +4493,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>일반 커서 세트</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="20000">일반 커서 세트 (캐릭터 제외)</option>
               </select>
@@ -4507,7 +4507,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>캐릭터 커서</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="7000">캐릭터 커서 48px — 정지</option>
               </select>
@@ -4521,7 +4521,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>커서 애니메이션</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="8000">캐릭터 커서 — 애니메이션</option>
               </select>
@@ -4538,7 +4538,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>용도 기본금</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음 / 개인소장용</option>
                 <option value="12000">방송용</option>
               </select>
@@ -4552,7 +4552,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>크기</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="7000">소형 (16~32px)</option>
                 <option value="17000">중형 (33~89px)</option>
@@ -4568,7 +4568,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>움짤 프레임</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="3000">소형 +3,000 / 프레임</option>
                 <option value="4000">중형 +4,000 / 프레임</option>
@@ -4584,7 +4584,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>배경 작업</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="35000">배경 작업</option>
               </select>
@@ -4598,7 +4598,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>배경 움짤</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="8000">배경 움짤 1프레임당</option>
               </select>
@@ -4615,11 +4615,11 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>캐릭터 기본 제작</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
-                <option value="12000">소형 캐릭터 기본 제작</option>
-                <option value="17000">중형 캐릭터 기본 제작</option>
-                <option value="22000">대형 캐릭터 기본 제작</option>
+                <option value="12000">소형 캐릭터 기본 제작 (16~32px)</option>
+                <option value="17000">중형 캐릭터 기본 제작 (33~89px)</option>
+                <option value="22000">대형 캐릭터 기본 제작 (90px+)</option>
               </select>
               <div class="qty-ctrl">
                 <button class="qty-btn" onclick="changeQty('pixel',9,-1)">−</button>
@@ -4631,7 +4631,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>동작 추가 기본금</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="10000">Run / Attack / Death 등 일반 동작</option>
               </select>
@@ -4645,7 +4645,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>일반 프레임 추가</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="4000">+4,000 / 프레임</option>
               </select>
@@ -4659,7 +4659,7 @@ color:var(--cyan);
           <div class="calc-select-group" data-calc="pixel">
             <label>Idle 단순 프레임</label>
             <div class="calc-select-row">
-              <select onchange="handleOptionChange(this,\'pixel\')">
+              <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="1000">+1,000 / 프레임</option>
               </select>
@@ -4668,6 +4668,15 @@ color:var(--cyan);
                 <div class="qty-val">0</div>
                 <button class="qty-btn" onclick="changeQty('pixel',12,+1)">+</button>
               </div>
+            </div>
+          </div>
+          <div class="calc-select-group" data-calc="pixel">
+            <label>게임소스 용도 기본금</label>
+            <div class="calc-select-row">
+              <select onchange="handleOptionChange(this,'pixel')">
+                <option value="0">개인작업용 (추가금 없음)</option>
+                <option value="3000">출시용 (+3,000)</option>
+              </select>
             </div>
           </div>
         </div>
@@ -4715,7 +4724,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="mc">
           <label>유형</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'mc\')">
+            <select onchange="handleOptionChange(this,'mc')">
               <option value="0">선택하세요.</option>
               <option value="10000">스킨 (10,000)</option>
               <option value="8000">도트 아이템/아이콘 (8,000)</option>
@@ -4732,7 +4741,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="mc">
           <label>1분 초과 (30초당)</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'mc\')">
+            <select onchange="handleOptionChange(this,'mc')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="40000">+30초 (+40,000)</option>
@@ -4749,7 +4758,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="mc">
           <label>라이팅+렌더링</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'mc\')">
+            <select onchange="handleOptionChange(this,'mc')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="30000">추가 (+30,000)</option>
@@ -4764,7 +4773,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="mc">
           <label>모델링</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'mc\')">
+            <select onchange="handleOptionChange(this,'mc')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="25000">추가 (+25,000)</option>
@@ -4779,7 +4788,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="mc">
           <label>편집</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'mc\')">
+            <select onchange="handleOptionChange(this,'mc')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="30000">편집 추가 (+30,000)</option>
@@ -4843,7 +4852,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="brand">
           <label>기본 유형</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'brand\')">
+            <select onchange="handleOptionChange(this,'brand')">
               <option value="0">선택하세요.</option>
               <option value="30000">채널아트 기본 (30,000)</option>
               <option value="25000">브랜딩 기본 (25,000)</option>
@@ -4858,7 +4867,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="brand">
           <label>일러스트 추가</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'brand\')">
+            <select onchange="handleOptionChange(this,'brand')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="15000">흉상 (+15,000)</option>
@@ -4875,7 +4884,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="brand">
           <label>브랜딩 용도</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'brand\')">
+            <select onchange="handleOptionChange(this,'brand')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="60000">방송 대기화면 (+60,000)</option>
@@ -4893,7 +4902,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="brand">
           <label>워드마크/심볼</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'brand\')">
+            <select onchange="handleOptionChange(this,'brand')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="40000">워드마크 (+40,000)</option>
@@ -4910,7 +4919,7 @@ color:var(--cyan);
         <div class="calc-select-group" data-calc="brand">
           <label>배경</label>
           <div class="calc-select-row">
-            <select onchange="handleOptionChange(this,\'brand\')">
+            <select onchange="handleOptionChange(this,'brand')">
               <option value="0">없음</option>
               <option value="0">없음</option>
               <option value="10000">패턴 (+10,000)</option>
@@ -5294,46 +5303,36 @@ function initCalc(key){
 function calcFromDOM(key){
   initCalc(key);
   const c=CALCS[key];
+  const box=document.getElementById(`calc-${key}`);
+  if(!box)return;
   c.items=[];
-  // 각 select-group 수집
-  const groups=document.querySelectorAll(`[data-calc="${key}"]`);
+  const groups=box.querySelectorAll(`[data-calc="${key}"]`);
   groups.forEach((grp,groupIndex)=>{
+    const panel=grp.closest('.pixel-calc-options');
+    if(panel && panel.style.display==='none')return;
     const sel=grp.querySelector('select');
-    const qtyEl=grp.querySelector('.qty-val');
     if(!sel)return;
-    const val=parseInt(sel.value)||0;
-    const qty=parseInt(qtyEl?.textContent)||0;
-    if(val>0&&qty>0){
-      const label=grp.querySelector('label')?.firstChild?.textContent?.trim()||'';
-      const optText=sel.options[sel.selectedIndex]?.text||'';
+    const val=Number(sel.value);
+    if(!Number.isFinite(val))return;
+    const label=grp.querySelector('label')?.firstChild?.textContent?.trim()||'';
+    if(label==='옵션_인원추가')return;
+    const optText=sel.options[sel.selectedIndex]?.text?.trim()||'';
+    const qtyEl=grp.querySelector('.qty-val');
+    const qty=qtyEl?Math.max(0,parseInt(qtyEl.textContent,10)||0):1;
+    const freeChoice=val===0 && sel.selectedIndex>0 && !/^(없음|선택하세요)/.test(optText);
+    if(qty>0 && (val>0 || freeChoice)){
       c.items.push({name:`${label}: ${optText}`,price:val,qty,groupIndex});
     }
   });
-  
-if(key==='illust'){
-  const peopleGroup = document.querySelectorAll('[data-calc="illust"]')[5];
-
-  if(peopleGroup){
-    const qtyEl = peopleGroup.querySelector('.qty-val');
-    const peopleCount = parseInt(qtyEl?.textContent) || 0;
-
-    c.items = c.items.filter(it => !it.name.includes('옵션_인원추가'));
-
-    if(peopleCount > 0){
-      const subtotal = c.items.reduce((sum,it)=>sum+(it.price*it.qty),0) + c.extraAdj;
-
-      const peoplePrice = Math.round(subtotal * 0.6 * peopleCount);
-
-      c.items.push({
-        name:`옵션_인원추가 (${peopleCount}명)`,
-        price:peoplePrice,
-        qty:1,
-        groupIndex:5
-      });
+  if(key==='illust'){
+    const peopleGroup=groups[5];
+    const peopleCount=Math.max(0,parseInt(peopleGroup?.querySelector('.qty-val')?.textContent,10)||0);
+    if(peopleCount>0){
+      const subtotal=c.items.reduce((sum,it)=>sum+it.price*it.qty,0)+c.extraAdj;
+      const peoplePrice=Math.round(subtotal*0.6*peopleCount);
+      c.items.push({name:`옵션_인원추가 (${peopleCount}명)`,price:peoplePrice,qty:1,groupIndex:5});
     }
   }
-}
-  
   renderCalc(key);
 }
 function switchPixelType(type){
@@ -5355,9 +5354,12 @@ function handleOptionChange(select,key){
   const grp=select.closest(`[data-calc="${key}"]`);
   if(!grp)return;
   const qv=grp.querySelector('.qty-val');
-  if(!qv)return;
-  const val=parseInt(select.value)||0;
-  qv.textContent=val>0?'1':'0';
+  if(qv){
+    const val=Number(select.value);
+    const text=select.options[select.selectedIndex]?.text?.trim()||'';
+    const chosen=Number.isFinite(val)&&(val>0||(select.selectedIndex>0&&!/^(없음|선택하세요)/.test(text)));
+    qv.textContent=chosen?'1':'0';
+  }
   calcFromDOM(key);
 }
 function handleIllustTypeChange(){
