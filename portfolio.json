@@ -2341,6 +2341,9 @@
       "entries": {
         "hero.lead": {
           "text": "그림부터 모델링, 영상까지."
+        },
+        "id:works-title": {
+          "text": "분야별 작업목록."
         }
       }
     },
