@@ -393,7 +393,7 @@ border-radius:0;
 .video-modal.image-viewer-mode .media-preview{display:flex;flex-direction:column;min-height:0;position:relative;}
 .image-viewer-stage{position:relative;flex:1;min-height:320px;background:#050509;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;}
 .image-viewer-stage.dragging{cursor:grabbing;}
-.image-viewer-image{max-width:100%;max-height:100%;display:block;object-fit:contain;transform-origin:center center;will-change:transform;pointer-events:auto;}
+.image-viewer-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;transform-origin:center center;pointer-events:auto;}
 .image-viewer-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:44px;height:58px;border:1px solid rgba(255,255,255,.16);border-radius:9px;background:rgba(13,13,20,.72);color:#fff;font-size:30px;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:background .15s,border-color .15s;}
 .image-viewer-nav:hover{background:rgba(0,229,255,.16);border-color:var(--cyan);color:var(--cyan);}
 .image-viewer-prev{left:16px}.image-viewer-next{right:16px}
@@ -5720,11 +5720,15 @@ color:var(--cyan);
 
 
 
-<script>var CALCS={};
+<script>
+/* ── CALCULATOR ENGINE ── */
+const CALCS={};
+
 function initCalc(key){
   if(CALCS[key])return;
   CALCS[key]={items:[],orders:[],extraAdj:0};
 }
+
 function calcFromDOM(key){
   initCalc(key);
   const c=CALCS[key];
@@ -5827,6 +5831,7 @@ function switchPixelType(type){
 
   calcFromDOM('pixel');
 }
+
 function handleOptionChange(select,key){
   const grp=select.closest(`[data-calc="${key}"]`);
   if(!grp)return;
@@ -5909,7 +5914,265 @@ function handleIllustTypeChange(){
   }
   calcFromDOM('illust');
 }
-function(key){
+
+function renderCalc(key){
+  const c=CALCS[key];
+  const box=document.getElementById(`calc-${key}`);
+  if(!box)return;
+
+  // 아이템 목록
+  const itemsEl=box.querySelector('.calc-items-box');
+  if(itemsEl){
+    if(!c.items.length&&c.extraAdj===0){
+      itemsEl.innerHTML='<div style="font-size:10px;color:var(--text-off);text-align:center;padding:6px 0">옵션을 선택하세요</div>';
+    }else{
+      let html=c.items.map((it,i)=>`
+        <div class="calc-item-row">
+          <span class="calc-item-name">${it.name}${it.qty>1?` ×${it.qty}`:''}${it.rateLabel?` <span class="calc-item-rate" style="display:inline-block;margin-left:6px;padding:2px 5px;border:1px solid rgba(200,185,154,.45);border-radius:3px;color:#c8b99a;font-size:10px;line-height:1.5;vertical-align:middle;">${it.rateLabel}</span>`:''}</span>
+          <span class="calc-item-price">${(it.price*it.qty).toLocaleString()}</span>
+          <span class="calc-item-del" onclick="removeCalcItem('${key}',${i})">×</span>
+        </div>`).join('');
+      if(c.extraAdj!==0){
+        html+=`<div class="calc-item-row">
+          <span class="calc-item-name">직접 입력</span>
+          <span class="calc-item-price">${c.extraAdj>0?'+':''}${c.extraAdj.toLocaleString()}</span>
+          <span class="calc-item-del" onclick="clearExtra('${key}')">×</span>
+        </div>`;
+      }
+      itemsEl.innerHTML=html;
+    }
+  }
+
+  // 합계
+  const sub=c.items.reduce((s,it)=>s+it.price*it.qty,0)+c.extraAdj;
+  const totalEl=box.querySelector('.calc-total-price');
+  if(totalEl)totalEl.textContent=sub.toLocaleString()+'원';
+
+  // 주문 목록
+  const ordersEl=box.querySelector('.calc-orders');
+  if(ordersEl){
+    let html=c.orders.map((ord,i)=>`
+      <div class="calc-order-item">
+        <div class="calc-order-header">
+          <span class="calc-order-num">ORDER ${String(i+1).padStart(2,'0')}</span>
+          <span class="calc-order-price">${ord.total.toLocaleString()}원</span>
+          <span class="calc-order-del" onclick="removeOrder('${key}',${i})">×</span>
+        </div>
+        <div class="calc-order-items">${ord.desc}</div>
+      </div>`).join('');
+
+    if(c.orders.length>0){
+      const grand=c.orders.reduce((s,o)=>s+o.total,0)+sub;
+      html+=`<div class="calc-grand-total">
+        <span class="calc-grand-label">전체 합계 (${c.orders.length+1}건)</span>
+        <span class="calc-grand-price">${grand.toLocaleString()}원</span>
+      </div>`;
+    }
+    ordersEl.innerHTML=html;
+  }
+}
+
+function removeCalcItem(key,idx){
+  initCalc(key);
+  const item=CALCS[key].items[idx];
+  const box=document.getElementById(`calc-${key}`);
+  if(box&&item){
+    const groups=box.querySelectorAll(`[data-calc="${key}"]`);
+    const grp=groups[item.groupIndex];
+    if(grp){
+      const sel=grp.querySelector('select');
+      if(sel)sel.value='0';
+      const qv=grp.querySelector('.qty-val');
+      if(qv)qv.textContent='0';
+    }
+  }
+  calcFromDOM(key);
+}
+
+function clearExtra(key){
+  initCalc(key);
+  CALCS[key].extraAdj=0;
+  renderCalc(key);
+}
+
+function applyExtra(key){
+  initCalc(key);
+  const input=document.getElementById(`extra-${key}`);
+  const val=parseInt(input.value)||0;
+  if(val===0)return;
+  CALCS[key].extraAdj=(CALCS[key].extraAdj||0)+val;
+  input.value='';
+  renderCalc(key);
+}
+
+function addOrder(key,keepOptions){
+  initCalc(key);
+  const c=CALCS[key];
+  const sub=c.items.reduce((s,it)=>s+it.price*it.qty,0)+c.extraAdj;
+  if(sub===0){alert('옵션을 먼저 선택해주세요.');return;}
+  const desc=c.items.map(it=>`${it.name}${it.qty>1?` ×${it.qty}`:''}${it.rateLabel?` [${it.rateLabel}]`:''}(${(it.price*it.qty).toLocaleString()}원)`).join(', ');
+  c.orders.push({total:sub,desc});
+
+  if(!keepOptions){
+    // 옵션 초기화
+    const box=document.getElementById(`calc-${key}`);
+    if(box){
+      box.querySelectorAll('select').forEach(s=>s.value='0');
+      box.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
+    }
+    c.items=[];
+    c.extraAdj=0;
+  }else{
+    // 유지 — items는 그대로, extraAdj만 초기화
+    c.extraAdj=0;
+  }
+  renderCalc(key);
+}
+
+function removeOrder(key,idx){
+  initCalc(key);
+  CALCS[key].orders.splice(idx,1);
+  renderCalc(key);
+}
+
+function changeQty(key,grpIdx,delta){
+  initCalc(key);
+  const box=document.getElementById(`calc-${key}`);
+  if(!box)return;
+  const grp=box.querySelectorAll(`[data-calc="${key}"]`)[grpIdx];
+  if(!grp)return;
+  const sel=grp.querySelector('select');
+  const qv=grp.querySelector('.qty-val');
+  if(!qv)return;
+  const val=parseInt(sel?.value)||0;
+  if(val===0){
+    qv.textContent='0';
+    calcFromDOM(key);
+    return;
+  }
+  let q=parseInt(qv.textContent)||0;
+  q=Math.max(0,q+delta);
+  qv.textContent=q;
+  if(q===0&&sel)sel.value='0';
+  calcFromDOM(key);
+}
+
+function resetCalc(key){
+  initCalc(key);
+  const c=CALCS[key];
+  c.items=[];c.orders=[];c.extraAdj=0;
+  const box=document.getElementById(`calc-${key}`);
+  if(box){
+    box.querySelectorAll('select').forEach(s=>s.value='0');
+    box.querySelectorAll('.qty-val').forEach(q=>q.textContent='0');
+  }
+  renderCalc(key);
+}
+
+(function(){
+  const _originalRender=renderCalc,_originalAdd=addOrder,_originalRemove=removeOrder,_originalReset=resetCalc;
+  // 화면의 다른 레이어에 고정 배치하는 주문 상세 팝업 (카드 높이를 변경하지 않음)
+  let orderPopupOwner=null,orderPopupPinned=false;
+  function getOrderPopup(){
+    let popup=document.getElementById('bw-order-floating-detail');
+    if(!popup){
+      popup=document.createElement('div');
+      popup.id='bw-order-floating-detail';
+      popup.className='bw-order-floating-detail';
+      popup.setAttribute('role','dialog');
+      popup.setAttribute('aria-label','주문 상세');
+      document.body.appendChild(popup);
+    }
+    return popup;
+  }
+  function hideOrderPopup(force=false){
+    if(orderPopupPinned&&!force)return;
+    const popup=document.getElementById('bw-order-floating-detail');
+    if(popup){popup.style.display='none';popup.classList.remove('is-pinned');}
+    orderPopupOwner=null;orderPopupPinned=false;
+  }
+  function placeOrderPopup(event){
+    const popup=document.getElementById('bw-order-floating-detail');
+    if(!popup||popup.style.display==='none')return;
+    const margin=12,offset=18;
+    const width=popup.offsetWidth,height=popup.offsetHeight;
+    const vw=document.documentElement.clientWidth||window.innerWidth;
+    const vh=document.documentElement.clientHeight||window.innerHeight;
+    const x=Number.isFinite(event.clientX)?event.clientX:vw/2;
+    const y=Number.isFinite(event.clientY)?event.clientY:vh/2;
+    let left=x+offset,top=y+offset;
+    if(left+width>vw-margin)left=x-width-offset;
+    if(top+height>vh-margin)top=y-height-offset;
+    popup.style.left=Math.max(margin,Math.min(left,Math.max(margin,vw-width-margin)))+'px';
+    popup.style.top=Math.max(margin,Math.min(top,Math.max(margin,vh-height-margin)))+'px';
+  }
+  function showOrderPopup(event,card,html,pinned=false){
+    if(orderPopupPinned&&!pinned)return;
+    const popup=getOrderPopup();
+    popup.innerHTML='<button type="button" class="bw-order-popup-close" aria-label="상세 닫기">×</button>'+html;
+    popup.querySelector('.bw-order-popup-close').onclick=()=>hideOrderPopup(true);
+    popup.classList.toggle('is-pinned',pinned);
+    popup.style.display='block';
+    orderPopupOwner=card;orderPopupPinned=pinned;
+    placeOrderPopup(event);
+  }
+  function toggleOrderPopup(event,card,html){
+    if(orderPopupPinned&&orderPopupOwner===card){hideOrderPopup(true);return;}
+    const rect=event.currentTarget?.getBoundingClientRect?.();
+    const position={clientX:event.clientX||rect?.right||window.innerWidth/2,clientY:event.clientY||rect?.bottom||window.innerHeight/2};
+    showOrderPopup(position,card,html,true);
+  }
+  document.addEventListener('pointerdown',event=>{
+    if(!orderPopupPinned)return;
+    if(getOrderPopup().contains(event.target)||event.target.closest?.('.calc-order-detail-toggle'))return;
+    hideOrderPopup(true);
+  });
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')hideOrderPopup(true);});
+  window.addEventListener('scroll',event=>{
+    if(event.target!==document.getElementById('bw-order-floating-detail'))hideOrderPopup(true);
+  },true);
+  window.addEventListener('resize',()=>hideOrderPopup(true));
+  const safe=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+  function snap(key){
+    const box=document.getElementById(`calc-${key}`);if(!box)return null;
+    return {selects:Array.from(box.querySelectorAll('select'),s=>({value:s.value,index:s.selectedIndex})),quantities:Array.from(box.querySelectorAll('.qty-val'),q=>q.textContent),extraAdj:CALCS[key]?.extraAdj||0};
+  }
+  function restore(key,data){
+    const box=document.getElementById(`calc-${key}`);if(!box||!data)return;
+    let sels=box.querySelectorAll('select');
+    if(key==='illust'){
+      if(sels[0]&&data.selects[0])sels[0].value=data.selects[0].value;
+      if(sels[1]&&data.selects[1])sels[1].value=data.selects[1].value;
+      handleIllustTypeChange();
+    }else if(key==='pixel'){
+      const type=data.selects[0]?.value;
+      const top=box.querySelector('.calc-select-group:not([data-calc]) select');
+      if(top&&type){top.value=type;switchPixelType(type);}
+    }
+    sels=box.querySelectorAll('select');
+    (data.selects||[]).forEach((saved,i)=>{
+      const sel=sels[i];if(!sel||!saved)return;
+      sel.value=saved.value;
+      if(sel.value!==saved.value&&sel.options[saved.index])sel.selectedIndex=saved.index;
+    });
+    const qty=box.querySelectorAll('.qty-val');
+    (data.quantities||[]).forEach((q,i)=>{if(qty[i])qty[i].textContent=q;});
+    CALCS[key].extraAdj=Number(data.extraAdj)||0;calcFromDOM(key);
+  }
+  function makeSummary(key,items){
+    if(key!=='illust')return null;
+    const box=document.getElementById('calc-illust');
+    const gs=box?.querySelectorAll('[data-calc="illust"]')||[];
+    const picked=i=>{const s=gs[i]?.querySelector('select');return s&&s.selectedIndex>0?(s.options[s.selectedIndex]?.text||'').trim():'';};
+    const type=picked(0),purpose=type==='일러스트'?picked(1):'';
+    const required=[type,purpose,picked(2),picked(3)].filter(Boolean).join(' · ')||'선택 없음';
+    const people=Math.max(0,parseInt(gs[5]?.querySelector('.qty-val')?.textContent,10)||0);
+    const peopleRate=items.find(it=>it.groupIndex===5)?.rateLabel||(people>0&&type==='컨셉아트'?'별도 협의':'');
+    const splitDiscount=items.some(it=>it.groupIndex===7&&it.price<0);
+    const rate=[peopleRate,splitDiscount?'분할 없음 30% 할인':''].filter(Boolean).join(' · ')||'해당 없음';
+    return [{label:'필수옵션',value:required},{label:'배경',value:picked(4)||'없음'},{label:'총원',value:`${people+1}명`},{label:'적용 요율',value:rate}];
+  }
+  renderCalc=function(key){
     hideOrderPopup(true);
     _originalRender(key);
     const c=CALCS[key],box=document.getElementById(`calc-${key}`);if(!c||!box)return;
@@ -5959,38 +6222,8 @@ function(key){
       if(grand)grand.textContent=sum.toLocaleString()+'원';
       if(label)label.textContent=`전체 합계 (${c.orders.length}건)`;
     }
-  }
-function removeCalcItem(key,idx){
-  initCalc(key);
-  const item=CALCS[key].items[idx];
-  const box=document.getElementById(`calc-${key}`);
-  if(box&&item){
-    const groups=box.querySelectorAll(`[data-calc="${key}"]`);
-    const grp=groups[item.groupIndex];
-    if(grp){
-      const sel=grp.querySelector('select');
-      if(sel)sel.value='0';
-      const qv=grp.querySelector('.qty-val');
-      if(qv)qv.textContent='0';
-    }
-  }
-  calcFromDOM(key);
-}
-function clearExtra(key){
-  initCalc(key);
-  CALCS[key].extraAdj=0;
-  renderCalc(key);
-}
-function applyExtra(key){
-  initCalc(key);
-  const input=document.getElementById(`extra-${key}`);
-  const val=parseInt(input.value)||0;
-  if(val===0)return;
-  CALCS[key].extraAdj=(CALCS[key].extraAdj||0)+val;
-  input.value='';
-  renderCalc(key);
-}
-function(key,keepOptions){
+  };
+  addOrder=function(key,keepOptions){
     initCalc(key);const c=CALCS[key],before=c.orders.length;
     const state=snap(key);
     const details=c.items.map(it=>({name:it.name,qty:it.qty,amount:it.price*it.qty,rateLabel:it.rateLabel||''}));
@@ -6004,43 +6237,35 @@ function(key,keepOptions){
     if(editing>=0&&editing<before){c.orders[editing]=order;c.orders.pop();}
     c.editOrderIndex=-1;c.preEditState=null;
     renderCalc(key);
-  }
-function(key,index){
+  };
+  window.editCalcOrder=function(key,index){
+    initCalc(key);const c=CALCS[key],ord=c.orders[index];
+    if(!ord?.snapshot){alert('이 주문은 수정 데이터가 없습니다.');return;}
+    if(!Number.isInteger(c.editOrderIndex)||c.editOrderIndex<0)c.preEditState=snap(key);
+    c.editOrderIndex=index;restore(key,ord.snapshot);
+    document.getElementById(`calc-${key}`)?.scrollIntoView?.({behavior:'smooth',block:'start'});
+  };
+  window.cancelCalcOrderEdit=function(key){
+    initCalc(key);const c=CALCS[key],old=c.preEditState;
+    c.editOrderIndex=-1;c.preEditState=null;
+    if(old)restore(key,old);else renderCalc(key);
+  };
+  removeOrder=function(key,index){
     const c=CALCS[key];if(c){
       if(c.editOrderIndex===index){c.editOrderIndex=-1;c.preEditState=null;}
       else if(c.editOrderIndex>index)c.editOrderIndex--;}
     _originalRemove(key,index);
-  }
-function changeQty(key,grpIdx,delta){
-  initCalc(key);
-  const box=document.getElementById(`calc-${key}`);
-  if(!box)return;
-  const grp=box.querySelectorAll(`[data-calc="${key}"]`)[grpIdx];
-  if(!grp)return;
-  const sel=grp.querySelector('select');
-  const qv=grp.querySelector('.qty-val');
-  if(!qv)return;
-  const val=parseInt(sel?.value)||0;
-  if(val===0){
-    qv.textContent='0';
-    calcFromDOM(key);
-    return;
-  }
-  let q=parseInt(qv.textContent)||0;
-  q=Math.max(0,q+delta);
-  qv.textContent=q;
-  if(q===0&&sel)sel.value='0';
-  calcFromDOM(key);
-}
-function(key){
+  };
+  resetCalc=function(key){
     const c=CALCS[key];if(c){c.editOrderIndex=-1;c.preEditState=null;}
     _originalReset(key);
-  }
+  };
+})();
 
 (function(){
 'use strict';
 var payload={profile:{},portfolio:{}},data={},rendered={};
-var viewer={gridId:'',index:-1,scale:1,x:0,y:0,drag:false,startX:0,startY:0,bound:false};
+var viewer={gridId:'',index:-1,viewport:null};
 
 function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
 function ytId(url){
@@ -6126,29 +6351,73 @@ function renderSub(sub){
   if(!pane||pane.classList.contains('active'))renderGrid(grid.id);
  });
 }
-function resetPublicViewer(){
- viewer.scale=1;viewer.x=0;viewer.y=0;viewer.drag=false;
- var img=document.querySelector('#videoContainer .image-viewer-image');
- if(img)img.style.transform='translate(0px,0px) scale(1)';
- var reset=document.querySelector('#videoContainer .image-viewer-reset');
- if(reset)reset.textContent='이미지 100%';
+function createImageViewport(stage, getImage, report, dragClass = "is-dragging") {
+  let scale = 1, x = 0, y = 0, drag = null;
+  function draw() {
+    const image = getImage();
+    if (!image) return;
+    image.style.transform = "translate(" + x + "px," + y + "px) scale(" + scale + ")";
+    const percent = scale * 100;
+    report(percent < .01 ? "<0.01%" : (percent < 1 ? percent.toFixed(2) : Math.round(percent)) + "%");
+  }
+  function endDrag(event) {
+    if (!drag || (event && drag.id !== event.pointerId)) return;
+    const id = drag.id;
+    drag = null;
+    stage.classList.remove(dragClass);
+    if (stage.hasPointerCapture(id)) stage.releasePointerCapture(id);
+  }
+  function reset() {
+    endDrag();
+    scale = 1; x = 0; y = 0;
+    draw();
+  }
+  function zoom(factor, clientX, clientY) {
+    if (!getImage()) return;
+    const next = scale * factor;
+    if (!(next > 0) || !Number.isFinite(next * 100) || next === scale) return;
+    const rect = stage.getBoundingClientRect();
+    const px = Number.isFinite(clientX) ? clientX - (rect.left + rect.width / 2) : 0;
+    const py = Number.isFinite(clientY) ? clientY - (rect.top + rect.height / 2) : 0;
+    const nextX = px + (x - px) * factor, nextY = py + (y - py) * factor;
+    if (!Number.isFinite(nextX) || !Number.isFinite(nextY)) return;
+    x = nextX; y = nextY; scale = next;
+    draw();
+  }
+  stage.addEventListener("wheel", event => {
+    if (!getImage() || event.ctrlKey || event.metaKey || !event.deltaY) return;
+    event.preventDefault();
+    zoom(event.deltaY < 0 ? 1.12 : 1 / 1.12, event.clientX, event.clientY);
+  }, {passive:false});
+  stage.addEventListener("pointerdown", event => {
+    if (event.button !== 0 || !getImage() || drag) return;
+    drag = {id:event.pointerId, x:event.clientX, y:event.clientY};
+    stage.setPointerCapture(event.pointerId);
+    stage.classList.add(dragClass);
+  });
+  stage.addEventListener("pointermove", event => {
+    if (drag?.id !== event.pointerId) return;
+    x += event.clientX - drag.x; y += event.clientY - drag.y;
+    drag.x = event.clientX; drag.y = event.clientY;
+    draw();
+  });
+  for (const name of ["pointerup", "pointercancel", "lostpointercapture"]) stage.addEventListener(name, endDrag);
+  stage.addEventListener("dblclick", event => {
+    if (event.button !== 0 || !getImage()) return;
+    event.preventDefault();
+    reset();
+  });
+  reset();
+  return {draw, reset, zoom};
 }
-function applyPublicViewer(){
- var img=document.querySelector('#videoContainer .image-viewer-image');if(!img)return;
- img.style.transform='translate('+viewer.x+'px,'+viewer.y+'px) scale('+viewer.scale+')';
- var reset=document.querySelector('#videoContainer .image-viewer-reset');
- if(reset)reset.textContent='이미지 '+Math.round(viewer.scale*100)+'%';
-}
+function resetPublicViewer(){viewer.viewport?.reset();}
 function setupPublicViewer(){
- var stage=document.querySelector('#videoContainer .image-viewer-stage'),img=document.querySelector('#videoContainer .image-viewer-image');
- if(!stage||!img)return;
- stage.addEventListener('wheel',function(e){e.preventDefault();viewer.scale=Math.max(.25,Math.min(5,viewer.scale*(e.deltaY<0?1.12:.89)));applyPublicViewer();},{passive:false});
- stage.addEventListener('mousedown',function(e){if(e.button!==0)return;viewer.drag=true;viewer.startX=e.clientX-viewer.x;viewer.startY=e.clientY-viewer.y;stage.classList.add('dragging');});
- if(!viewer.bound){
-  viewer.bound=true;
-  window.addEventListener('mousemove',function(e){if(!viewer.drag)return;viewer.x=e.clientX-viewer.startX;viewer.y=e.clientY-viewer.startY;applyPublicViewer();});
-  window.addEventListener('mouseup',function(){viewer.drag=false;var current=document.querySelector('#videoContainer .image-viewer-stage');if(current)current.classList.remove('dragging');});
- }
+ var stage=document.querySelector('#videoContainer .image-viewer-stage'),img=stage?.querySelector('.image-viewer-image');
+ if(!img)return;
+ viewer.viewport=createImageViewport(stage,()=>img,function(percent){
+  var reset=document.querySelector('#videoContainer .image-viewer-reset');
+  if(reset)reset.textContent='이미지 '+percent;
+ },'dragging');
 }
 function publicCardIndexes(gridId){
  return (Array.isArray(data[gridId])?data[gridId]:[]).map(function(item,index){return{item:item,index:index};}).filter(function(row){return !!(row.item&&(row.item.src||row.item.url));});
@@ -6164,7 +6433,7 @@ window.resetPublicViewer=function(){resetPublicViewer();};
 function openPublicCard(item,gridId,index){
  var url=item.src||item.url||'',id=ytId(url);
  var box=document.getElementById('videoContainer'),modal=document.getElementById('videoModal');if(!box||!modal)return;
- viewer.gridId=gridId||'';viewer.index=Number.isInteger(index)?index:-1;resetPublicViewer();
+ viewer.gridId=gridId||'';viewer.index=Number.isInteger(index)?index:-1;resetPublicViewer();viewer.viewport=null;
  if((item.type||'image')==='image'){
   box.innerHTML='<div class="media-preview"><button class="image-viewer-nav image-viewer-prev" type="button" onclick="movePublicCard(-1,event)" aria-label="이전 이미지">‹</button><div class="image-viewer-stage"><img class="image-viewer-image" src="'+esc(url)+'" alt="'+esc(item.title||'')+'" draggable="false"></div><button class="image-viewer-nav image-viewer-next" type="button" onclick="movePublicCard(1,event)" aria-label="다음 이미지">›</button><div class="image-viewer-controls"><button class="image-viewer-reset" type="button" onclick="resetPublicViewer()">이미지 100%</button></div><div class="media-preview-title">'+esc(item.title||'제목 없음')+'</div>'+(item.desc?'<div class="media-preview-desc">'+esc(item.desc)+'</div>':'')+'</div>';
   modal.querySelector('.video-modal')?.classList.add('image-viewer-mode');modal.classList.add('open');setupPublicViewer();return;
@@ -6175,7 +6444,7 @@ function openPublicCard(item,gridId,index){
  box.innerHTML='<div class="media-preview"><button class="image-viewer-nav image-viewer-prev" type="button" onclick="movePublicCard(-1,event)" aria-label="이전 카드">‹</button><div class="media-preview-media">'+media+'</div><button class="image-viewer-nav image-viewer-next" type="button" onclick="movePublicCard(1,event)" aria-label="다음 카드">›</button><div class="media-preview-title">'+esc(item.title||'제목 없음')+'</div>'+(item.desc?'<div class="media-preview-desc">'+esc(item.desc)+'</div>':'')+'</div>';
  modal.classList.add('open');
 }
-window.closeVideoOnly=function(){var m=document.getElementById('videoModal');if(m)m.classList.remove('open');var b=document.getElementById('videoContainer');if(b)b.innerHTML='';viewer.gridId='';viewer.index=-1;resetPublicViewer();};
+window.closeVideoOnly=function(){resetPublicViewer();viewer.viewport=null;var m=document.getElementById('videoModal');if(m)m.classList.remove('open');var b=document.getElementById('videoContainer');if(b)b.innerHTML='';viewer.gridId='';viewer.index=-1;};
 window.closeVideoModal=function(e){var m=document.getElementById('videoModal');if(!e||e.target===m)window.closeVideoOnly();};
 document.addEventListener('keydown',function(e){
  var modal=document.getElementById('videoModal');if(!modal||!modal.classList.contains('open'))return;
