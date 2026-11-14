@@ -10,18 +10,42 @@
     "profileImgUrl": "./opimage/1782689883234-무제22_20241013202118.png",
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
     "profileCrop": {
-      "x": 0.4975124378109453,
       "h": 0.5121681415929203,
-      "w": 0.2879353233830846,
-      "y": 0
+      "y": 0,
+      "x": 0.4975124378109453,
+      "w": 0.2879353233830846
     },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-09-11T06:54:49.631Z"
+    "updatedAt": "2026-11-14T00:30:57.719Z"
   },
   "portfolio": {
     "thumbnail-ld": [
+      {
+        "title": "2026 10 23썸네일",
+        "desc": "",
+        "src": "./thumbnail/2026-10-23썸네일.jpg",
+        "type": "image",
+        "thumbnailPath": "thumbnail/card-thumbs/2026-10-23썸네일.webp",
+        "thumbnailSrc": "./thumbnail/card-thumbs/2026-10-23썸네일.webp"
+      },
+      {
+        "title": "2026 09 13",
+        "desc": "",
+        "src": "./thumbnail/2026-09-13.png",
+        "type": "image",
+        "thumbnailPath": "thumbnail/card-thumbs/2026-09-13.webp",
+        "thumbnailSrc": "./thumbnail/card-thumbs/2026-09-13.webp"
+      },
+      {
+        "title": "2026 09 27",
+        "desc": "",
+        "src": "./thumbnail/2026-09-27.jpg",
+        "type": "image",
+        "thumbnailPath": "thumbnail/card-thumbs/2026-09-27.webp",
+        "thumbnailSrc": "./thumbnail/card-thumbs/2026-09-27.webp"
+      },
       {
         "title": "2026 08 28",
         "desc": "",
@@ -446,6 +470,14 @@
       }
     ],
     "illust-line": [
+      {
+        "title": "2026.09",
+        "desc": "",
+        "src": "./illustration/2026.09.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/2026.09.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026.09.webp"
+      },
       {
         "title": "배비꼬 새해 (2)",
         "desc": "",
@@ -933,6 +965,134 @@
     ],
     "illust-rough": [
       {
+        "title": "키위기 러프퀄5",
+        "desc": "",
+        "src": "./illustration/키위기-러프퀄5.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/키위기-러프퀄5.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/키위기-러프퀄5.webp"
+      },
+      {
+        "title": "삥빵 러프퀄",
+        "desc": "",
+        "src": "./illustration/삥빵-러프퀄.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/삥빵-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/삥빵-러프퀄.webp"
+      },
+      {
+        "title": "2026.10(2)",
+        "desc": "",
+        "src": "./illustration/2026.10(2).jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/2026.10(2).webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026.10(2).webp"
+      },
+      {
+        "title": "2026.10(1)",
+        "desc": "",
+        "src": "./illustration/2026.10(1).jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/2026.10(1).webp",
+        "thumbnailSrc": "./illustration/card-thumbs/2026.10(1).webp"
+      },
+      {
+        "title": "Clair de Leline 러프퀄 2",
+        "desc": "",
+        "src": "./illustration/Clair_de_Leline-러프퀄-2.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/Clair_de_Leline-러프퀄-2.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/Clair_de_Leline-러프퀄-2.webp"
+      },
+      {
+        "title": "레디언트 러프퀄7",
+        "desc": "",
+        "src": "./illustration/레디언트-러프퀄7.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/레디언트-러프퀄7.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/레디언트-러프퀄7.webp"
+      },
+      {
+        "title": "a 러프퀄3 3",
+        "desc": "",
+        "src": "./illustration/_a-러프퀄3_3.png",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/_a-러프퀄3_3.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/_a-러프퀄3_3.webp"
+      },
+      {
+        "title": "레디언트 러프퀄6",
+        "desc": "",
+        "src": "./illustration/레디언트-러프퀄6.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/레디언트-러프퀄6.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/레디언트-러프퀄6.webp"
+      },
+      {
+        "title": "레디언트 러프퀄5",
+        "desc": "",
+        "src": "./illustration/레디언트-러프퀄5.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/레디언트-러프퀄5.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/레디언트-러프퀄5.webp"
+      },
+      {
+        "title": "레디언트 러프퀄4",
+        "desc": "",
+        "src": "./illustration/레디언트-러프퀄4.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/레디언트-러프퀄4.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/레디언트-러프퀄4.webp"
+      },
+      {
+        "title": "레디언트 러프퀄3",
+        "desc": "",
+        "src": "./illustration/레디언트-러프퀄3.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/레디언트-러프퀄3.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/레디언트-러프퀄3.webp"
+      },
+      {
+        "title": "키위기 러프퀄3",
+        "desc": "",
+        "src": "./illustration/키위기-러프퀄3.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/키위기-러프퀄3.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/키위기-러프퀄3.webp"
+      },
+      {
+        "title": "키위기 러프퀄2 1",
+        "desc": "",
+        "src": "./illustration/키위기-러프퀄2_1.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/키위기-러프퀄2_1.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/키위기-러프퀄2_1.webp"
+      },
+      {
+        "title": "키위기 러프퀄",
+        "desc": "",
+        "src": "./illustration/키위기-러프퀄.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/키위기-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/키위기-러프퀄.webp"
+      },
+      {
+        "title": "신청용 러프퀄2",
+        "desc": "",
+        "src": "./illustration/신청용-러프퀄2.png",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/신청용-러프퀄2.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/신청용-러프퀄2.webp"
+      },
+      {
+        "title": "Clair de Leline 러프퀄",
+        "desc": "",
+        "src": "./illustration/Clair_de_Leline-러프퀄.jpg",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/Clair_de_Leline-러프퀄.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/Clair_de_Leline-러프퀄.webp"
+      },
+      {
         "title": "뷰 러프퀄",
         "desc": "",
         "src": "./illustration/뷰-러프퀄.jpg",
@@ -973,30 +1133,6 @@
         "thumbnailSrc": "./illustration/card-thumbs/한량-팬아트.webp"
       },
       {
-        "title": "하누 러프퀄2",
-        "desc": "",
-        "src": "./illustration/하누-러프퀄2.jpg",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/하누-러프퀄2.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/하누-러프퀄2.webp"
-      },
-      {
-        "title": "신청용 러프퀄",
-        "desc": "",
-        "src": "./illustration/신청용-러프퀄.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/신청용-러프퀄.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/신청용-러프퀄.webp"
-      },
-      {
-        "title": "하누 러프퀄1",
-        "desc": "",
-        "src": "./illustration/하누-러프퀄1.jpg",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/하누-러프퀄1.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/하누-러프퀄1.webp"
-      },
-      {
         "title": "레디언트 러프퀄",
         "desc": "",
         "src": "./illustration/레디언트-러프퀄.jpg",
@@ -1019,14 +1155,6 @@
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/265.webp",
         "thumbnailSrc": "./illustration/card-thumbs/265.webp"
-      },
-      {
-        "title": "띠용 러프퀄",
-        "desc": "",
-        "src": "./illustration/띠용-러프퀄.jpg",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/띠용-러프퀄.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/띠용-러프퀄.webp"
       },
       {
         "title": "深海 20241117204917",
@@ -1069,52 +1197,12 @@
         "thumbnailSrc": "./illustration/card-thumbs/무제172_20241223195907.webp"
       },
       {
-        "title": "seolhwa00 러프퀄6",
-        "desc": "",
-        "src": "./illustration/seolhwa00-러프퀄6.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/seolhwa00-러프퀄6.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/seolhwa00-러프퀄6.webp"
-      },
-      {
-        "title": "seolhwa00 러프퀄1",
-        "desc": "",
-        "src": "./illustration/seolhwa00-러프퀄1.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/seolhwa00-러프퀄1.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/seolhwa00-러프퀄1.webp"
-      },
-      {
-        "title": "seolhwa00 러프퀄9",
-        "desc": "",
-        "src": "./illustration/seolhwa00-러프퀄9.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/seolhwa00-러프퀄9.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/seolhwa00-러프퀄9.webp"
-      },
-      {
-        "title": "seolhwa00 러프퀄11",
-        "desc": "",
-        "src": "./illustration/seolhwa00-러프퀄11.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/seolhwa00-러프퀄11.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/seolhwa00-러프퀄11.webp"
-      },
-      {
         "title": "무제140 20241205202650",
         "desc": "",
         "src": "./illustration/무제140_20241205202650.jpg",
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/무제140_20241205202650.webp",
         "thumbnailSrc": "./illustration/card-thumbs/무제140_20241205202650.webp"
-      },
-      {
-        "title": "Sukiyakiudon님 러프퀄",
-        "desc": "",
-        "src": "./illustration/Sukiyakiudon님-러프퀄.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/Sukiyakiudon님-러프퀄.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/Sukiyakiudon님-러프퀄.webp"
       },
       {
         "title": "무제83 20241123144935",
@@ -1141,14 +1229,6 @@
         "thumbnailSrc": "./illustration/card-thumbs/260.webp"
       },
       {
-        "title": "2026 02 26 5",
-        "desc": "",
-        "src": "./illustration/2026_02_26-5.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026_02_26-5.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026_02_26-5.webp"
-      },
-      {
         "title": "강쏘쏘님 (1)",
         "desc": "",
         "src": "./illustration/강쏘쏘님 (1).png",
@@ -1165,44 +1245,12 @@
         "thumbnailSrc": "./illustration/card-thumbs/무제22_20241013202118.webp"
       },
       {
-        "title": "2026 02 26 3",
-        "desc": "",
-        "src": "./illustration/2026_02_26-3.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026_02_26-3.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026_02_26-3.webp"
-      },
-      {
-        "title": "2026 02 28 3",
-        "desc": "",
-        "src": "./illustration/2026_02_28-3.jpg",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/2026_02_28-3.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/2026_02_28-3.webp"
-      },
-      {
         "title": "146",
         "desc": "",
         "src": "./illustration/146.png",
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/146.webp",
         "thumbnailSrc": "./illustration/card-thumbs/146.webp"
-      },
-      {
-        "title": "애옹님 낙서퀄2",
-        "desc": "",
-        "src": "./illustration/애옹님-낙서퀄2.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/애옹님-낙서퀄2.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/애옹님-낙서퀄2.webp"
-      },
-      {
-        "title": "무제68 20241113152449",
-        "desc": "",
-        "src": "./illustration/무제68_20241113152449.jpg",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/무제68_20241113152449.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/무제68_20241113152449.webp"
       },
       {
         "title": "무제24 20241014201951",
@@ -1219,14 +1267,6 @@
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/이프리트.webp",
         "thumbnailSrc": "./illustration/card-thumbs/이프리트.webp"
-      },
-      {
-        "title": "무제221 20250201161329",
-        "desc": "",
-        "src": "./illustration/무제221_20250201161329.jpg",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/무제221_20250201161329.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/무제221_20250201161329.webp"
       },
       {
         "title": "무제416 20250627204430",
@@ -2072,6 +2112,14 @@
       }
     ],
     "animation2DGrid": [
+      {
+        "title": "Let s groove밈",
+        "desc": "",
+        "src": "./animation-video/Let-s-groove밈.mp4",
+        "type": "video",
+        "thumbnailPath": "animation-video/card-thumbs/Let-s-groove밈.jpg",
+        "thumbnailSrc": "./animation-video/card-thumbs/Let-s-groove밈.jpg"
+      },
       {
         "title": "입시포폴",
         "desc": "",
