@@ -2333,5 +2333,17 @@
       }
     ]
   },
-  "opimages": []
+  "opimages": [],
+  "bowoneEditor": {
+    "version": 1,
+    "settings": {
+      "version": 1,
+      "entries": {
+        "hero.lead": {
+          "text": "그림부터 모델링, 영상까지."
+        }
+      }
+    },
+    "orders": {}
+  }
 }
