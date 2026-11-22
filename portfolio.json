@@ -10,15 +10,15 @@
     "profileImgUrl": "./opimage/1782689883234-무제22_20241013202118.png",
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
     "profileCrop": {
-      "h": 0.5121681415929203,
       "y": 0,
-      "x": 0.4975124378109453,
-      "w": 0.2879353233830846
+      "w": 0.2879353233830846,
+      "h": 0.5121681415929203,
+      "x": 0.4975124378109453
     },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-11-14T00:30:57.719Z"
+    "updatedAt": "2026-11-22T08:28:10.483Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -191,14 +191,6 @@
         "thumbnailSrc": "./thumbnail/card-thumbs/4(2).webp"
       },
       {
-        "title": "5",
-        "desc": "",
-        "src": "./thumbnail/5.jpg",
-        "type": "image",
-        "thumbnailPath": "thumbnail/card-thumbs/5.webp",
-        "thumbnailSrc": "./thumbnail/card-thumbs/5.webp"
-      },
-      {
         "title": "38",
         "desc": "",
         "src": "./thumbnail/38.png",
@@ -237,14 +229,6 @@
         "type": "image",
         "thumbnailPath": "thumbnail/card-thumbs/79.webp",
         "thumbnailSrc": "./thumbnail/card-thumbs/79.webp"
-      },
-      {
-        "title": "5",
-        "desc": "",
-        "src": "./thumbnail/5.png",
-        "type": "image",
-        "thumbnailPath": "thumbnail/card-thumbs/5.webp",
-        "thumbnailSrc": "./thumbnail/card-thumbs/5.webp"
       },
       {
         "title": "54",
@@ -301,6 +285,14 @@
         "type": "image",
         "thumbnailPath": "thumbnail/card-thumbs/안정식님1.webp",
         "thumbnailSrc": "./thumbnail/card-thumbs/안정식님1.webp"
+      },
+      {
+        "title": "5",
+        "desc": "",
+        "src": "./thumbnail/5.jpg",
+        "type": "image",
+        "thumbnailPath": "thumbnail/card-thumbs/5.webp",
+        "thumbnailSrc": "./thumbnail/card-thumbs/5.webp"
       }
     ],
     "thumbnail-sd": [
@@ -605,6 +597,14 @@
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/무제181_20241226151328.webp",
         "thumbnailSrc": "./illustration/card-thumbs/무제181_20241226151328.webp"
+      },
+      {
+        "title": "186 20250101190312",
+        "desc": "",
+        "src": "./illustration/186_20250101190312.png",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/186_20250101190312.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/186_20250101190312.webp"
       }
     ],
     "illust-semi-painted": [
@@ -687,14 +687,6 @@
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/창작_백랑.webp",
         "thumbnailSrc": "./illustration/card-thumbs/창작_백랑.webp"
-      },
-      {
-        "title": "186 20250101190312",
-        "desc": "",
-        "src": "./illustration/186_20250101190312.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/186_20250101190312.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/186_20250101190312.webp"
       },
       {
         "title": "238",
@@ -2347,6 +2339,27 @@
         }
       }
     },
-    "orders": {}
+    "orders": {
+      "illust-line": [
+        "illustration/2026.09.jpg",
+        "illustration/배비꼬_새해 (2).png",
+        "illustration/263.png",
+        "illustration/무제373_20250517154734.png",
+        "illustration/230.png",
+        "illustration/옌_이님.png",
+        "illustration/무제656_20251005205553.png",
+        "illustration/무제658_20251007144254.png",
+        "illustration/무제555_20250823205731.png",
+        "illustration/루아레시안님 (1).png",
+        "illustration/1_2.png",
+        "illustration/가디언테일즈_미래공주.png",
+        "illustration/이슈타르.png",
+        "illustration/대문.png",
+        "illustration/186_20250101190312.png",
+        "illustration/바이올렛.png",
+        "illustration/무제187_20250103195114.png",
+        "illustration/무제181_20241226151328.jpg"
+      ]
+    }
   }
 }

@@ -51,6 +51,18 @@ header{max-width:960px;margin:0 auto;padding:56px 24px 40px;display:flex;align-i
 .p-tag.hl{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
 
 /* CONTACT ROW */
+
+/* One synchronized contact/channel set for the OP home and commission tab. */
+.op-commission-contact-set{display:flex;flex-direction:column;align-items:center;gap:0;padding:16px 12px 31px;margin:0 0 26px;text-align:center;border-bottom:1px solid var(--border2)}
+.op-commission-contact-set .op-contact-email-line{margin:0;color:var(--text);font-size:15px;line-height:1.75}
+.op-commission-contact-set .op-contact-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:20px}
+.op-commission-contact-set .op-contact-actions a,.op-commission-contact-set .op-contact-actions button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:45px;padding:10px 17px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font:600 12px/1.4 'Noto Sans KR',sans-serif;cursor:pointer;text-decoration:none}
+.op-commission-contact-set .op-contact-actions a{background:var(--gold);color:#171717;border-color:var(--gold)}
+.op-commission-contact-set .op-contact-actions a:hover,.op-commission-contact-set .op-contact-actions button:hover{border-color:var(--cyan);background:var(--surface);color:var(--cyan)}
+.op-commission-contact-set .op-contact-actions svg{width:18px;height:18px;flex:none;fill:currentColor}
+.op-commission-contact-set #op-commission-channel-socials{max-width:none;margin:20px auto 0;padding:0;display:flex;justify-content:center;flex-wrap:wrap}
+.op-commission-contact-set .op-contact-copy-status{display:block;min-height:17px;margin-top:4px;color:var(--cyan);font-size:11px}
+@media(max-width:580px){.op-commission-contact-set{padding-inline:0}.op-commission-contact-set .op-contact-actions{width:100%}.op-commission-contact-set .op-contact-actions a,.op-commission-contact-set .op-contact-actions button{flex:1 1 180px}.op-commission-contact-set #op-commission-channel-socials{gap:8px}}
 .contact-row{max-width:960px;margin:0 auto;padding:0 24px 28px;display:flex;gap:10px;flex-wrap:wrap;}
 .c-btn{display:flex;align-items:center;gap:7px;font-size:12px;padding:8px 14px;border-radius:8px;border:1px solid var(--border2);color:var(--text-dim);background:var(--bg2);text-decoration:none;cursor:pointer;transition:border-color .2s,color .2s;font-family:'Noto Sans KR',sans-serif;font-weight:300;}
 .c-btn:hover{border-color:var(--cyan);color:var(--cyan)}
@@ -1237,21 +1249,21 @@ color:var(--cyan);
     "role": "Illustrator · Animator · 3D Modeler",
     "bio": "일러스트, 애니메이션, 3D 모델링을 중심으로\n다양한 디지털 콘텐츠를 제작하고 있는\n멀티미디어 아티스트 보원입니다.\n\n캐릭터 디자인부터 MV 제작,\n게임용 픽셀아트 및 마인크래프트 리소스 제작까지\n폭넓은 작업을 진행하고 있습니다.\n\nE-mail : agentdh@naver.com",
     "email": "agentdh@naver.com",
-    "commissionLinkTitle": "의뢰하러 가기",
-    "commissionLinkUrl": "https://discord.gg/EZhs87qRvU",
+    "commissionLinkTitle": "디스코드로 문의하기",
+    "commissionLinkUrl": "https://discord.gg/QGsfqz9HPC",
     "profileImgPath": "opimage/1782689883234-무제22_20241013202118.png",
     "profileImgUrl": "./opimage/1782689883234-무제22_20241013202118.png",
     "profileImgRawUrl": "https://agentdh.github.io/portfolio_op/opimage/1782689883234-%EB%AC%B4%EC%A0%9C22_20241013202118.png",
     "profileCrop": {
-      "h": 0.5121681415929203,
       "y": 0,
-      "x": 0.4975124378109453,
-      "w": 0.2879353233830846
+      "w": 0.2879353233830846,
+      "h": 0.5121681415929203,
+      "x": 0.4975124378109453
     },
     "ogImgPath": "opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgUrl": "./opimage/1782689930050-잠드는-거리_20241122204406.jpg",
     "ogImgRawUrl": "https://raw.githubusercontent.com/agentdh/portfolio_op/main/opimage/1782689930050-잠드는-거리_20241122204406.jpg",
-    "updatedAt": "2026-11-14T00:30:57.719Z"
+    "updatedAt": "2026-11-22T08:28:10.483Z"
   },
   "portfolio": {
     "thumbnail-ld": [
@@ -1424,14 +1436,6 @@ color:var(--cyan);
         "thumbnailSrc": "./thumbnail/card-thumbs/4(2).webp"
       },
       {
-        "title": "5",
-        "desc": "",
-        "src": "./thumbnail/5.jpg",
-        "type": "image",
-        "thumbnailPath": "thumbnail/card-thumbs/5.webp",
-        "thumbnailSrc": "./thumbnail/card-thumbs/5.webp"
-      },
-      {
         "title": "38",
         "desc": "",
         "src": "./thumbnail/38.png",
@@ -1470,14 +1474,6 @@ color:var(--cyan);
         "type": "image",
         "thumbnailPath": "thumbnail/card-thumbs/79.webp",
         "thumbnailSrc": "./thumbnail/card-thumbs/79.webp"
-      },
-      {
-        "title": "5",
-        "desc": "",
-        "src": "./thumbnail/5.png",
-        "type": "image",
-        "thumbnailPath": "thumbnail/card-thumbs/5.webp",
-        "thumbnailSrc": "./thumbnail/card-thumbs/5.webp"
       },
       {
         "title": "54",
@@ -1534,6 +1530,14 @@ color:var(--cyan);
         "type": "image",
         "thumbnailPath": "thumbnail/card-thumbs/안정식님1.webp",
         "thumbnailSrc": "./thumbnail/card-thumbs/안정식님1.webp"
+      },
+      {
+        "title": "5",
+        "desc": "",
+        "src": "./thumbnail/5.jpg",
+        "type": "image",
+        "thumbnailPath": "thumbnail/card-thumbs/5.webp",
+        "thumbnailSrc": "./thumbnail/card-thumbs/5.webp"
       }
     ],
     "thumbnail-sd": [
@@ -1838,6 +1842,14 @@ color:var(--cyan);
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/무제181_20241226151328.webp",
         "thumbnailSrc": "./illustration/card-thumbs/무제181_20241226151328.webp"
+      },
+      {
+        "title": "186 20250101190312",
+        "desc": "",
+        "src": "./illustration/186_20250101190312.png",
+        "type": "image",
+        "thumbnailPath": "illustration/card-thumbs/186_20250101190312.webp",
+        "thumbnailSrc": "./illustration/card-thumbs/186_20250101190312.webp"
       }
     ],
     "illust-semi-painted": [
@@ -1920,14 +1932,6 @@ color:var(--cyan);
         "type": "image",
         "thumbnailPath": "illustration/card-thumbs/창작_백랑.webp",
         "thumbnailSrc": "./illustration/card-thumbs/창작_백랑.webp"
-      },
-      {
-        "title": "186 20250101190312",
-        "desc": "",
-        "src": "./illustration/186_20250101190312.png",
-        "type": "image",
-        "thumbnailPath": "illustration/card-thumbs/186_20250101190312.webp",
-        "thumbnailSrc": "./illustration/card-thumbs/186_20250101190312.webp"
       },
       {
         "title": "238",
@@ -3594,9 +3598,9 @@ color:var(--cyan);
   </div>
   <aside class="commission-link-card" aria-label="Discord 의뢰 링크">
     <div class="commission-link-kicker">DISCORD COMMISSION</div>
-    <strong class="commission-link-title" id="commissionLinkTitle">의뢰하러 가기</strong>
+    <strong class="commission-link-title" id="commissionLinkTitle">디스코드로 문의하기</strong>
     <p class="commission-link-desc">작업 문의와 상담은 Discord에서 편하게 진행할 수 있습니다.</p>
-    <a class="commission-link-button" id="commissionLinkButton" href="https://discord.gg/EZhs87qRvU" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.32 4.37A19.79 19.79 0 0 0 15.44 3a13.78 13.78 0 0 0-.62 1.28 18.27 18.27 0 0 0-5.63 0A12.64 12.64 0 0 0 8.55 3a19.74 19.74 0 0 0-4.88 1.37C.58 8.96-.26 13.44.15 17.86A19.9 19.9 0 0 0 6.13 21a14.7 14.7 0 0 0 1.48-2.05 12.9 12.9 0 0 1-2.33-1.12l.57-.44c4.49 2.08 9.36 2.08 13.8 0l.58.44c-.74.43-1.52.8-2.34 1.12A14.24 14.24 0 0 0 19.36 21a19.8 19.8 0 0 0 5.98-3.14c.49-5.13-.83-9.57-5.02-13.49ZM8.02 15.15c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.08 2.76-2.45 2.76Zm8.52 0c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.07 2.76-2.45 2.76Z"></path></svg><span id="commissionLinkButtonLabel">의뢰하러 가기</span></a>
+    <a class="commission-link-button" id="commissionLinkButton" href="https://discord.gg/QGsfqz9HPC" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.32 4.37A19.79 19.79 0 0 0 15.44 3a13.78 13.78 0 0 0-.62 1.28 18.27 18.27 0 0 0-5.63 0A12.64 12.64 0 0 0 8.55 3a19.74 19.74 0 0 0-4.88 1.37C.58 8.96-.26 13.44.15 17.86A19.9 19.9 0 0 0 6.13 21a14.7 14.7 0 0 0 1.48-2.05 12.9 12.9 0 0 1-2.33-1.12l.57-.44c4.49 2.08 9.36 2.08 13.8 0l.58.44c-.74.43-1.52.8-2.34 1.12A14.24 14.24 0 0 0 19.36 21a19.8 19.8 0 0 0 5.98-3.14c.49-5.13-.83-9.57-5.02-13.49ZM8.02 15.15c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.08 2.76-2.45 2.76Zm8.52 0c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.07 2.76-2.45 2.76Z"></path></svg><span id="commissionLinkButtonLabel">디스코드로 문의하기</span></a>
   </aside>
 </header>
 
@@ -3604,6 +3608,8 @@ color:var(--cyan);
   <a class="c-btn" href="https://x.com/bowone_agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>@bowone_agentdh</a>
   <a class="c-btn" href="https://crepe.cm/@agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>크레페</a>
   <a class="c-btn" href="https://artmug.kr/index.php?channel=list&amp;field=brand&amp;search=YWdlbnRkaA==" target="_blank"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>아트머그</a>
+  <a class="c-btn" href="https://commi.kr/agentdh" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1c1.38 0 2.48 1.25 2.45 2.76-.03 1.51-1.07 2.76-2.45 2.76Z"></path></svg>커미</a>
+  <a class="c-btn" href="https://meenit.co/agentdh" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>미닛</a>
   <a class="c-btn" href="https://www.youtube.com/@agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"></path></svg>YouTube</a>
   <a class="c-btn" href="https://www.instagram.com/agentdhone/" target="_blank"><svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3z"></path></svg>Instagram</a>
 </div>
@@ -4291,6 +4297,16 @@ color:var(--cyan);
 </div>
 <!-- ══ 가격표 탭 ══ -->
 <div class="tab-panel" id="tab-commission">
+
+  <section class="op-commission-contact-set" id="op-commission-contact-set" aria-label="의뢰 문의 및 외부 채널">
+    <p class="op-contact-email-line" id="op-commission-email-line">E-mail : agentdh@naver.com</p>
+    <div class="op-contact-actions">
+      <a id="op-commission-discord" href="https://discord.gg/QGsfqz9HPC" target="_blank" rel="noopener noreferrer"><span id="op-commission-discord-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.32 4.37A19.79 19.79 0 0 0 15.44 3a13.78 13.78 0 0 0-.62 1.28 18.27 18.27 0 0 0-5.63 0A12.64 12.64 0 0 0 8.55 3a19.74 19.74 0 0 0-4.88 1.37C.58 8.96-.26 13.44.15 17.86A19.9 19.9 0 0 0 6.13 21a14.7 14.7 0 0 0 1.48-2.05 12.9 12.9 0 0 1-2.33-1.12l.57-.44c4.49 2.08 9.36 2.08 13.8 0l.58.44c-.74.43-1.52.8-2.34 1.12A14.24 14.24 0 0 0 19.36 21a19.8 19.8 0 0 0 5.98-3.14c.49-5.13-.83-9.57-5.02-13.49ZM8.02 15.15c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.08 2.76-2.45 2.76Zm8.52 0c-1.35 0-2.45-1.24-2.45-2.76s1.08-2.76 2.45-2.76c1.38 0 2.48 1.25 2.45 2.76 0 1.52-1.07 2.76-2.45 2.76Z"></path></svg></span><span id="op-commission-discord-label">디스코드로 문의하기</span> <span aria-hidden="true">↗</span></a>
+      <button type="button" id="op-commission-email-copy" aria-label="이메일 주소 복사"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.6"></path></svg><span id="op-commission-email-copy-label">agentdh@naver.com</span></button>
+    </div>
+    <span class="op-contact-copy-status" id="op-commission-copy-status" role="status"></span>
+    <nav class="contact-row" id="op-commission-channel-socials" aria-label="작업 및 커미션 채널"><a class="c-btn" href="https://x.com/bowone_agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>@bowone_agentdh</a><a class="c-btn" href="https://crepe.cm/@agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>크레페</a><a class="c-btn" href="https://artmug.kr/index.php?channel=list&amp;field=brand&amp;search=YWdlbnRkaA==" target="_blank"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>아트머그</a><a class="c-btn" href="https://commi.kr/agentdh" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1c1.38 0 2.48 1.25 2.45 2.76-.03 1.51-1.07 2.76-2.45 2.76Z"></path></svg>커미</a><a class="c-btn" href="https://meenit.co/agentdh" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zm4.1 1h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>미닛</a><a class="c-btn" href="https://www.youtube.com/@agentdh" target="_blank"><svg viewBox="0 0 24 24"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"></path></svg>YouTube</a><a class="c-btn" href="https://www.instagram.com/agentdhone/" target="_blank"><svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3z"></path></svg>Instagram</a></nav>
+  </section>
   <div class="sub-tab-wrap">
     <button class="sub-tab active" onclick="switchSub('commission','thumbnail',this)">썸네일</button>
     <button class="sub-tab" onclick="switchSub('commission','illust',this)">일러스트</button>
@@ -4385,7 +4401,7 @@ color:var(--cyan);
 <div class="price-main">
 <div class="sec-label-lg"><span class="sec-num">01</span><h2 class="sec-title">썸네일<span class="en">Thumbnail</span></h2></div>
     <div class="pixel-grid">
-      <div class="price-card"><div class="price-card-label">기본형</div><div class="price-card-name">MD · LD 썸네일</div><div class="price-card-desc">기본 최대 3명 포함<br>사전 요청 시 레이어 분할 추가금 없음</div><div class="price-card-num">30,000<span class="unit">원</span></div></div>
+      <div class="price-card"><div class="price-card-label">기본형</div><div class="price-card-name">MD · LD 썸네일</div><div class="price-card-desc">기본 최대 3명 포함<br>사전 요청 시 레이어 분할 추가금 없음</div><div class="price-card-num">35,000<span class="unit">원</span></div></div>
       <div class="price-card"><div class="price-card-label">합성형</div><div class="price-card-name">누끼 · 배경 합성 썸네일</div><div class="price-card-desc">합성 + 텍스트 디자인<br>배경·소품 추가 가능</div><div class="price-card-num">15,000<span class="unit">원~</span></div></div>
       <div class="price-card"><div class="price-card-label">소스형</div><div class="price-card-name">유튜브 투명 소스 (PNG)</div><div class="price-card-desc">영상 편집 · 썸네일용<br>SD / LD 선택</div><div class="price-card-from">SD 기준</div><div class="price-card-num">10,000<span class="unit">원</span></div></div>
     </div>
@@ -4411,7 +4427,7 @@ color:var(--cyan);
           <div class="calc-select-row">
             <select onchange="handleOptionChange(this,'thumb')">
               <option value="0">선택하세요.</option>
-              <option value="30000">MD·LD 썸네일</option>
+              <option value="35000">MD·LD 썸네일</option>
               <option value="15000">합성 썸네일</option>
               <option value="10000">유튜브소스 SD</option>
               <option value="20000">유튜브소스 LD</option>
@@ -4520,9 +4536,9 @@ color:var(--cyan);
     </div>
     <div class="pixel-grid">
       <div class="option-block"><div class="option-block-title">비상업용 <span style="color:var(--green)">Non-Commercial</span></div>
-        <div class="option-row"><div class="opt-name">흉상 <div class="opt-sub">가슴~명치</div></div><div class="opt-price">10,000</div></div>
-        <div class="option-row"><div class="opt-name">반신 <div class="opt-sub">허벅지~무릎</div></div><div class="opt-price">40,000</div></div>
-        <div class="option-row"><div class="opt-name">전신</div><div class="opt-price">65,000</div></div>
+        <div class="option-row"><div class="opt-name">흉상 <div class="opt-sub">가슴~명치</div></div><div class="opt-price">20,000</div></div>
+        <div class="option-row"><div class="opt-name">반신 <div class="opt-sub">허벅지~무릎</div></div><div class="opt-price">45,000</div></div>
+        <div class="option-row"><div class="opt-name">전신</div><div class="opt-price">75,000</div></div>
       </div>
       <div class="option-block"><div class="option-block-title">상업용 <span style="color:var(--purple)">Commercial</span></div>
         <div class="option-row"><div class="opt-name">흉상 <div class="opt-sub">가슴~명치</div></div><div class="opt-price">50,000</div></div>
@@ -4712,8 +4728,8 @@ color:var(--cyan);
         <div class="option-row"><div class="opt-name">디테일 모션</div><div class="opt-price">120,000</div></div>
       </div>
       <div class="option-block"><div class="option-block-title">LD</div>
-        <div class="option-row"><div class="opt-name">간단 움직임</div><div class="opt-price">180,000</div></div>
-        <div class="option-row"><div class="opt-name">디테일 모션</div><div class="opt-price">300,000</div></div>
+        <div class="option-row"><div class="opt-name">간단 움직임</div><div class="opt-price">230,000</div></div>
+        <div class="option-row"><div class="opt-name">디테일 모션</div><div class="opt-price">380,000</div></div>
       </div>
     </div>
     <div class="option-block"><div class="option-block-title">파츠 분리 추가금</div>
@@ -4758,8 +4774,8 @@ color:var(--cyan);
           <div class="calc-select-row">
             <select onchange="handleOptionChange(this,'live2d')">
               <option value="0">선택하세요.</option>
-              <option value="180000">LD 간단 (180,000)</option>
-              <option value="300000">LD 디테일 (300,000)</option>
+              <option value="230000">LD 간단 (230,000)</option>
+              <option value="380000">LD 디테일 (380,000)</option>
             </select>
             <div class="qty-ctrl">
               <button class="qty-btn" onclick="changeQty('live2d',1,-1)">−</button>
@@ -4873,10 +4889,12 @@ color:var(--cyan);
         <div class="option-row"><div class="opt-name">용도 기본금 — 개인작업용</div><div class="opt-price free">₩0</div></div>
         <div class="option-row"><div class="opt-name">용도 기본금 — 출시용</div><div class="opt-price free">3,000</div></div>
         <div class="option-row"><div class="opt-name">소형 (16~32px)<div class="opt-sub">게임소스용 픽셀 캐릭터/간단한 소형 스프라이트 기준</div></div><div class="opt-price">12,000</div></div>
-		<div class="option-row"><div class="opt-name">중형 (33~89px)<div class="opt-sub">게임소스용 픽셀 캐릭터/일반 캐릭터 스프라이트 기준</div></div><div class="opt-price">17,000</div></div>
-		<div class="option-row"><div class="opt-name">대형 (90px+)<div class="opt-sub">게임소스용 픽셀 캐릭터/대형 캐릭터 또는 보스형 기준</div></div><div class="opt-price">22,000</div></div>
+		<div class="option-row"><div class="opt-name">중형 (33~89px)<div class="opt-sub">게임소스용 픽셀 캐릭터/일반 캐릭터 스프라이트 기준</div></div><div class="opt-price">25,000</div></div>
+		<div class="option-row"><div class="opt-name">대형 (90px+)<div class="opt-sub">게임소스용 픽셀 캐릭터/대형 캐릭터 또는 보스형 기준</div></div><div class="opt-price">35,000</div></div>
 		<div class="option-row"><div class="opt-name">동작 추가 기본금<div class="opt-sub">Run · Attack · Death 등 별도 동작 추가 시</div></div><div class="opt-price add">+10,000</div></div>
-		<div class="option-row"><div class="opt-name">일반 프레임 추가<div class="opt-sub">Run · Attack · Death 등 일반 동작 프레임</div></div><div class="opt-price add">+4,000 / 프레임</div></div>
+		<div class="option-row"><div class="opt-name">일반 프레임 추가 — 소형 (16~32px)<div class="opt-sub">Run · Attack · Death 등 일반 동작 프레임</div></div><div class="opt-price add">+4,000 / 프레임</div></div>
+<div class="option-row"><div class="opt-name">일반 프레임 추가 — 중형 (33~89px)<div class="opt-sub">Run · Attack · Death 등 일반 동작 프레임</div></div><div class="opt-price add">+6,000 / 프레임</div></div>
+<div class="option-row"><div class="opt-name">일반 프레임 추가 — 대형 (90px+)<div class="opt-sub">Run · Attack · Death 등 일반 동작 프레임</div></div><div class="opt-price add">+9,000 / 프레임</div></div>
 		<div class="option-row"><div class="opt-name">Idle 등 단순 움직임<div class="opt-sub">숨쉬기 · 깜빡임 · 단순 루프 움직임</div></div><div class="opt-price add">+1,000 / 프레임</div></div>
 		<div class="option-row"><div class="opt-name">빠른 마감</div><div class="opt-price">협의</div></div>
       </div>
@@ -5041,8 +5059,8 @@ color:var(--cyan);
               <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
                 <option value="12000">소형 캐릭터 기본 제작 (16~32px)</option>
-                <option value="17000">중형 캐릭터 기본 제작 (33~89px)</option>
-                <option value="22000">대형 캐릭터 기본 제작 (90px+)</option>
+                <option value="25000">중형 캐릭터 기본 제작 (33~89px)</option>
+                <option value="35000">대형 캐릭터 기본 제작 (90px+)</option>
               </select>
               <div class="qty-ctrl">
                 <button class="qty-btn" onclick="changeQty('pixel',9,-1)">−</button>
@@ -5070,7 +5088,9 @@ color:var(--cyan);
             <div class="calc-select-row">
               <select onchange="handleOptionChange(this,'pixel')">
                 <option value="0">없음</option>
-                <option value="4000">+4,000 / 프레임</option>
+                <option value="4000">소형 (16~32px) +4,000 / 프레임</option>
+                <option value="6000">중형 (33~89px) +6,000 / 프레임</option>
+                <option value="9000">대형 (90px+) +9,000 / 프레임</option>
               </select>
               <div class="qty-ctrl">
                 <button class="qty-btn" onclick="changeQty('pixel',11,-1)">−</button>
@@ -5134,7 +5154,7 @@ color:var(--cyan);
       <div class="price-card"><div class="price-card-label">리소스팩</div><div class="price-card-name">3D 리소스</div><div class="price-card-desc">상업용 추가금 없음</div><div class="price-card-num">13,000<span class="unit">원+α</span></div></div>
     </div>
     <div class="option-block"><div class="option-block-title">마인크래프트 애니메이션</div>
-      <div class="option-row"><div class="opt-name">기본금 (1분 이하)</div><div class="opt-price">20,000</div></div>
+      <div class="option-row"><div class="opt-name">기본금 (1분 이하)</div><div class="opt-price">60,000</div></div>
       <div class="option-row"><div class="opt-name">1분 초과 시 30초당</div><div class="opt-price add">+40,000</div></div>
       <div class="option-row"><div class="opt-name">라이팅 + 렌더링</div><div class="opt-price add">+30,000</div></div>
       <div class="option-row"><div class="opt-name">모델링 추가</div><div class="opt-price add">+25,000</div></div>
@@ -5152,7 +5172,7 @@ color:var(--cyan);
               <option value="10000">스킨 (10,000)</option>
               <option value="8000">도트 아이템/아이콘 (8,000)</option>
               <option value="13000">3D 리소스 (13,000)</option>
-              <option value="20000">애니메이션 기본 (20,000)</option>
+              <option value="60000">애니메이션 기본 (60,000)</option>
             </select>
             <div class="qty-ctrl">
               <button class="qty-btn" onclick="changeQty('mc',0,-1)">−</button>
@@ -5388,7 +5408,7 @@ color:var(--cyan);
         <div class="option-row"><div class="opt-name">3D 소품·배경 추가</div><div class="opt-price add">+5,000+α</div></div>
       </div>
       <div class="option-block"><div class="option-block-title">3D 애니메이션</div>
-        <div class="option-row"><div class="opt-name">기본금 (1분 이하)</div><div class="opt-price">40,000</div></div>
+        <div class="option-row"><div class="opt-name">기본금 (1분 이하)</div><div class="opt-price">100,000</div></div>
         <div class="option-row"><div class="opt-name">1분 초과 시 30초당</div><div class="opt-price add">+60,000</div></div>
         <div class="option-row"><div class="opt-name">편집 추가</div><div class="opt-price add">+30,000</div></div>
       </div>
@@ -5410,7 +5430,7 @@ color:var(--cyan);
       <select onchange="handleOptionChange(this,'anim')">
         <option value="0">선택하세요.</option>
         <option value="25000">2D 애니메이션 기본 (25,000)</option>
-        <option value="40000">3D 애니메이션 기본 (40,000)</option>
+        <option value="100000">3D 애니메이션 기본 (100,000)</option>
       </select>
       <div class="qty-ctrl">
         <button class="qty-btn" onclick="changeQty('anim',0,-1)">−</button>
@@ -5593,13 +5613,7 @@ color:var(--cyan);
 
 <footer>
   <div class="footer-brand">BOWONE · Commission Open</div>
-  <div class="footer-links">
-    <a href="https://x.com/bowone_agentdh" target="_blank">X</a>
-    <a href="https://www.youtube.com/@agentdh" target="_blank">YouTube</a>
-    <a href="https://artmug.kr/index.php?channel=list&amp;field=brand&amp;search=YWdlbnRkaA==" target="_blank">아트머그</a>
-    <a href="https://crepe.cm/@agentdh" target="_blank">크레페</a>
-    <a href="mailto:agentdh@naver.com">이메일</a>
-  </div>
+  <div class="footer-links"><a href="https://x.com/bowone_agentdh" target="_blank" rel="noopener noreferrer">@bowone_agentdh</a><a href="https://crepe.cm/@agentdh" target="_blank" rel="noopener noreferrer">크레페</a><a href="https://artmug.kr/index.php?channel=list&amp;field=brand&amp;search=YWdlbnRkaA==" target="_blank" rel="noopener noreferrer">아트머그</a><a href="https://commi.kr/agentdh" target="_blank" rel="noopener noreferrer">커미</a><a href="https://meenit.co/agentdh" target="_blank" rel="noopener noreferrer">미닛</a><a href="https://www.youtube.com/@agentdh" target="_blank" rel="noopener noreferrer">YouTube</a><a href="https://www.instagram.com/agentdhone/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="mailto:agentdh@naver.com">이메일</a></div>
 </footer>
 </div><!-- /main-area -->
 
@@ -5720,8 +5734,10 @@ color:var(--cyan);
 
 
 
-<script>
-/* ── CALCULATOR ENGINE ── */
+
+
+
+<script>/* ── CALCULATOR ENGINE ── */
 const CALCS={};
 
 function initCalc(key){
@@ -5877,9 +5893,9 @@ function handleIllustTypeChange(){
 
     if(type2==='noncommercial'){
       base.innerHTML += `
-        <option value="10000">흉상 (10,000)</option>
-        <option value="40000">반신 (40,000)</option>
-        <option value="65000">전신 (65,000)</option>
+        <option value="20000">흉상 (20,000)</option>
+        <option value="45000">반신 (45,000)</option>
+        <option value="75000">전신 (75,000)</option>
       `;
     }
 
@@ -6262,95 +6278,7 @@ function resetCalc(key){
   };
 })();
 
-(function(){
-'use strict';
-var payload={profile:{},portfolio:{}},data={},rendered={};
-var viewer={gridId:'',index:-1,viewport:null};
 
-function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
-function ytId(url){
- try{
-  var u=new URL(String(url||''),location.href),h=u.hostname.replace(/^www\./,'').toLowerCase(),id='';
-  if(h==='youtu.be')id=u.pathname.slice(1).split('/')[0];
-  else if(h.indexOf('youtube.com')>=0){
-   if(u.pathname==='/watch')id=u.searchParams.get('v')||'';
-   else if(u.pathname.indexOf('/shorts/')===0)id=u.pathname.split('/shorts/')[1].split('/')[0];
-   else if(u.pathname.indexOf('/embed/')===0)id=u.pathname.split('/embed/')[1].split('/')[0];
-  }
-  return /^[A-Za-z0-9_-]{6,}$/.test(id)?id:'';
- }catch(e){return '';}
-}
-function readPayload(){
- var el=document.getElementById('portfolio-data');
- try{return JSON.parse(el?el.textContent:'{}')||{};}catch(e){console.error(e);return {};}
-}
-function applyProfile(p){
- p=p||{};
- var n=document.getElementById('profileName'),r=document.getElementById('profileRole'),b=document.getElementById('profileBio');
- var img=document.getElementById('avatarImg'),ini=document.getElementById('avatarInitial');
- if(p.name&&n)n.textContent=p.name;
- if(p.role&&r)r.textContent=p.role;
- if(p.bio&&b)b.innerHTML=esc(p.bio).replace(/\n/g,'<br>');
- var ct=document.getElementById('commissionLinkTitle'),cb=document.getElementById('commissionLinkButton'),cl=document.getElementById('commissionLinkButtonLabel');
- var title=p.commissionLinkTitle||'의뢰하러 가기',url=p.commissionLinkUrl||'https://discord.gg/EZhs87qRvU';
- if(ct)ct.textContent=title;if(cl)cl.textContent=title;if(cb)cb.href=url;
- if(img&&p.profileImgUrl){
-  img.src=p.profileImgUrl;img.loading='lazy';img.decoding='async';img.style.display='block';if(ini)ini.style.display='none';
-  var c=p.profileCrop;
-  if(c&&c.w>0&&c.h>0){img.style.objectFit='fill';img.style.width=(100/c.w)+'%';img.style.height=(100/c.h)+'%';img.style.left=(-100*c.x/c.w)+'%';img.style.top=(-100*c.y/c.h)+'%';}
-  else{img.style.objectFit='cover';img.style.width='100%';img.style.height='100%';img.style.left='0';img.style.top='0';}
- }
-}
-function makeCard(item,gridId,index){
- var card=document.createElement('div'),url=item.src||item.url||'',type=item.type||'image',id=ytId(url);
- card.className='card generated-card';
- card.dataset.url=url;card.dataset.type=type;card.dataset.title=item.title||'';card.dataset.desc=item.desc||'';
- var media='',badge='IMAGE',badgeClass='image';
- if(id){
-  badge='VIDEO';badgeClass='video';
-  media='<img loading="lazy" decoding="async" src="https://img.youtube.com/vi/'+esc(id)+'/mqdefault.jpg" alt=""><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>';
- }else if(type==='video'){
-  badge='VIDEO';badgeClass='video';
-  media=item.thumbnailSrc
-   ? '<img loading="lazy" decoding="async" src="'+esc(item.thumbnailSrc)+'" alt=""><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>'
-   : '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--orange);font-size:36px">▶</div>';
- }else if(type==='link'){
-  badge='LINK';badgeClass='link';media='<div class="card-thumb ph">↗</div>';
- }else{
-  media='<img loading="lazy" decoding="async" src="'+esc(item.thumbnailSrc||url)+'" alt="'+esc(item.title||'')+'">';
- }
- card.innerHTML='<div class="card-thumb">'+media+'</div><span class="type-badge '+badgeClass+'">'+badge+'</span><div class="card-body"><div class="card-title">'+esc(item.title||'제목 없음')+'</div>'+(item.desc?'<div class="card-desc">'+esc(item.desc)+'</div>':'')+'</div>';
- card.addEventListener('click',function(){openPublicCard(item,gridId,index);});
- return card;
-}
-function renderGrid(gridId){
- if(rendered[gridId])return;
- var grid=document.getElementById(gridId);if(!grid)return;
- rendered[gridId]=true;
- grid.querySelectorAll(':scope > .generated-card,:scope > .pup-empty-grid-card').forEach(function(el){el.remove();});
- var items=Array.isArray(data[gridId])?data[gridId]:[];
- items.forEach(function(item,index){grid.appendChild(makeCard(item,gridId,index));});
- if(!items.length){var ph=document.createElement('div');ph.className='pup-empty-grid-card';ph.textContent='비어있음';grid.appendChild(ph);}
- setTimeout(updatePublicGridScrolls,0);
-}
-function updatePublicGridScrolls(){
- document.querySelectorAll('#tab-work .grid-3[id],#tab-work .grid-2[id]').forEach(function(grid){
-  if(grid.closest('.style-pane'))return;
-  grid.classList.remove('portfolio-scroll-9');grid.style.maxHeight='';
-  var cards=[...grid.children].filter(function(el){return el.classList.contains('card');});
-  if(cards.length<=9||!cards[8]||grid.getClientRects().length===0)return;
-  grid.classList.add('portfolio-scroll-9');
-  var height=Math.ceil(cards[8].getBoundingClientRect().bottom-grid.getBoundingClientRect().top+1);
-  if(height>240)grid.style.maxHeight=height+'px';
- });
-}
-function renderSub(sub){
- if(!sub)return;
- sub.querySelectorAll('.grid-3[id],.grid-2[id]').forEach(function(grid){
-  var pane=grid.closest('.style-pane');
-  if(!pane||pane.classList.contains('active'))renderGrid(grid.id);
- });
-}
 function createImageViewport(stage, getImage, report, dragClass = "is-dragging") {
   let scale = 1, x = 0, y = 0, drag = null;
   function draw() {
@@ -6409,6 +6337,96 @@ function createImageViewport(stage, getImage, report, dragClass = "is-dragging")
   });
   reset();
   return {draw, reset, zoom};
+}
+
+(function(){
+'use strict';
+var payload={profile:{},portfolio:{}},data={},rendered={};
+var viewer={gridId:'',index:-1,viewport:null};
+
+function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function ytId(url){
+ try{
+  var u=new URL(String(url||''),location.href),h=u.hostname.replace(/^www\./,'').toLowerCase(),id='';
+  if(h==='youtu.be')id=u.pathname.slice(1).split('/')[0];
+  else if(h.indexOf('youtube.com')>=0){
+   if(u.pathname==='/watch')id=u.searchParams.get('v')||'';
+   else if(u.pathname.indexOf('/shorts/')===0)id=u.pathname.split('/shorts/')[1].split('/')[0];
+   else if(u.pathname.indexOf('/embed/')===0)id=u.pathname.split('/embed/')[1].split('/')[0];
+  }
+  return /^[A-Za-z0-9_-]{6,}$/.test(id)?id:'';
+ }catch(e){return '';}
+}
+function readPayload(){
+ var el=document.getElementById('portfolio-data');
+ try{return JSON.parse(el?el.textContent:'{}')||{};}catch(e){console.error(e);return {};}
+}
+function applyProfile(p){
+ p=p||{};
+ var n=document.getElementById('profileName'),r=document.getElementById('profileRole'),b=document.getElementById('profileBio');
+ var img=document.getElementById('avatarImg'),ini=document.getElementById('avatarInitial');
+ if(p.name&&n)n.textContent=p.name;
+ if(p.role&&r)r.textContent=p.role;
+ if(p.bio&&b)b.innerHTML=esc(p.bio).replace(/\n/g,'<br>');
+ var ct=document.getElementById('commissionLinkTitle'),cb=document.getElementById('commissionLinkButton'),cl=document.getElementById('commissionLinkButtonLabel');
+ var title=p.commissionLinkTitle||'디스코드로 문의하기',url=p.commissionLinkUrl||'https://discord.gg/QGsfqz9HPC';
+ if(ct)ct.textContent=title;if(cl)cl.textContent=title;if(cb)cb.href=url;
+ if(img&&p.profileImgUrl){
+  img.src=p.profileImgUrl;img.loading='lazy';img.decoding='async';img.style.display='block';if(ini)ini.style.display='none';
+  var c=p.profileCrop;
+  if(c&&c.w>0&&c.h>0){img.style.objectFit='fill';img.style.width=(100/c.w)+'%';img.style.height=(100/c.h)+'%';img.style.left=(-100*c.x/c.w)+'%';img.style.top=(-100*c.y/c.h)+'%';}
+  else{img.style.objectFit='cover';img.style.width='100%';img.style.height='100%';img.style.left='0';img.style.top='0';}
+ }
+}
+function makeCard(item,gridId,index){
+ var card=document.createElement('div'),url=item.src||item.url||'',type=item.type||'image',id=ytId(url);
+ card.className='card generated-card';
+ card.dataset.url=url;card.dataset.type=type;card.dataset.title=item.title||'';card.dataset.desc=item.desc||'';
+ var media='',badge='IMAGE',badgeClass='image';
+ if(id){
+  badge='VIDEO';badgeClass='video';
+  media='<img loading="lazy" decoding="async" src="https://img.youtube.com/vi/'+esc(id)+'/mqdefault.jpg" alt=""><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>';
+ }else if(type==='video'){
+  badge='VIDEO';badgeClass='video';
+  media=item.thumbnailSrc
+   ? '<img loading="lazy" decoding="async" src="'+esc(item.thumbnailSrc)+'" alt=""><div class="play-overlay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>'
+   : '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--orange);font-size:36px">▶</div>';
+ }else if(type==='link'){
+  badge='LINK';badgeClass='link';media='<div class="card-thumb ph">↗</div>';
+ }else{
+  media='<img loading="lazy" decoding="async" src="'+esc(item.thumbnailSrc||url)+'" alt="'+esc(item.title||'')+'">';
+ }
+ card.innerHTML='<div class="card-thumb">'+media+'</div><span class="type-badge '+badgeClass+'">'+badge+'</span><div class="card-body"><div class="card-title">'+esc(item.title||'제목 없음')+'</div>'+(item.desc?'<div class="card-desc">'+esc(item.desc)+'</div>':'')+'</div>';
+ card.addEventListener('click',function(){openPublicCard(item,gridId,index);});
+ return card;
+}
+function renderGrid(gridId){
+ if(rendered[gridId])return;
+ var grid=document.getElementById(gridId);if(!grid)return;
+ rendered[gridId]=true;
+ grid.querySelectorAll(':scope > .generated-card,:scope > .pup-empty-grid-card').forEach(function(el){el.remove();});
+ var items=Array.isArray(data[gridId])?data[gridId]:[];
+ items.forEach(function(item,index){grid.appendChild(makeCard(item,gridId,index));});
+ if(!items.length){var ph=document.createElement('div');ph.className='pup-empty-grid-card';ph.textContent='비어있음';grid.appendChild(ph);}
+ setTimeout(updatePublicGridScrolls,0);
+}
+function updatePublicGridScrolls(){
+ document.querySelectorAll('#tab-work .grid-3[id],#tab-work .grid-2[id]').forEach(function(grid){
+  if(grid.closest('.style-pane'))return;
+  grid.classList.remove('portfolio-scroll-9');grid.style.maxHeight='';
+  var cards=[...grid.children].filter(function(el){return el.classList.contains('card');});
+  if(cards.length<=9||!cards[8]||grid.getClientRects().length===0)return;
+  grid.classList.add('portfolio-scroll-9');
+  var height=Math.ceil(cards[8].getBoundingClientRect().bottom-grid.getBoundingClientRect().top+1);
+  if(height>240)grid.style.maxHeight=height+'px';
+ });
+}
+function renderSub(sub){
+ if(!sub)return;
+ sub.querySelectorAll('.grid-3[id],.grid-2[id]').forEach(function(grid){
+  var pane=grid.closest('.style-pane');
+  if(!pane||pane.classList.contains('active'))renderGrid(grid.id);
+ });
 }
 function resetPublicViewer(){viewer.viewport?.reset();}
 function setupPublicViewer(){
